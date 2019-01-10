@@ -6,6 +6,6 @@ Episcanpy – Epigenomics single cell analysis in python
 It is compatible with scanpy_ (`Wolf et al., 2018 <https://doi.org/10.1186/s13059-017-1382-0>`_). Making use of sparse
 implementation, iterative neighbors search and other techniques (these 2 sentences come from the rna velocity readme)
 
-The documentation of Episcanpy is available at <episcanpy.readthedocs.io>
+The documentation of Episcanpy is available at <https://episcanpy.readthedocs.io/en/latest/>
 
 We are still working on pip install procedure, it should be available soon
