@@ -1,5 +1,5 @@
-Welcome to episcanpy's documentation!
-=====================================
+Episcanpy -- Epigenomics Single-Cell Analysis in Python
+=======================================================
 
 Content
 =======

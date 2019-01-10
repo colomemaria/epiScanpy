@@ -21,12 +21,24 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+## From Scanpy
+import sys
+import logging
+from pathlib import Path
+from datetime import datetime
+from jinja2.defaults import DEFAULT_FILTERS
+import matplotlib  # noqa
+
+
 
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
-# needs_sphinx = '1.0'
+needs_sphinx = '1.0'
+
+
+
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -44,6 +56,12 @@ source_suffix = '.rst'
 
 # The master toctree document.
 master_doc = 'index'
+
+## From scanpy
+default_role = 'literal'
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+pygments_style = 'sphinx'
+
 
 # General information about the project.
 project = 'episcanpy'
@@ -83,18 +101,31 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = dict(
+    navigation_depth=4,
+)
+
+html_context = dict(
+    display_github=True,      # Integrate GitHub
+    github_user='DaneseAnna',   # Username
+    github_repo='Episcanpy',     # Repo name
+    github_version='master',  # Version
+    conf_py_path='/docs/',    # Path in the checkout to the docs root
+)
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['nstatic']
+
+def setup(app):
+    app.add_stylesheet('css/custom.css')
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -143,6 +174,36 @@ latex_documents = [
      'Anna Danese, Maria Richter, Maria Colome-Tatche', 'manual'),
 ]
 
+# -- Options for other output formats ------------------------------------------
+
+
+htmlhelp_basename = f'{project}doc'
+doc_title = f'{project} Documentation'
+latex_documents = [
+    (master_doc, f'{project}.tex', doc_title, author, 'manual'),
+]
+man_pages = [
+    (master_doc, project, doc_title, [author], 1)
+]
+texinfo_documents = [
+    (master_doc, project, doc_title, author, project, 'One line description of project.', 'Miscellaneous'),
+]
+
+# -- Images for plot functions -------------------------------------------------
+
+
+def api_image(qualname: str) -> str:
+    # I’d like to make this a contextfilter, but the jinja context doesn’t contain the path,
+    # so no chance to not hardcode “api/” here.
+    path = Path(__file__).parent / 'api' / f'{qualname}.png'
+    print(path, path.is_file())
+    return f'.. image:: {path.name}\n   :width: 200\n   :align: right' if path.is_file() else ''
+
+
+# html_context doesn’t apply to autosummary templates ☹
+# and there’s no way to insert filters into those templates
+# so we have to modify the default filters
+DEFAULT_FILTERS['api_image'] = api_image
 
 # -- Options for manual page output ---------------------------------------
 
