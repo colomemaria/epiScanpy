@@ -1,2 +1,4 @@
+.. automodule:: episcanpy.api
+
 API
 ===

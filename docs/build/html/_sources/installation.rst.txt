@@ -9,4 +9,6 @@ installing Miniconda_ (see `Installing Miniconda`_). Then run::
 
     conda install seaborn scikit-learn statsmodels numba
     conda install -c conda-forge python-igraph louvain
+
     pip install scanpy
+
