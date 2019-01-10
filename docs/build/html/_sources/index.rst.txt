@@ -2,8 +2,7 @@ Episcanpy -- Epigenomics Single-Cell Analysis in Python
 =======================================================
 
 
-Report issues and see the code on GitHub. If Scanpy is useful for your research, consider citing Genome Biology (2018).
-
+Report issues and see the code on GitHub. If Episcanpy is useful for your research, consider citing at ...
 
 .. toctree::
    :maxdepth: 1
@@ -11,8 +10,8 @@ Report issues and see the code on GitHub. If Scanpy is useful for your research,
 
    Tutorials
    Workflow
-   Installation
-   api/index
+   installation
+   api
    references
 
 * :ref:`license`
@@ -29,8 +28,3 @@ Report issues and see the code on GitHub. If Scanpy is useful for your research,
     help
 
    :caption: Contents:
-
-
-
-API
-===
