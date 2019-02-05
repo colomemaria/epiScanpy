@@ -22,9 +22,9 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import sys
-import inspect
+# import inspect
 import logging
-from pathlib import Path
+# from pathlib import Path
 from datetime import datetime
 from typing import Optional
 
@@ -37,8 +37,8 @@ from jinja2.defaults import DEFAULT_FILTERS
 # Don’t use tkinter agg when importing scanpy → … → matplotlib
 # matplotlib.use('agg')
 
-# HERE = Path(__file__).parent
-# sys.path.insert(0, str(HERE.parent))
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
 import episcanpy  # noqa
 
 logger = logging.getLogger(__name__)
