@@ -61,7 +61,7 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.githubpages',
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
-    'sphinx_autodoc_typehints',
+    #'sphinx_autodoc_typehints',
     'sphinx.ext.intersphinx',
     'scanpydoc',
 ]
