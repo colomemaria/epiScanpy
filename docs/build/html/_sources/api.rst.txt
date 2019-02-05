@@ -1,4 +1,0 @@
-.. automodule:: episcanpy.api
-
-API
-===

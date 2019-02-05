@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Usage Principles &mdash; episcanpy 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> episcanpy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Usage Principles</a><ul>
+<li><a class="reference internal" href="#workflow">Workflow</a></li>
+<li><a class="reference internal" href="#anndata">AnnData</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">episcanpy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Usage Principles</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/AnnaDanese/episcanpy/blob/master/docs/basic_usage.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="usage-principles">
+<h1>Usage Principles<a class="headerlink" href="#usage-principles" title="Permalink to this headline">¶</a></h1>
+<p>Import the Scanpy API as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">episcanpy.api</span> <span class="k">as</span> <span class="nn">epi</span>
+</pre></div>
+</div>
+<div class="section" id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<p>The typical workflow consists of subsequent calls of data analysis tools
+in <code class="docutils literal"><span class="pre">sc.tl</span></code>, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">tsne</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="o">**</span><span class="n">tool_params</span><span class="p">)</span>  <span class="c1"># embed the data using tSNE</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">adata</span></code> is an <code class="xref py py-class docutils literal"><span class="pre">AnnData</span></code> object. Each of these calls adds annotation to an expression matrix <em>X</em>, which stores <em>n_obs</em> observations (cells) of <em>n_vars</em> variables (genes). For each tool, there typically is an associated plotting function in <code class="docutils literal"><span class="pre">sc.pl</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">tsne</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="o">**</span><span class="n">plotting_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you pass <code class="docutils literal"><span class="pre">show=False</span></code>, a <code class="xref py py-class docutils literal"><span class="pre">matplotlib.axes.Axes</span></code> instance is returned and you have all of matplotlib’s detailed configuration possibilities.</p>
+<p>To facilitate writing memory-efficient pipelines, by default, Scanpy tools operate <em>inplace</em> on <code class="docutils literal"><span class="pre">adata</span></code> and return <code class="docutils literal"><span class="pre">None</span></code> - this also allows to easily transition to <a class="reference external" href="http://falexwolf.de/blog/171223_AnnData_indexing_views_HDF5-backing/">out-of-memory pipelines</a>. If you want to return a copy of the <code class="xref py py-class docutils literal"><span class="pre">AnnData</span></code> object and leave the passed <code class="docutils literal"><span class="pre">adata</span></code> unchanged, pass <code class="docutils literal"><span class="pre">copy=True</span></code>.</p>
+</div>
+<div class="section" id="anndata">
+<h2>AnnData<a class="headerlink" href="#anndata" title="Permalink to this headline">¶</a></h2>
+<p>Scanpy is based on <code class="xref py py-mod docutils literal"><span class="pre">anndata</span></code>, which provides the <code class="xref py py-class docutils literal"><span class="pre">AnnData</span></code> class.</p>
+<img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 300px"><p>At the most basic level, an <code class="xref py py-class docutils literal"><span class="pre">AnnData</span></code> object <code class="docutils literal"><span class="pre">adata</span></code> stores
+a data matrix (<code class="docutils literal"><span class="pre">adata.X</span></code>), dataframe-like annotation of observations
+(<code class="docutils literal"><span class="pre">adata.obs</span></code>) and variables (<code class="docutils literal"><span class="pre">adata.var</span></code>) and unstructured dict-like
+annotation (<code class="docutils literal"><span class="pre">adata.uns</span></code>). Values can be retrieved and appended via
+<code class="docutils literal"><span class="pre">adata.obs['key1']</span></code> and <code class="docutils literal"><span class="pre">adata.var['key2']</span></code>. Names of observations and
+variables can be accessed via <code class="docutils literal"><span class="pre">adata.obs_names</span></code> and <code class="docutils literal"><span class="pre">adata.var_names</span></code>,
+respectively. <code class="xref py py-class docutils literal"><span class="pre">AnnData</span></code> objects can be sliced like
+dataframes, for example, <code class="docutils literal"><span class="pre">adata_subset</span> <span class="pre">=</span> <span class="pre">adata[:,</span> <span class="pre">list_of_gene_names]</span></code>.
+For more, see this <a class="reference external" href="http://falexwolf.de/blog/171223_AnnData_indexing_views_HDF5-backing/">blog post</a>.</p>
+<p>To read a data file to an <code class="xref py py-class docutils literal"><span class="pre">AnnData</span></code> object, call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to initialize an <code class="xref py py-class docutils literal"><span class="pre">AnnData</span></code> object. Possibly add further annotation using, e.g., <code class="docutils literal"><span class="pre">pd.read_csv</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">anno</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename_sample_annotation</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cell_groups&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">anno</span><span class="p">[</span><span class="s1">&#39;cell_groups&#39;</span><span class="p">]</span>  <span class="c1"># categorical annotation of type pandas.Categorical</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">anno</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span>                <span class="c1"># numerical annotation of type float</span>
+<span class="c1"># alternatively, you could also set the whole dataframe</span>
+<span class="c1"># adata.obs = anno</span>
+</pre></div>
+</div>
+<p>To write, use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">write_csvs</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">write_loom</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anna Danese, Maria Richter
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'0.0.1',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
