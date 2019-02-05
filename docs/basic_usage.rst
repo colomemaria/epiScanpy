@@ -27,7 +27,16 @@ in ``epi.ch``, e.g.::
 where ``adata`` is an :class:`~anndata.AnnData` object. Each of these calls adds annotation to an expression matrix *X*, which stores *n_obs* observations (cells) of *n_vars* variables (genes). For each tool, there typically is an associated plotting function in ``sc.pl``::
 
     sc.pl.tsne(adata, **plotting_params)
+    
+And, just because I can, I will inserate a "random" figure. Truth being told,I would like to put the final pipeline.
+
+.. raw:: html
+
+   <img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/filter_genes_dispersion.png" style="width: 100px"><img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px"><img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px"><img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px"><img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 200px">
+
+
 
 
 .. _Seaborn: http://seaborn.pydata.org/
 .. _matplotlib: http://matplotlib.org/
+
