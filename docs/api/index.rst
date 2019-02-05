@@ -24,3 +24,32 @@ For visual quality control, see  :func:`~episcanpy.api.new_basic_functions.load_
 
    functions.extract_meth.extract_CG
    load.extract_CH
+
+
+
+Plotting: PL
+------------
+
+The plotting module :class:`episcanpy.plotting` largely parallels the ``tl.*`` and a few of the ``pp.*`` functions.
+For most tools and for some preprocessing functions, you'll find a plotting function with the same name.
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   plotting
+
+
+
+
+Functions: FUN
+--------------
+
+The plotting module :class:`episcanpy.functions` largely parallels the ``tl.*`` and a few of the ``pp.*`` functions.
+For most tools and for some preprocessing functions, you'll find a plotting function with the same name.
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   functions
