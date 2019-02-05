@@ -77,7 +77,7 @@ master_doc = 'index'
 # General information about the project.
 project = 'episcanpy'
 author = 'Anna Danese, Maria Richter'
-copyright = f'{datetime.now():%Y}, {author}' #'2019, Anna Danese'
+copyright = '2019, Anna Danese' #f'{datetime.now():%Y}, {author}'
 
 
 # The version info for the project you're documenting, acts as replacement for
