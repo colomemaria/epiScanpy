@@ -1,64 +1,32 @@
 Usage Principles
 ----------------
 
+We reuse a lot of the Scanpy functions "out of the box". To this end we need to import Scanpy and Anndata
+
 Import the Scanpy API as::
 
     import episcanpy.api as epi
+    import anndata as ad
 
 Workflow
 ^^^^^^^^
 
-The typical workflow consists of subsequent calls of data analysis tools
-in ``sc.tl``, e.g.::
+First we need to build the count matrix. It requires (sometimes) -omic specific functions.
+Preprocessing functions are therefore divides into 2 categories: ``epi.ch`` for single cell ATAC data and ``epi.mt`` for the methylation data.
 
-    sc.tl.tsne(adata, **tool_params)  # embed the data using tSNE
+When it comes to calculationg tSNE, UMAP, PCA etc. we take advantage of the shared datastructure with scanpy and we can use most (if not all) Scanpy functions
+
+To see Scanpy usage principles: <https://scanpy.readthedocs.io/en/latest/basic_usage.html>`__.
+
+
+The typical workflow consists of subsequent calls of ATAC specific processing tools
+in ``epi.ch``, e.g.::
+
+    epi.ch.load_features(file_features, **tool_params)  # to load annotation files (bad example as it works the same for mt
 
 where ``adata`` is an :class:`~anndata.AnnData` object. Each of these calls adds annotation to an expression matrix *X*, which stores *n_obs* observations (cells) of *n_vars* variables (genes). For each tool, there typically is an associated plotting function in ``sc.pl``::
 
     sc.pl.tsne(adata, **plotting_params)
-
-If you pass ``show=False``, a :class:`matplotlib.axes.Axes` instance is returned and you have all of matplotlib's detailed configuration possibilities.
-
-To facilitate writing memory-efficient pipelines, by default, Scanpy tools operate *inplace* on ``adata`` and return ``None`` - this also allows to easily transition to `out-of-memory pipelines <http://falexwolf.de/blog/171223_AnnData_indexing_views_HDF5-backing/>`__. If you want to return a copy of the :class:`~anndata.AnnData` object and leave the passed ``adata`` unchanged, pass ``copy=True``.
-
-
-AnnData
-^^^^^^^
-
-Scanpy is based on :mod:`anndata`, which provides the :class:`~anndata.AnnData` class.
-
-.. raw:: html
-
-    <img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 300px">
-
-At the most basic level, an :class:`~anndata.AnnData` object ``adata`` stores
-a data matrix (``adata.X``), dataframe-like annotation of observations
-(``adata.obs``) and variables (``adata.var``) and unstructured dict-like
-annotation (``adata.uns``). Values can be retrieved and appended via
-``adata.obs['key1']`` and ``adata.var['key2']``. Names of observations and
-variables can be accessed via ``adata.obs_names`` and ``adata.var_names``,
-respectively. :class:`~anndata.AnnData` objects can be sliced like
-dataframes, for example, ``adata_subset = adata[:, list_of_gene_names]``.
-For more, see this `blog post <http://falexwolf.de/blog/171223_AnnData_indexing_views_HDF5-backing/>`__.
-
-To read a data file to an :class:`~anndata.AnnData` object, call::
-
-    adata = sc.read(filename)
-
-to initialize an :class:`~anndata.AnnData` object. Possibly add further annotation using, e.g., ``pd.read_csv``::
-
-    import pandas as pd
-    anno = pd.read_csv(filename_sample_annotation)
-    adata.obs['cell_groups'] = anno['cell_groups']  # categorical annotation of type pandas.Categorical
-    adata.obs['time'] = anno['time']                # numerical annotation of type float
-    # alternatively, you could also set the whole dataframe
-    # adata.obs = anno
-
-To write, use::
-
-    adata.write(filename)
-    adata.write_csvs(filename)
-    adata.write_loom(filename)
 
 
 .. _Seaborn: http://seaborn.pydata.org/
