@@ -33,13 +33,13 @@ from sphinx.ext import autosummary
 
 from jinja2.defaults import DEFAULT_FILTERS
 
-import matplotlib  # noqa
+# import matplotlib  # noqa
 # Don’t use tkinter agg when importing scanpy → … → matplotlib
-matplotlib.use('agg')
+# matplotlib.use('agg')
 
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent))
-import scanpy  # noqa
+# import scanpy  # noqa
 
 logger = logging.getLogger(__name__)
 
