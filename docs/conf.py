@@ -31,12 +31,25 @@ from typing import Optional
 from sphinx.application import Sphinx
 from sphinx.ext import autosummary
 
+from jinja2.defaults import DEFAULT_FILTERS
+
+import matplotlib  # noqa
+# Don’t use tkinter agg when importing scanpy → … → matplotlib
+matplotlib.use('agg')
+
+HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parent))
+import scanpy  # noqa
+
+logger = logging.getLogger(__name__)
+
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
-needs_sphinx = '1.0'
-#needs_sphinx = '1.7'  # autosummary bugfix
+#needs_sphinx = '1.0'
+needs_sphinx = '1.7'  # autosummary bugfix
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
