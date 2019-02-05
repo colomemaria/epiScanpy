@@ -9,7 +9,7 @@
 import sys
 # import inspect
 import logging
-# from pathlib import Path
+from pathlib import Path
 from datetime import datetime
 from typing import Optional
 
@@ -18,9 +18,9 @@ from sphinx.ext import autosummary
 
 from jinja2.defaults import DEFAULT_FILTERS
 
-# import matplotlib  # noqa
+import matplotlib  # noqa
 # Don’t use tkinter agg when importing scanpy → … → matplotlib
-# matplotlib.use('agg')
+matplotlib.use('agg')
 
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent))
