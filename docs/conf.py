@@ -37,8 +37,8 @@ from jinja2.defaults import DEFAULT_FILTERS
 # Don’t use tkinter agg when importing scanpy → … → matplotlib
 # matplotlib.use('agg')
 
-HERE = Path(__file__).parent
-sys.path.insert(0, str(HERE.parent))
+# HERE = Path(__file__).parent
+# sys.path.insert(0, str(HERE.parent))
 # import scanpy  # noqa
 
 logger = logging.getLogger(__name__)
