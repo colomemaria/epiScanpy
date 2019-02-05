@@ -76,7 +76,21 @@ napoleon_google_docstring = False
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_use_rtype = False
+napoleon_use_param = True
 napoleon_custom_sections = [('Params', 'Parameters')]
+
+intersphinx_mapping = dict(
+    anndata=('https://anndata.readthedocs.io/en/latest/', None),
+    bbknn=('https://bbknn.readthedocs.io/en/latest/', None),
+    leidenalg=('https://leidenalg.readthedocs.io/en/latest/', None),
+    louvain=('https://louvain-igraph.readthedocs.io/en/latest/', None),
+    matplotlib=('https://matplotlib.org/', None),
+    numpy=('https://docs.scipy.org/doc/numpy/', None),
+    pandas=('http://pandas.pydata.org/pandas-docs/stable/', None),
+    python=('https://docs.python.org/3', None),
+    scipy=('https://docs.scipy.org/doc/scipy/reference/', None),
+    sklearn=('https://scikit-learn.org/stable/', None),
+)
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -137,7 +151,7 @@ html_theme = 'sphinx_rtd_theme'#'alabaster'
 #
 # html_theme_options = {}
 html_theme_options = dict(
-    navigation_depth=2,
+    navigation_depth=4, # it used to be navigation_depth=2,
 )
 
 html_context = dict(
@@ -226,4 +240,19 @@ texinfo_documents = [
 ]
 
 
+# -- Images for plot functions -------------------------------------------------
+
+
+#def api_image(qualname: str) -> str:
+    # I’d like to make this a contextfilter, but the jinja context doesn’t contain the path,
+    # so no chance to not hardcode “api/” here.
+#    path = Path(__file__).parent / 'api' / f'{qualname}.png'
+#    print(path, path.is_file())
+#    return f'.. image:: {path.name}\n   :width: 200\n   :align: right' if path.is_file() else ''
+
+
+# html_context doesn’t apply to autosummary templates ☹
+# and there’s no way to insert filters into those templates
+# so we have to modify the default filters
+#DEFAULT_FILTERS['api_image'] = api_image
 
