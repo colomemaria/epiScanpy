@@ -24,7 +24,7 @@ HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent))
 import episcanpy  # noqa
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 
 # -- General configuration ------------------------------------------------
