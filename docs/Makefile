@@ -3,8 +3,8 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = episcanpy
+SPHINXBUILD   = python3 -msphinx
+SPHINXPROJ    = Scanpy
 SOURCEDIR     = .
 BUILDDIR      = _build
 
