@@ -24,7 +24,7 @@
 import sys
 import inspect
 import logging
-# from pathlib import Path
+from pathlib import Path
 from datetime import datetime
 from typing import Optional
 
@@ -39,7 +39,7 @@ from jinja2.defaults import DEFAULT_FILTERS
 
 # HERE = Path(__file__).parent
 # sys.path.insert(0, str(HERE.parent))
-# import scanpy  # noqa
+import episcanpy  # noqa
 
 logger = logging.getLogger(__name__)
 
