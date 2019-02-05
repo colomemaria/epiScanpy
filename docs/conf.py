@@ -3,10 +3,11 @@
 #
 #
 import os
-# sys.path.insert(0, os.path.abspath('.'))
 import sys
+sys.path.insert(0, os.path.abspath('.'))
+
 import inspect
-#import logging
+import logging
 from pathlib import Path
 from datetime import datetime
 from typing import Optional
@@ -24,7 +25,7 @@ HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent))
 import episcanpy  # noqa
 
-# logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 # -- General configuration ------------------------------------------------
