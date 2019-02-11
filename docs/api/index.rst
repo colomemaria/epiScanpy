@@ -3,7 +3,6 @@
 API
 ===
 
-
 Import Scanpy's high-level API as::
 
    import episcanpy.api as epi
@@ -27,7 +26,6 @@ For visual quality control, see  :func:`~episcanpy.pp.extract_CG` :func:`~episca
    ct.read_methylation_file
    ct.load_features
    ct.make_windows
-   episcanpy.api.load.load_features
    
 
 Preprocessing: PP
