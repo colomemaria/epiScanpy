@@ -35,21 +35,65 @@ del sys
 
 
 __doc__ = """\
-Global API (deprecated)
-=======================
-.. deprecated:: 1.3.7
-   Use the top level module instead: `import scanpy as sc`.
-For the deprecated high-level API documented on this page, use `import scanpy.api as sc`.
-Preprocessing: PP
+API
+===
+
+
+Import Scanpy's high-level API as::
+
+   import episcanpy.api as epi
+
+Count Matrices: CT
 ------------------
-Filtering of highly-variable genes, batch-effect correction, per-cell normalization, preprocessing recipes.
-Basic Preprocessing
-~~~~~~~~~~~~~~~~~~~
-For visual quality control, see :func:`~scanpy.api.pl.highest_expr_gens` and
-:func:`~scanpy.api.pl.filter_genes_dispersion` in the :doc:`plotting API
-<plotting>`.
+
+Loading data, loading annotations, building count matrices, filtering of lowly covered methylation variables.
+Filtering of lowly covered cells.
+
+Building Count matrices
+~~~~~~~~~~~~~~~~~~~~~~~
+
+For visual quality control, see  :func:`~episcanpy.pp.extract_CG` :func:`~episcanpy.load.read_methylation_file` :func:`~episcanpy.ct.make_windows` and  in :mod:`episcanpy.plotting`.
+ in the :doc:`plotting API <plotting>`.
+ 
+ 
 .. autosummary::
    :toctree: .
-   load.extract_CG
-   load.extract_CH
-   new_basic_function.write_methlevel
+
+   ct.read_methylation_file
+   ct.load_features
+   ct.make_windows
+   episcanpy.api.load.load_features
+   
+
+Preprocessing: PP
+------------------
+
+Imputing missing data (methylation), filterinf lowly covered cells or variables, correction for batch effect...
+
+Preprocessing
+~~~~~~~~~~~~~
+
+For the sake of testing the readthedocs, see  :func:`~episcanpy.api.load.load_features` :func:`~episcanpy.load_features.load_features` :func:`~episcanpy.api.load.extract_CH` and  in :mod:`episcanpy.plotting`.
+ in the :doc:`plotting API <plotting>`.
+ 
+ 
+.. autosummary::
+   :toctree: .
+
+   pp.extract_CH
+   pp.extract_CG
+   
+
+
+Plotting: PL
+------------
+
+The plotting module :class:`episcanpy.plotting` largely parallels the ``tl.*`` and a few of the ``pp.*`` functions.
+For most tools and for some preprocessing functions, you'll find a plotting function with the same name.
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   whatever
+"""
