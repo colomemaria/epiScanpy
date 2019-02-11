@@ -20,7 +20,7 @@ del get_versions, sys, check_versions, annotate_doc_types
 # the actual API
 from . import tools as tl
 from . import preprocessing as pp
-from . import load as load
+from . import count_matrix as ct
 #from . import functions as functions
 
 from anndata import AnnData
