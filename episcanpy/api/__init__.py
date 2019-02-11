@@ -6,6 +6,8 @@ from anndata import read_csv, read_excel, read_hdf, read_loom, read_mtx, read_te
 from .. import __version__
 
 from . import pp
+from . import tl
+from . import functions
 from . import ct
 
 __doc__ = """\
