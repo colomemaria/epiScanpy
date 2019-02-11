@@ -15,7 +15,7 @@ from typing import Optional
 from sphinx.application import Sphinx
 from sphinx.ext import autosummary
 
-from jinja2.defaults import DEFAULT_FILTERS
+#from jinja2.defaults import DEFAULT_FILTERS
 
 import matplotlib  # noqa
 # Don’t use tkinter agg when importing scanpy → … → matplotlib
@@ -226,5 +226,4 @@ texinfo_documents = [
 
 
 # -- Images for plot functions -------------------------------------------------
-
 
