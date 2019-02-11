@@ -9,6 +9,8 @@ MOUSE = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '2',
 # in a dictionary that has chromosomes as keys. 
 def load_features(file_features, chromosomes=HUMAN, path="", sort=False):
     """
+    Description function. 
+    
     The function load features is here to transform a bed file into a usable 
     set of units to measure methylation levels. 
     It has to be a bed-like file. You also need to specify the chromosomes you 
@@ -56,6 +58,8 @@ def load_features(file_features, chromosomes=HUMAN, path="", sort=False):
 
 def make_windows(size, chromosomes=HUMAN, max_length=1000000000):
     """
+    Description function. 
+    
     Generate windows/bins of the given size for the appropriate genome (default
     choice is human). 
     
