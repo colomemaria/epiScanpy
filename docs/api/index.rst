@@ -16,7 +16,7 @@ Filtering of lowly covered cells.
 Building Count matrices
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-For visual quality control, see  :func:`~episcanpy.pp.extract_CG` :func:`~episcanpy.load.read_methylation_file` :func:`~episcanpy.ct.make_windows` and  in :mod:`episcanpy.plotting`.
+For visual quality control, see  :func:`~episcanpy.pp.extract_CG` :func:`~episcanpy.ct.read_methylation_file` :func:`~episcanpy.ct.make_windows` and  in :mod:`episcanpy.plotting`.
  in the :doc:`plotting API <plotting>`.
  
  
