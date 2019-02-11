@@ -23,9 +23,9 @@ For visual quality control, see  :func:`~episcanpy.api.load.load_features` :func
 .. autosummary::
    :toctree: .
 
-   load.extract_CH
-   load.extract_CG
-   load.load_features
+   ct.extract_CH
+   ct.extract_CG
+   ct.load_features
 
 
 
