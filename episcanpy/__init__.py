@@ -21,7 +21,7 @@ del get_versions, sys, check_versions, annotate_doc_types
 from . import tools as tl
 from . import preprocessing as pp
 from . import count_matrix as ct
-#from . import functions as functions
+from . import functions as functions
 
 from anndata import AnnData
 from anndata import read_h5ad, read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
