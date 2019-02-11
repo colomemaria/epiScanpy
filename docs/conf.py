@@ -15,8 +15,6 @@ from typing import Optional
 from sphinx.application import Sphinx
 from sphinx.ext import autosummary
 
-#from jinja2.defaults import DEFAULT_FILTERS
-
 import matplotlib  # noqa
 # Don’t use tkinter agg when importing scanpy → … → matplotlib
 matplotlib.use('agg')
@@ -39,7 +37,8 @@ needs_sphinx = '1.7'  # autosummary bugfix
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
+extensions = [
+    'sphinx.ext.autodoc',
 	'sphinx.ext.doctest',
     'sphinx.ext.coverage',
     'sphinx.ext.autosummary',
@@ -48,7 +47,7 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx_autodoc_typehints',
     'sphinx.ext.intersphinx',
-    #'scanpydoc',
+    'scanpydoc',
 ]
 
 # Generate the API documentation when building
