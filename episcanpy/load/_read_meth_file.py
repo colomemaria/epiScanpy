@@ -1,6 +1,3 @@
-from .extract_meth import extract_CG
-from .extract_meth import extract_CH
-
 def read_methylation_file(sample_name, meth_type, head, path, chromosome):
     """
     Read file from which you want to extract the methylation level and
