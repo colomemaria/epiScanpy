@@ -8,13 +8,14 @@ Import Scanpy's high-level API as::
 
    import episcanpy.api as epi
 
-Preprocessing: PP
+Count Matrices: CT
 ------------------
 
-Filtering of highly-variable genes, batch-effect correction, per-cell normalization, preprocessing recipes.
+Loading data, loading annotations, building count matrices, filtering of lowly covered methylation variables.
+Filtering of lowly covered cells.
 
-Basic Preprocessing
-~~~~~~~~~~~~~~~~~~~
+Building Count matrices
+~~~~~~~~~~~~~~~~~~~~~~~
 
 For visual quality control, see  :func:`~episcanpy.api.load.load_features` :func:`~episcanpy.load_features.load_features` :func:`~episcanpy.api.load.extract_CH` and  in :mod:`episcanpy.plotting`.
  in the :doc:`plotting API <plotting>`.
@@ -23,10 +24,30 @@ For visual quality control, see  :func:`~episcanpy.api.load.load_features` :func
 .. autosummary::
    :toctree: .
 
-   ct.extract_CH
-   ct.extract_CG
+   ct.read_methylation_file
    ct.load_features
+   ct.make_windows
+   
+   
 
+Preprocessing: PP
+------------------
+
+Imputing missing data (methylation), filterinf lowly covered cells or variables, correction for batch effect...
+
+Preprocessing
+~~~~~~~~~~~~~
+
+For the sake of testing the readthedocs, see  :func:`~episcanpy.api.load.load_features` :func:`~episcanpy.load_features.load_features` :func:`~episcanpy.api.load.extract_CH` and  in :mod:`episcanpy.plotting`.
+ in the :doc:`plotting API <plotting>`.
+ 
+ 
+.. autosummary::
+   :toctree: .
+
+   pp.extract_CH
+   pp.extract_CG
+   
 
 
 Plotting: PL
@@ -39,29 +60,7 @@ For most tools and for some preprocessing functions, you'll find a plotting func
    :hidden:
    :maxdepth: 1
 
-   plotting
+   whatever
 
 
 
-
-Functions: FUN
---------------
-
-The plotting module :class:`episcanpy.functions` largely parallels the ``tl.*`` and a few of the ``pp.*`` functions.
-For most tools and for some preprocessing functions, you'll find a plotting function with the same name.
-
-.. toctree::
-   :hidden:
-   :maxdepth: 1
-
-   functions
-
-
-
-
-Reading
--------
-
-*Note:* For reading annotation use :ref:`pandas.read_… <pandas:/io.rst#io-tools-text-csv-hdf5>`
-and add it to your :class:`anndata.AnnData` object.
-The following read functions are intended for the numeric data in the data matrix `X`.
