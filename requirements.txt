@@ -3,5 +3,5 @@ matplotlib>=2.2
 pandas>=0.21
 scipy
 seaborn
-tables
+
 
