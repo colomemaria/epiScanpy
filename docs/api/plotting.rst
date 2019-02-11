@@ -1,4 +1,4 @@
 episcanpy.api.plotting
 ======================
 
-This page no longer exists. See :mod:`episcanpy.plotting` instead.
+This  is so dull!! I need to make the real documentation. See :mod:`episcanpy.plotting`.
