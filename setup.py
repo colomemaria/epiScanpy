@@ -1,6 +1,6 @@
 import sys
 if sys.version_info < (3,):
-    sys.exit('scanpy requires Python >= 3.5')
+    sys.exit('episcanpy requires Python >= 3.5')
 from pathlib import Path
 
 from setuptools import setup, find_packages
