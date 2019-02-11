@@ -27,6 +27,10 @@ sys.path.insert(0, str(HERE.parent))
 
 logger = logging.getLogger(__name__)
 
+def setup(app):
+    import six
+    print('Six version: %s' % six.__version__)
+
 
 # -- General configuration ------------------------------------------------
 
