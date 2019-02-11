@@ -1,2 +1,2 @@
-from ._load_features import load_features
-from ._extract import extract_CH, extract_CG
+from ..load._read_meth_file import read_methylation_file
+from ..load._extract import extract_CG, extract_CH
