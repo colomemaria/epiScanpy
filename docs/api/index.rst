@@ -1,4 +1,4 @@
-.. automodule:: episcanpy.api
+.. automodule:: episcanpy
 
 API
 ===
@@ -17,7 +17,7 @@ Filtering of lowly covered cells.
 Building Count matrices
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-For visual quality control, see  :func:`~` :func:`~episcanpy.load._read_meth_file` :func:`~episcanpy.api.ct.make_windows` and  in :mod:`episcanpy.plotting`.
+For visual quality control, see  :func:`~episcanpy.pp.extract_CG` :func:`~episcanpy.load.read_methylation_file` :func:`~episcanpy.ct.make_windows` and  in :mod:`episcanpy.plotting`.
  in the :doc:`plotting API <plotting>`.
  
  
