@@ -1,5 +1,7 @@
 def extract_CG(input_sample, output_variable, head):
     """
+    Description function. 
+    
     Extract relevant information for cytosines covered in a CG context
     It supposes that it is on the same format at the Methylpy/Ecker data
     Parameters
@@ -18,6 +20,8 @@ def extract_CG(input_sample, output_variable, head):
     
 def extract_CH(sample, output_variable, head):
     """
+    Description function. 
+    
     Extract relevant information for cytosines covered in a CH context
     It supposes that it is on the same format at the Methylpy/Ecker data
     Parameters
