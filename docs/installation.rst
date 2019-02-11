@@ -17,3 +17,13 @@ Pull Scanpy from `PyPI <https://pypi.org/project/episcanpy>`__ (consider
 using ``pip3`` to access Python 3)::
 
     pip install episcanpy
+    
+    
+   
+Github
+~~~~~~
+
+you can also (right know it is the only way available) install
+epiScanpy like the following::
+
+    sudo pip install git+https://github.com/DaneseAnna/Episcanpy
