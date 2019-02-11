@@ -5,16 +5,18 @@ from anndata import read_csv, read_excel, read_hdf, read_loom, read_mtx, read_te
 
 from .. import __version__
 
-from . import load
-from . import new_basic_function
-from . import read_meth_file
+#from . import load
+#from . import new_basic_function
+#from . import read_meth_file
 # from ..readwrite import read, read_10x_h5, read_10x_mtx, write, read_params, write_params
 # from . import datasets
 # from . import export_to
 # from . import logging
 # from . import queries
 
-from .. import functions  
+from . import pp
+from . import ct
+
 
 # unfortunately, we cannot put this here as long as we have simple global
 # variables in settings... they couldn't be set in this case...
