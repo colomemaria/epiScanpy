@@ -227,15 +227,4 @@ texinfo_documents = [
 
 # -- Images for plot functions -------------------------------------------------
 
-def api_image(qualname: str) -> str:
-    # I’d like to make this a contextfilter, but the jinja context doesn’t contain the path,
-    # so no chance to not hardcode “api/” here.
-    path = Path(__file__).parent / 'api' / f'{qualname}.png'
-    print(path, path.is_file())
-    return f'.. image:: {path.name}\n   :width: 200\n   :align: right' if path.is_file() else ''
 
-
-# html_context doesn’t apply to autosummary templates ☹
-# and there’s no way to insert filters into those templates
-# so we have to modify the default filters
-DEFAULT_FILTERS['api_image'] = api_image
