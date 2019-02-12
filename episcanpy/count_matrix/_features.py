@@ -1,3 +1,11 @@
+# chromosomes for 2 principal species. If you work with another genome
+# the chromosomes will have to be specified
+# mitochondrial genome not included
+HUMAN = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '2',
+         '20', '21', '22', '3', '4', '5', '6', '7', '8', '9', 'X', 'Y']
+MOUSE = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '2',
+         '3', '4', '5', '6', '7', '8', '9', 'X', 'Y']
+
 def load_features(file_features, chromosomes=HUMAN, path="", sort=False):
     """
     The function load features is here to transform a bed file into a usable 
@@ -65,3 +73,5 @@ def make_windows(size, chromosomes=HUMAN, max_length=1000000000):
     for c in chromosomes:
         features_chrom[c] = [[start[i], end[i], ''.join(["chr_", c, "_", str(i)])] for i in range(len(end))]
     return(features_chrom)
+
+
