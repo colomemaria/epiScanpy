@@ -1,3 +1,21 @@
+import numpy as np
+from numpy import NaN
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set(color_codes=True)
+
+
+# chromosomes for 2 principal species. If you work with another genome
+# the chromosomes will have to be specified
+HUMAN = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '2',
+         '20', '21', '22', '3', '4', '5', '6', '7', '8', '9', 'X', 'Y']
+MOUSE = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '2',
+         '3', '4', '5', '6', '7', '8', '9', 'X', 'Y']
+# my favorite dataset ;-)
+HEAD_Ecker = ['chr', 'pos', 'strand', 'mc_class', 'mc_count', 'total', 'methylated\n']
+
+
+
 def methylation_level(reduced_cyt, feature, chromosome, threshold=1):
     """
     Measure the methylation for the feature you give as input using the reduce
