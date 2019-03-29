@@ -1,1 +1,40 @@
 .DS_Store
+docs/_build
+docs/api/episcanpy.api.*.rst
+docs/api/episcanpy.*.rst
+!docs/api/episcanpy.api.rst
+!docs/api/episcanpy.api.AnnData.rst
+!docs/api/episcanpy.plotting.rst
+.pytest_cache/
+.episcanpy
+.coverage
+figures/
+cache/
+coverage.xml
+episcanpy.egg-info/
+README.html
+
+# always-ignore extensions
+*~
+
+# Python / Byte-compiled / optimized / DLL
+__pycache__/
+episcanpy/__pycache__/
+*.py[cod]
+*.so
+.cache
+
+# OS or Editor files and folders
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+.directory
+/.idea/
+
+# always-ignore directories
+/dist/
+/build/
+/_build/
+/_static/
+/_templates/
+/__pycache__/
