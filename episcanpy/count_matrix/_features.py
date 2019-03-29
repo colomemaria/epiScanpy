@@ -52,7 +52,6 @@ def load_features(file_features, chromosomes=HUMAN, path="", sort=False):
             
     return(features_chrom)
 
-
 def make_windows(size, chromosomes=HUMAN, max_length=1000000000):
     """
     Generate windows/bins of the given size for the appropriate genome (default
@@ -75,3 +74,29 @@ def make_windows(size, chromosomes=HUMAN, max_length=1000000000):
     return(features_chrom)
 
 
+def size_feature_norm(loaded_feature, size):
+    for key in loaded_feature.keys():
+        for i in range(len(loaded_feature[key])):
+            length = loaded_feature[key][i][1] - loaded_feature[key][i][0]
+            add_length = size - length
+            if add_length%2 == 1:
+                loaded_feature[key][i][0] = loaded_feature[key][i][0] - add_length//2 -1
+                loaded_feature[key][i][1] = loaded_feature[key][i][1] + add_length//2
+            else:
+                loaded_feature[key][i][0] = loaded_feature[key][i][0] - add_length//2
+                loaded_feature[key][i][1] = loaded_feature[key][i][1] + add_length//2
+                
+def plot_size_features(loaded_feature, bins=50, return_length=False):
+    length = []
+    for key in loaded_feature.keys():
+        for line in loaded_feature[key]:
+            length.append(line[1] - line[0])
+        
+    np.histogram(length)
+    plt.hist(length, bins)
+    plt.show
+    if return_length:
+        return(length)
+    
+    
+    

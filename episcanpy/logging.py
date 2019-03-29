@@ -3,7 +3,7 @@
 
 import time as time_module
 import datetime
-from anndata import logging
+#from anndata import logging
 from . import settings
 
 
@@ -128,10 +128,10 @@ def _sec_to_str(t):
                [(t*100,), 100, 60, 60])
 
 
-print_memory_usage = logging.print_memory_usage
+#print_memory_usage = logging.print_memory_usage
 
 
-get_memory_usage = logging.get_memory_usage
+#get_memory_usage = logging.get_memory_usage
 
 
 def get_passed_time():
@@ -143,7 +143,7 @@ def get_passed_time():
 
 def print_version_and_date():
     from . import __version__
-    _write_log('Running Scanpy', __version__, 'on {}.'.format(get_date_string()))
+    _write_log('Running epiScanpy', __version__, 'on {}.'.format(get_date_string()))
 
 
 _DEPENDENCIES_NUMERICS = [

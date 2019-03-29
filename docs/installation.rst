@@ -26,4 +26,4 @@ Github
 you can also (right know it is the only way available) install
 epiScanpy like the following::
 
-    sudo pip install git+https://github.com/DaneseAnna/Episcanpy
+    pip install git+https://github.com/DaneseAnna/epiScanpy

@@ -6,10 +6,12 @@
 .. include:: ../README.rst
    :end-line: 24
 
-Report issues and see the code on `GitHub <https://github.com/AnnaDanese/episcanpy>`__.
+Report issues and see the code on `GitHub <https://github.com/AnnaDanese/epiScanpy>`__.
 
 If Scanpy is useful for your research, consider citing `Genome Biology (2018) <https://doi.org/10.1186/s13059-017-1382-0>`__.
 When Episcanpy is released... Well cite Episcanpy too.
+
+We are now working on the introduction
 
 .. include:: release_notes.rst
 

@@ -1,9 +1,8 @@
 Usage Principles
 ----------------
 
-We reuse a lot of the Scanpy functions "out of the box". To this end we need to import Scanpy and Anndata
 
-Import the Scanpy API as::
+Import the epiScanpy API as::
 
     import episcanpy.api as epi
     import anndata as ad
@@ -12,7 +11,7 @@ Workflow
 ^^^^^^^^
 
 First we need to build the count matrix. It requires (sometimes) -omic specific functions.
-Preprocessing functions are therefore divides into 2 categories: ``epi.ch`` for single cell ATAC data and ``epi.mt`` for the methylation data.
+All the functions to build the count matrices (that are either for ATAC, methylation or other) will  use ``epi.ct``
 
 When it comes to calculationg tSNE, UMAP, PCA etc. we take advantage of the shared datastructure with scanpy and we can use most (if not all) Scanpy functions
 

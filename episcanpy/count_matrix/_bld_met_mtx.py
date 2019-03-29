@@ -1,9 +1,5 @@
 import numpy as np
 from numpy import NaN
-import matplotlib.pyplot as plt
-import seaborn as sns
-sns.set(color_codes=True)
-
 
 # chromosomes for 2 principal species. If you work with another genome
 # the chromosomes will have to be specified
