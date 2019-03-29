@@ -12,9 +12,14 @@ try:
 except ImportError:  # Deps not yet installed
     __author__ = __email__ = ''
 
+# extract version
+with open(os.path.join(os.path.dirname(__file__), "episcanpy", "version.py")) as f:
+    version = f.read().split("\n")[0].split("=")[-1].strip(' ').strip('"')
+
 setup(
     name='episcanpy',
-    version=versioneer.get_version(),
+    #version=versioneer.get_version(),
+    version=version,
     cmdclass=versioneer.get_cmdclass(),
     description='Epigenomics Single-Cell Analysis in Python.',
     long_description=Path('README.rst').read_text('utf-8'),
