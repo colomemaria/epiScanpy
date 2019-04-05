@@ -142,7 +142,7 @@ html_theme_options = dict(
 
 html_context = dict(
     display_github=True,      # Integrate GitHub
-    github_user='AnnaDanese',   # Username
+    github_user='colomemaria',   # Username
     github_repo='epiScanpy',     # Repo name
     github_version='master',  # Version
     conf_py_path='/docs/',    # Path in the checkout to the docs root
