@@ -1,4 +1,4 @@
-import sys
+import sys, os
 if sys.version_info < (3,):
     sys.exit('epiScanpy requires Python >= 3.5')
 from pathlib import Path
