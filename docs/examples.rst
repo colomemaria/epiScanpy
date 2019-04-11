@@ -7,13 +7,24 @@ Tutorials
 single cell ATAC
 ----------------
 
-Currently, for getting started, we recommend `Scanpy's reimplementation <https://nbviewer.jupyter.org/github/theislab/scanpy_usage/blob/master/170505_seurat/seurat.ipynb>`__ of Seurat's [Satija15]_ clustering tutorial 2700 PBMCs from 10x Genomics, containing preprocessing, clustering and the identification of cell types via known marker genes.
+For getting started, we recommend epiScanpy's adaptation PBMC clustering tutorial of `Scanpy's to the 10k PBMCs from 10x Genomics. The tutorial focus on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. tutorial here_ 
 
-You might compare this to `clustering 68K PBMCs <https://nbviewer.jupyter.org/github/theislab/scanpy_usage/blob/master/170503_zheng17/zheng17.ipynb>`__ as it would be done in Cell Ranger [Zheng17]_.
+
 
 .. raw:: html
 
-   <img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/filter_genes_dispersion.png" style="width: 100px"><img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/louvain.png" style="width: 100px"><img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/NKG7.png" style="width: 100px"><img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/violin.png" style="width: 100px"><img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/cell_types.png" style="width: 200px">
+   <img src="https://github.com/colomemaria/epiScanpy/blob/master/pbmc_PCA_coverage.png" style="width: 100px"><img
+   <img src="https://github.com/colomemaria/epiScanpy/blob/master/pbmc_umap.png" style="width: 100px"><img
+   <img src="https://github.com/colomemaria/epiScanpy/blob/master/pbmc_diffmap.png" style="width: 100px"><img
+   
+   
+Soon available, there will be a tutorial on clustering comparison between peak and enhancer based count matrices usinf prefrontal cortex data from the Cusanovich mouse ATAC atlas (ref Cusanovich mouse atlas paper).
+
+.. raw:: html
+
+   <img src="https://github.com/colomemaria/epiScanpy/blob/readthedocs/docs/umap.png" style="width: 100px"><img
+   <img src="https://github.com/colomemaria/epiScanpy/blob/readthedocs/docs/heatmap.png" style="width: 100px"><img
+
 
 
 ------------
@@ -21,16 +32,12 @@ You might compare this to `clustering 68K PBMCs <https://nbviewer.jupyter.org/gi
 Single cell methylation
 -----------------------
 
-For trajectory inference on complex datasets, we offer several examples `here <https://github.com/theislab/paga>`__. Get started `here <https://nbviewer.jupyter.org/github/theislab/paga/blob/master/blood/paul15/paul15.ipynb>`__ for the following result on hematopoiesis.
+Soon a tutorial on windows based methylation data analysis using the publicly available data from Luo et al. (Ecker lab).
+Another tutorial will arrive as a follow up comparing promoters and enhancers in frontal cortex brain.
 
 .. raw:: html
 
-   <img src="http://www.falexwolf.de/img/paga_paul15.png" style="width: 450px">
-
-You can extend this to multi-resolution analyses of whole animals, such as `here <https://nbviewer.jupyter.org/github/theislab/paga/blob/master/planaria/planaria.ipynb>`__.
-
-.. raw:: html
-
-   <img src="http://www.falexwolf.de/img/paga_planaria.png" style="width: 350px">
-
-The PAGA method behind this is described `here <https://rawgit.com/falexwolf/paga_paper/master/paga.pdf>`__ and can be cited using this `doi <https://doi.org/10.1101/208819>`__. As a reference for simple pseudotime analyses, we provide the diffusion pseudotime analyses of [Haghverdi16]_ for two hematopoiesis datasets: `here <https://nbviewer.jupyter.org/github/theislab/scanpy_usage/blob/master/170502_paul15/paul15.ipynb>`__ for [Paul15]_ and `here <https://nbviewer.jupyter.org/github/theislab/scanpy_usage/blob/master/170501_moignard15/moignard15.ipynb>`__ for [Moignard15]_.
+   <img src="https://github.com/colomemaria/epiScanpy/blob/master/umap_markers_hodology_ecker.png" style="width: 450px">
+   
+   
+.. _tutorialhere: https://github.com/colomemaria/epiScanpy/blob/readthedocs/docs/beta_tutorial_10x_pbmc.html
