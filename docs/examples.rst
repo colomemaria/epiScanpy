@@ -7,7 +7,7 @@ Tutorials
 single cell ATAC
 ----------------
 
-For getting started, we recommend `epiScanpy's adaptation PBMC clustering tutorial of `Scanpy's to the 10k PBMCs from 10x Genomics. The tutorial focus on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. tutorial `here_ 
+For getting started, we recommend epiScanpy's adaptation PBMC clustering tutorial of `Scanpy's to the 10k PBMCs from 10x Genomics. The tutorial focus on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. tutorial here_ 
 
 
 
