@@ -19,9 +19,9 @@ To see Scanpy usage principles: <https://scanpy.readthedocs.io/en/latest/basic_u
 
 
 The typical workflow consists of subsequent calls of ATAC specific processing tools
-in ``epi.ch``, e.g.::
+in ``epi.ct``, e.g.::
 
-    epi.ch.load_features(file_features, **tool_params)  # to load annotation files (bad example as it works the same for mt
+    epi.ct.load_features(file_features, **tool_params)  # to load annotation files (bad example as it works the same for mt
 
 where ``adata`` is an :class:`~anndata.AnnData` object. Each of these calls adds annotation to an expression matrix *X*, which stores *n_obs* observations (cells) of *n_vars* variables (genes). For each tool, there typically is an associated plotting function in ``sc.pl``::
 
