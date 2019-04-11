@@ -19,18 +19,22 @@ Soon available, there will be a tutorial on clustering comparison between peak a
 
 .. raw:: html
 
-   <img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/filter_genes_dispersion.png" style="width: 100px"><img 
+   <img src="https://github.com/colomemaria/epiScanpy/blob/master/pbmc_diffmap.png" style="width: 100px"><img
+   <img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/louvain.png" style="width: 100px"><img 
+   <img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/louvain.png" style="width: 100px"><img 
+
 
 ------------
 
 Single cell methylation
 -----------------------
 
-For trajectory inference on complex datasets, we offer several examples `here <https://github.com/theislab/paga>`__. Get started `here <https://nbviewer.jupyter.org/github/theislab/paga/blob/master/blood/paul15/paul15.ipynb>`__ for the following result on hematopoiesis.
+Soon a tutorial on windows based methylation data analysis using the publicly available data from Luo et al. (Ecker lab).
+Another tutorial will arrive as a follow up comparing promoters and enhancers in frontal cortex brain.
 
 .. raw:: html
 
-   <img src="http://www.falexwolf.de/img/paga_paul15.png" style="width: 450px">
+   <img src="https://github.com/colomemaria/epiScanpy/blob/master/umap_markers_hodology_ecker.png" style="width: 450px">
    
    
 .. _tutorialhere: https://github.com/colomemaria/epiScanpy/blob/readthedocs/docs/beta_tutorial_10x_pbmc.html
