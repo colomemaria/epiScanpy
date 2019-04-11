@@ -12,7 +12,7 @@
 Episcanpy – Epigenomics single cell analysis in python
 ============================================
 
-**Episcanpy** is a toolkit to analyse single cell chromatin (ATACseq) and methylation (BSseq) data.
+**Episcanpy** is a toolkit to analyse single cell open chromatin (ATACseq) and methylation (BSseq) data.
 
 The documentation of epiScanpy is available at <https://episcanpy.readthedocs.io/en/latest/>
 If epiScanpy is useful to your research, consider citing epiScanpy (`Biorxiv_link_`)
