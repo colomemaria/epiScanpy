@@ -10,6 +10,9 @@ installing Miniconda_ (see `Installing Miniconda`_). Then run::
     conda install seaborn scikit-learn statsmodels numba
     conda install -c conda-forge python-igraph louvain
     conda create -n scanpy python=3.6 scanpy
+    
+Finally, run::  
+    conda install episcanpy
 
 
 
@@ -26,4 +29,4 @@ Github
 you can also (right know it is the only way available) install
 epiScanpy like the following::
 
-    pip install git+https://github.com/DaneseAnna/epiScanpy
+    pip install git+https://github.com/colomemaria/epiScanpy
