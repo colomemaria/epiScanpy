@@ -10,10 +10,10 @@ Import the epiScanpy API as::
 Workflow
 ^^^^^^^^
 
-First we need to build the count matrix. It requires (sometimes) -omic specific functions.
+First step is to build the count matrix. It requires -omic specific approaches as the data have -omic specific limitations.
 All the functions to build the count matrices (that are either for ATAC, methylation or other) will  use ``epi.ct``
 
-When it comes to calculationg tSNE, UMAP, PCA etc. we take advantage of the shared datastructure with scanpy and we can use most (if not all) Scanpy functions
+When it comes to calculationg tSNE, UMAP, PCA etc. we take advantage of the shared datastructure with scanpy and we can use most (if not all) Scanpy functions.
 
 To see Scanpy usage principles: <https://scanpy.readthedocs.io/en/latest/basic_usage.html>`__.
 
@@ -27,11 +27,13 @@ where ``adata`` is an :class:`~anndata.AnnData` object. Each of these calls adds
 
     sc.pl.tsne(adata, **plotting_params)
     
-And, just because I can, I will inserate a "random" figure. Truth being told,I would like to put the final pipeline.
 
 .. raw:: html
 
-   <img src="http://falexwolf.de/img/scanpy_usage/170505_seurat/filter_genes_dispersion.png" style="width: 100px"><img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px"><img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px"><img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px"><img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 200px">
+   <img      src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
+   <img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
+   <img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
+   <img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 200px">
 
 
 
