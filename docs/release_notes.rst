@@ -9,7 +9,7 @@
 .. role:: smaller
 
 
-Version 0.0.1 :small:`February 5, 2019`
+Version 0.0.1 :small:`April 15, 2019`
 --------------------------------------
 
-made public (still working on it)
+Currently beta release.
