@@ -23,8 +23,11 @@ def coverage_cells(adata, bins=50, key_added=None):
 def commoness_features(adata, threshold=None, bw=0.5, key_added=None):
     if key_added == None:
         key_added='commonness'
+    
+    adata_tmp = adata.copy()
+    adata_tmp = adata_tmp.transpose()
     common = []
-    matrix = np.matrix(adata.X)
+    matrix = np.matrix(adata_tmp.X)
     matrix = matrix.transpose()
     matrix = matrix.tolist()
     for var in matrix:
