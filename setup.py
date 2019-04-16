@@ -18,8 +18,8 @@ with open(os.path.join(os.path.dirname(__file__), "episcanpy", "version.py")) as
 
 setup(
     name='episcanpy',
-    #version=versioneer.get_version(),
-    version=version,
+    version=versioneer.get_version(),
+    #version=version,
     cmdclass=versioneer.get_cmdclass(),
     description='Epigenomics Single-Cell Analysis in Python.',
     long_description=Path('README.rst').read_text('utf-8'),
