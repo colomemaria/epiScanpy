@@ -15,9 +15,10 @@ Report issues and see the code on `GitHub <https://github.com/AnnaDanese/epiScan
 .. toctree::
    :maxdepth: 1
    :hidden:
-
+   
    examples
    basic_usage
+   System_Requirements
    installation
    api/index
    references
