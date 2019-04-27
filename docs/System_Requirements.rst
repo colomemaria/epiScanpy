@@ -13,13 +13,25 @@ Software requirements
 This package is supported for *macOS* and *Linux*. The package has been tested on the following systems:
 + macOS: Mojave (10.14.1)
 
+
+
 Python Dependencies
 ~~~~~~~~~~~~~~~~~~~
-``epiScanpy`` depends on the Python scientific stack.::
+EpiScanpy require a working version of ``Python`` (>= 3.5)
 
+Additionally, this package ``epiScanpy`` depends on other Python dependencies and packages.::
+
+  anndata
+  matplotlib
   numpy
   pandas
+  pyliftOver
   scanpy
   scipy
   scikit-learn
   seaborn
+  
+  
+  
+  
+
