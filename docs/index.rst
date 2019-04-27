@@ -15,7 +15,7 @@ Report issues and access the code on `GitHub <https://github.com/AnnaDanese/epiS
 .. toctree::
    :maxdepth: 1
    :hidden:
-
+   
    examples
    basic_usage
    System_Requirements

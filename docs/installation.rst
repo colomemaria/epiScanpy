@@ -30,4 +30,3 @@ you can also (right know it is the only way available) install
 epiScanpy like the following::
 
     pip install git+https://github.com/colomemaria/epiScanpy
-
