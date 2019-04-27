@@ -6,7 +6,7 @@
 .. include:: ../README.rst
    :end-line: 24
 
-Report issues and see the code on `GitHub <https://github.com/AnnaDanese/epiScanpy>`__.
+Report issues and access the code on `GitHub <https://github.com/AnnaDanese/epiScanpy>`__.
 
 .. include:: release_notes.rst
 
