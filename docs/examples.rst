@@ -9,10 +9,6 @@ single cell ATAC
 
 For getting started, we recommend epiScanpy's adaptation PBMC clustering tutorial of `Scanpy's to the 10k PBMCs from 10x Genomics. The tutorial focus on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. tutorial here_ 
 
-
-.. image:: https://github.com/colomemaria/epiScanpy/blob/master/pbmc_PCA_coverage.png?branch=master
-   :target: https://github.com/colomemaria/epiScanpy/
-   
 .. raw:: html
 
    <img src="https://github.com/colomemaria/epiScanpy/blob/master/pbmc_PCA_coverage.png" style="width: 100px"><img
