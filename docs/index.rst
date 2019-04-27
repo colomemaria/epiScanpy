@@ -18,6 +18,7 @@ Report issues and access the code on `GitHub <https://github.com/AnnaDanese/epiS
 
    examples
    basic_usage
+   System_Requirements
    installation
    api/index
    references
