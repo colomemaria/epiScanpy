@@ -1,6 +1,9 @@
 import anndata as ad
 import scanpy.api as sc
 from anndata import AnnData
+import numpy as np
+import sklearn.datasets
+
 
 def normal_blobs(n_variables=11, n_centers=5, cluster_std=1.0, n_observations=640) -> AnnData:
     """Gaussian Blobs, ATAC.
