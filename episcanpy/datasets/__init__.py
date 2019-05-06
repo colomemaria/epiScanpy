@@ -2,7 +2,6 @@ import anndata as ad
 import scanpy.api as sc
 from anndata import AnnData
 import numpy as np
-import sklearn.datasets
 
 
 def normal_blobs(n_variables=11, n_centers=5, cluster_std=1.0, n_observations=640) -> AnnData:
@@ -31,11 +30,8 @@ def normal_blobs(n_variables=11, n_centers=5, cluster_std=1.0, n_observations=64
                                        random_state=0)
     return AnnData(X, obs={'blobs': y.astype(str)})
 
-from anndata import AnnData
-import numpy as np
-import sklearn.datasets
 
-def bad_atac_sim(n_variables=5000, n_centers=4, cluster_std=2.0, n_observations=3000, dropouts=None)
+def bad_atac_sim(n_variables=5000, n_centers=4, cluster_std=2.0, n_observations=3000, dropout=None):
     """
     Generate isotropic Gaussian blobs from sklearn 'make_blobs' for clustering. The data are then binarised
     and we account for dropout. 
@@ -47,7 +43,7 @@ def bad_atac_sim(n_variables=5000, n_centers=4, cluster_std=2.0, n_observations=
     
     return a not annotated adata mastrix
     """
-    
+    import sklearn.datasets
     X, y = sklearn.datasets.make_blobs(n_samples=n_observations,
                                        n_features=n_variables,
                                        centers=n_centers,
@@ -56,8 +52,8 @@ def bad_atac_sim(n_variables=5000, n_centers=4, cluster_std=2.0, n_observations=
                                        random_state=0)
     adata = AnnData(X, obs={'blobs': y.astype(str)})
 
-    if dropout=None or dropout = 0.5:
-        threshold = np.median(adata.X)  
+    if (dropout==None) or (dropout == 0.5):
+        threshold == np.median(adata.X)  
     elif dropout>=1:
         threshold=np.amax(adata.X)
     elif dropout>=0.5:
@@ -70,32 +66,6 @@ def bad_atac_sim(n_variables=5000, n_centers=4, cluster_std=2.0, n_observations=
     adata.X = (adata.X > threshold).astype(np.int_)
 
     return (adata)
-
-def meth_blobs(n_variables=11, n_centers=5, cluster_std=1.0, n_observations=640) -> AnnData:
-    """Gaussian Blobs, methylation levels.
-    Parameters
-    ----------
-    n_variables : `int`, optional (default: 11)
-        Dimension of feature space.
-    n_centers : `int`, optional (default: 5)
-        Number of cluster centers.
-    cluster_std : `float`, optional (default: 1.0)
-        Standard deviation of clusters.
-    n_observations : `int`, optional (default: 640)
-        Number of observations. By default, this is the same observation number as in
-        ``sc.datasets.krumsiek11()``.
-    Returns
-    -------
-    Annotated data matrix containing a observation annotation 'blobs' that
-    indicates cluster identity.
-    """
-    import sklearn.datasets
-    X, y = sklearn.datasets.make_blobs(n_samples=n_observations,
-                                       n_features=n_variables,
-                                       centers=n_centers,
-                                       cluster_std=cluster_std,
-                                       random_state=0)
-    return AnnData(X, obs={'blobs': y.astype(str)})
 
 #############################################
 def sim_atac(nb_cells=None, nb_features=None, nb_cell_type=None):
