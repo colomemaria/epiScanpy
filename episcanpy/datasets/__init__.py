@@ -53,11 +53,11 @@ def bad_atac_sim(n_variables=5000, n_centers=4, cluster_std=2.0, n_observations=
     adata = AnnData(X, obs={'blobs': y.astype(str)})
 
     if (dropout==None) or (dropout == 0.5):
-        threshold == np.median(adata.X)  
+        threshold = np.median(adata.X)  
     elif dropout>=1:
-        threshold=np.amax(adata.X)
+        threshold = np.amax(adata.X)
     elif dropout>=0.5:
-        threshold=np.amax(adata.X)*dropout
+        threshold = np.amax(adata.X)*dropout
     elif dropout<=0:
         threshold = 0
     else:
