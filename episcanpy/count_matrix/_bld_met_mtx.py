@@ -420,3 +420,47 @@ def make_list(dico):
     for c in sorted(dico.keys()):
         final_list += dico[c]
     return final_list
+
+
+def build_count_mtx(cells, annotation, path="", output_file=None, writing_option="w",
+                    meth_context="CG", chromosome=MOUSE, feature_names=None,
+                   thereshold=1, ct_mtx=None, sparse=False):
+    """
+        build count matrix. It either write the count matrix if given an output file. Otherwise it return 
+        the count matrix as a variable (numpy matrix). 
+        If you want to add cells. you put the initial matrix as ct_mtx or you specify the matrix to write +
+        writing option = a
+        
+        if you want to write down the matrix as a sparse matrix you have to specify it (not implented yet)
+        
+        I need to pay attention to where I am writing the output file.
+        
+        Also, verbosity..
+    """
+    
+    i = 0
+    ct_mtx = np.matrix()
+    for cell in cells:
+        # verbosity
+        print(i, cell)
+        i += 1
+        if meth_context == 'CG':
+            tmp_file = read_meth_fileCG(cell, path, chromosome)
+        elif meth_context == 'CH':
+            tmp_file = read_meth_fileCH(cell, path, chromosome)
+        else:
+            break
+        meth_level_annot = methylation_level(tmp_file, annotation, chromosome)
+        prep_annot = prep_methlevels(meth_level_annot, cell, threshold)
+        if output_file != None:
+            write_methlevel(prep_annot, output_file, writing_option, feature_names)
+        else:
+            if ct_mtx != None:
+                ct_mtx = np.vstack([ct_mtx, prep_annot])
+            else:
+                ct_mtx = np.matrix(prep_annot)
+                
+    if output_file == None:
+        return(ct_mtx)
+    else:
+        return()
