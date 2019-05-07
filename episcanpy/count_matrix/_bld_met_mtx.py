@@ -421,27 +421,60 @@ def make_list(dico):
         final_list += dico[c]
     return final_list
 
-
-def build_count_mtx(cells, annotation, path="", output_file=None, writing_option="w",
+def build_count_mtx(cells, annotation, path="", output_file=None, writing_option="a",
                     meth_context="CG", chromosome=MOUSE, feature_names=None,
                    thereshold=1, ct_mtx=None, sparse=False):
     """
-        build count matrix. It either write the count matrix if given an output file. Otherwise it return 
-        the count matrix as a variable (numpy matrix). 
-        If you want to add cells. you put the initial matrix as ct_mtx or you specify the matrix to write +
-        writing option = a
+    Build methylation count matrix for a given annotation.
+    It either write the count matrix (if given an output file) or return it as a variable (numpy matrix). 
+    If you want to add cells to an already existing matrix (with the same annotations),  you put the initial matrix as ct_mtx or you specify the matrix to write +
+    writing option = a
         
-        if you want to write down the matrix as a sparse matrix you have to specify it (not implented yet)
+    if you want to write down the matrix as a sparse matrix you have to specify it (not implented yet)
         
-        I need to pay attention to where I am writing the output file.
+    I need to pay attention to where I am writing the output file.
         
-        Also, verbosity..
+    Also, verbosity..
+        
+    Pay attention, it does not average variables. If you want to process many small features such as
+    tfbs, we advise to use the dedicated function.
+        
+    Parameters
+    ----------
+    cells:
+        list of the file names to read to build the count matrix.
+    annotation:
+        loaded annotation to use to build the count matrix
+        'str' or 'list' depending of the number of matrices to build
+    path:
+        path to the input data. 
+    output_file:
+        name files to write. 'str' or 'list' depending of the number of matrices to build
+    writing_option:
+        either 'w' if you want to erase potentialy already existing file or 'a' to append.
+        'str' or 'list' if youi have a list of matrices and the writing options are differents
+    meth_context:
+        read methylation in 'CG' of 'CH' context
+    chromosome:
+        'MOUSE' and 'HUMAN' (without mitochondrial genome) or list with chromosomes.
+    feature_names:
+        If you want to write down the name of the annotation features. 
+    thereshold:
+        the minimum of cytosines covered per annotation to calculate a methylation level.
+        default=1 'Int'
+    ct_mtx:
+        numpy matrix containing the same set of annotations and for which you want to append.
+        default: None
+    sparse:
+        Boolean, writing option as a normal or sparse matrix.
+        default: False
+    
     """
     
     i = 0
     ct_mtx = np.matrix()
     for cell in cells:
-        # verbosity
+        #verbiosity
         print(i, cell)
         i += 1
         if meth_context == 'CG':
@@ -450,10 +483,10 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
             tmp_file = read_meth_fileCH(cell, path, chromosome)
         else:
             break
-        meth_level_annot = methylation_level(tmp_file, annotation, chromosome)
-        prep_annot = prep_methlevels(meth_level_annot, cell, threshold)
+        meth_level_annot = methylation_level(tmp_file, annotation, chromosome, threshold)
+        
         if output_file != None:
-            write_methlevel(prep_annot, output_file, writing_option, feature_names)
+            write_methlevel(prep_annot, output_file, cell, writing_option, feature_names)
         else:
             if ct_mtx != None:
                 ct_mtx = np.vstack([ct_mtx, prep_annot])
