@@ -7,7 +7,7 @@ from .. import __version__
 
 from . import pp
 from . import tl
-from . import functions
+#from . import functions
 from . import ct
 from . import pl
 
@@ -26,19 +26,29 @@ Count Matrices: CT
 Loading data, loading annotations, building count matrices, filtering of lowly covered methylation variables.
 Filtering of lowly covered cells.
 
+Load & Generate Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+To load known annotations of the genome to build count matrices. Or, to generate non-overlapping windows of different sizes.
+
+.. autosummary::
+   :toctree: .
+   
+   ct.load_features
+   ct.make_windows
+   ct.size_feature_norm
+   ct.plot_size_features
+
 Building Count matrices
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-For visual quality control, see  :func:`~episcanpy.pp.extract_CG` :func:`~episcanpy.load.read_methylation_file` :func:`~episcanpy.ct.make_windows` and  in :mod:`episcanpy.plotting`.
- in the :doc:`plotting API <plotting>`.
- 
+To build the count matrix (based on annotations or windows)
  
 .. autosummary::
    :toctree: .
 
-   ct.read_methylation_file
-   ct.load_features
-   ct.make_windows
+   ct.build_count_mtx
+   ct.read_cyt_summary
    
 
 Preprocessing: PP
@@ -46,30 +56,71 @@ Preprocessing: PP
 
 Imputing missing data (methylation), filterinf lowly covered cells or variables, correction for batch effect...
 
+Loading the data
+~~~~~~~~~~~~~~~~
+
+.. autosummary::
+   :toctree: .
+   
+   pp.readandimputematrix
+
+Quality Controls
+~~~~~~~~~~~~~~~~
+
+.. autosummary::
+   :toctree: .
+   
+   pp.coverage_cells
+   pp.commoness_features
+
+
 Preprocessing
 ~~~~~~~~~~~~~
-
-For the sake of testing the readthedocs, see  :func:`~episcanpy.api.load.load_features` :func:`~episcanpy.load_features.load_features` :func:`~episcanpy.api.load.extract_CH` and  in :mod:`episcanpy.plotting`.
- in the :doc:`plotting API <plotting>`.
  
  
 .. autosummary::
    :toctree: .
-
-   pp.extract_CH
-   pp.extract_CG
    
+   pp.binarize
+   pp.lazy
 
+
+Tools: TL
+---------
+
+These functions should probably be in preprocessing
+.. autosummary::
+   :toctree: .
+
+   tl.read_ATAC
+   tl.readandimputematrix
+   tl.read_MET
+   
+   
+tl.lazy should be there and not in preprocessing
+
+.. autosummary::
+   :toctree: .
+   tl.lazy
+   tl. rank_features
+   tl.silhouette
 
 Plotting: PL
 ------------
 
-The plotting module :class:`episcanpy.plotting` largely parallels the ``tl.*`` and a few of the ``pp.*`` functions.
-For most tools and for some preprocessing functions, you'll find a plotting function with the same name.
+Most of the functions that actually produce plot.
+
+I need to put back the coverage and commonness functions from above (or a "plotting onluy' equivalent).
 
 .. toctree::
    :hidden:
    :maxdepth: 1
 
-   whatever
+   pl.plot_rank_features
+   pl.overlap_heatmap
+   pl.prct_overlap
+   pl.silhouette
+   pl.silhouette_tot
+   
+   
 """
