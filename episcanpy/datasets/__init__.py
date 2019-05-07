@@ -75,7 +75,7 @@ def sim_atac(nb_cells=None, nb_features=None, nb_cell_type=None):
     -------
     ATACseq binary data matrix.
     """
-    mport sklearn.datasets
+    import sklearn.datasets
     X, y = sklearn.datasets.make_blobs(n_samples=n_observations,
                                        n_features=n_variables,
                                        centers=n_centers,
