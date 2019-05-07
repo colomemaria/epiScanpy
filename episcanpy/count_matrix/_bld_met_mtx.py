@@ -423,7 +423,7 @@ def make_list(dico):
 
 def build_count_mtx(cells, annotation, path="", output_file=None, writing_option="a",
                     meth_context="CG", chromosome=MOUSE, feature_names=None,
-                   thereshold=1, ct_mtx=None, sparse=False):
+                   threshold=1, ct_mtx=None, sparse=False):
     """
     Build methylation count matrix for a given annotation.
     It either write the count matrix (if given an output file) or return it as a variable (numpy matrix). 
@@ -452,16 +452,17 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         name files to write. 'str' or 'list' depending of the number of matrices to build
     writing_option:
         either 'w' if you want to erase potentialy already existing file or 'a' to append.
-        'str' or 'list' if youi have a list of matrices and the writing options are differents
+        'str' or 'list' if you have a list of matrices and the writing options are differents
     meth_context:
         read methylation in 'CG' of 'CH' context
     chromosome:
         'MOUSE' and 'HUMAN' (without mitochondrial genome) or list with chromosomes.
     feature_names:
         If you want to write down the name of the annotation features. 
+        'Int' (or 'list' if you have multiple annotations)
     thereshold:
         the minimum of cytosines covered per annotation to calculate a methylation level.
-        default=1 'Int'
+        default=1 'Int' (or 'list' if you have multiple annotations with different thresholds)
     ct_mtx:
         numpy matrix containing the same set of annotations and for which you want to append.
         default: None
@@ -470,30 +471,49 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         default: False
     
     """
-    
+    #verbosity
     i = 0
-    ct_mtx = np.matrix()
+    
+    #################################
+    if type(annotation) != list:
+        annotation = [annotation]
+        output_file = [output_file]
+        ct_mtx = [ct_mtx]
+        feature_names = [feature_names]
+        
+    nb_annotation = len(annotation)
+    
+    if type(writing_option) != list:
+        writing_option = [writing_option for x in range(nb_annotation)]
+    if type(threshold) != list:
+        threshold =[threshold for x in range(nb_annotation)]
+        
+    #################################
     for cell in cells:
-        #verbiosity
+        #verbosity
         print(i, cell)
         i += 1
+        
+        # read the file to extract cytosines in the right context
         if meth_context == 'CG':
             tmp_file = read_meth_fileCG(cell, path, chromosome)
         elif meth_context == 'CH':
             tmp_file = read_meth_fileCH(cell, path, chromosome)
         else:
             break
-        meth_level_annot = methylation_level(tmp_file, annotation, chromosome, threshold)
         
-        if output_file != None:
-            write_methlevel(prep_annot, output_file, cell, writing_option, feature_names)
-        else:
-            if ct_mtx != None:
-                ct_mtx = np.vstack([ct_mtx, prep_annot])
+        # build the cell vector for the count matrix at every set of annotations
+        for index_annot in range(nb_annotation):
+            meth_level_annot = methylation_level(tmp_file, annotation[index_annot], chromosome, threshold[index_annot])
+            if output_file[index_annot] != None:
+                write_methlevel(prep_annot, output_file, cell, writing_option[index_annot], feature_names[index_annot])
             else:
-                ct_mtx = np.matrix(prep_annot)
+                if ct_mtx[index_annot] != None:
+                    ct_mtx[index_annot] = np.vstack([ct_mtx[index_annot], prep_annot])
+                else:
+                    ct_mtx[index_annot] = np.matrix(prep_annot)
                 
     if output_file == None:
-        return(ct_mtx)
+       return(ct_mtx)
     else:
         return()
