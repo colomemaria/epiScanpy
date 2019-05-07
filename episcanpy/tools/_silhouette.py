@@ -11,7 +11,7 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean',
     """
     
     if copy:
-      adata = adata.copy()
+      adata_name = adata_name.copy()
       
     X = adata_name.obsm[value]
     cluster_labels = adata_name.obs[cluster_annot]
@@ -20,53 +20,15 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean',
     ## also, return sample_silhouette_values as adata.obs['silhouette_samples']
     silhouette_avg = silhouette_score(X, cluster_labels, metric)
     sample_silhouette_values = silhouette_samples(X, cluster_labels, metric)
+    
     if key_added:
         adata_name.obs[key_added] = sample_silhouette_values
+        adata_name.uns[key_added] = silhouette_avg
     else:
         adata_name.obs['silhouette_samples'] = sample_silhouette_values
+        adata_name.uns['silhouette_samples_avg'] = silhouette_avg
 
-
-    i =0
-    for name in list(sorted(set(adata_name.obs[cluster_annot]))):
-        # Aggregate the silhouette scores for samples belonging to
-        # cluster i, and sort them
-        ith_cluster_silhouette_values = \
-            sample_silhouette_values[cluster_labels == name]
-
-        ith_cluster_silhouette_values.sort()
-
-        size_cluster_i = ith_cluster_silhouette_values.shape[0]
-        y_upper = y_lower + size_cluster_i
-        
-        if palette != None:
-            color = palette[i]
-        else:
-            color = cm.nipy_spectral(float(i) / n_clusters)
-        ax1.fill_betweenx(np.arange(y_lower, y_upper),
-                            0, ith_cluster_silhouette_values,
-                            facecolor=color, edgecolor=color, alpha=0.7)
-
-        # Label the silhouette plots with their cluster numbers at the middle
-        #ax1.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i))
-        if name_cluster:
-            if name_cluster_pos == 'left':
-                ax1.text((min(sample_silhouette_values)+0.1), y_lower + 0.5 * size_cluster_i, name)
-            else:
-                ax1.text(-0.05, y_lower + 0.5 * size_cluster_i, name)
-            
-
-        # Compute the new y_lower for next plot
-        y_lower = y_upper + 10  # 10 for the 0 samples
-        i += 1
-
-
-    # The vertical line for average silhouette score of all the values
-    ax1.axvline(x=silhouette_avg, color="red", linestyle="--")
-    ax1.set_yticks([])  # Clear the yaxis labels / ticks
-    #ax1.set_xticks([-0.1, 0, 0.2, 0.4, 0.6, 0.8, 1])
-    if save != None:
-        plt.savefig('_'.join(['silhouette', save])) 
-    plt.show()
-    
-    print(silhouette_avg)
-    return()
+    if copy:
+        return(adata_name)
+    else:
+        return()
