@@ -90,8 +90,8 @@ def sim_met(nb_cells=None, nb_features=None, nb_cell_type=None):
     -------
     Methylation data matrix.
     """
-    [...]
-    return(count_matrix)
+    #[...]
+    #return(count_matrix)
 
 ###############################################
 def Luo17_raw():
@@ -101,8 +101,8 @@ def Luo17_raw():
     -------
     Methylation summaries name files.
     """
-    [...]
-    return(methylation_summaries)
+    #[...]
+    #return(methylation_summaries)
 
 def Luo17promoters_raw():
     """CG Methylation levels at promoters. Mouse prefrontal cortex neurons [Luo17]_.
@@ -112,8 +112,8 @@ def Luo17promoters_raw():
     Annotated data matrix (not filtered).
     """ 
     ## Here I put the raw count matrix. Not the annotated/filtered one 
-  [...]
-  return(count_matrix)
+    #[...]
+    #return(count_matrix)
   
 def Luo17promoters():
     """CG Methylation levels at promoters. Mouse prefrontal cortex neurons [Luo17]_.
@@ -122,6 +122,6 @@ def Luo17promoters():
     -------
     Annotated data matrix.
     """ 
-    return(count_matrix)
+    #return(count_matrix)
  # I will need to add the hematopoitic count matrix from Cusanovich and the peak count matrix for brain data
  # Also Cusanovich et al. 2018
