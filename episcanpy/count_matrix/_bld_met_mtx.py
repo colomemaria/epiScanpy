@@ -410,3 +410,13 @@ def write_methlevel(meth_to_write, name_file, cell, writing_option='a', feature_
     write_list(meth_to_write, file_to_write)
     file_to_write.close()
     return()
+
+def make_list(dico):
+    """
+    Make information stored in  dictionary with chromosomes as key
+    into one list. (lost of chromosomal information)
+    """
+    final_list = []
+    for c in sorted(dico.keys()):
+        final_list += dico[c]
+    return final_list

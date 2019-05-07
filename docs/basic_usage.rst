@@ -21,11 +21,22 @@ To see Scanpy usage principles: <https://scanpy.readthedocs.io/en/latest/basic_u
 The typical workflow consists of subsequent calls of ATAC specific processing tools
 in ``epi.ct``, e.g.::
 
-    epi.ct.load_features(file_features, **tool_params)  # to load annotation files (bad example as it works the same for mt
+    epi.ct.load_features(file_features, **tool_params)  # to load annotation files 
+    
 
-where ``adata`` is an :class:`~anndata.AnnData` object. Each of these calls adds annotation to an expression matrix *X*, which stores *n_obs* observations (cells) of *n_vars* variables (genes). For each tool, there typically is an associated plotting function in ``sc.pl``::
+Second step is to load the matrix and annotations for quality controls, filtering and normalisation. The count matrix and additional informations are stored as ``adata`` is an :class:`~anndata.AnnData` object. 
+All functions for quality control and preprocessing are called using ``epi.pp``
 
-    sc.pl.tsne(adata, **plotting_params)
+To visualise how common features are and what the coverage distribution of the count matrix features, uses: ::
+    
+    epi.pp.commoness_features(adata, **plotting_params)
+    epi.pp.coverage_cells(adata, **plotting_params)
+    
+
+To obtain cell-cell distance calculations or low dimensional representation we use the tools developped by  ``Scanpy`` and make use of the the ``adata`` object, to store *n_obs* observations (cells) of *n_vars* variables (expression, methylation, chromatin features). For each tool, there typically is an associated plotting function in ``sc.tl`` and``sc.pl``::
+
+        sc.tl.tsne(adata, **tool_params)
+        sc.pl.tsne(adata, **plotting_params)
     
 
 .. raw:: html
@@ -34,7 +45,6 @@ where ``adata`` is an :class:`~anndata.AnnData` object. Each of these calls adds
    <img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
    <img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
    <img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 200px">
-
 
 
 

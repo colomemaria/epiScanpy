@@ -24,6 +24,8 @@ from . import count_matrix as ct
 from . import plotting as pl
 from . import functions as functions
 
+from . import datasets
+
 from anndata import AnnData
 from anndata import read_h5ad, read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
 #from .readwrite import read, read_10x_h5, read_10x_mtx
