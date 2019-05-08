@@ -38,5 +38,3 @@ Thumbs.db
 /_static/
 /_templates/
 /__pycache__/
-
-~/.pypirc
