@@ -2,10 +2,8 @@ import sys, os
 if sys.version_info < (3,):
     sys.exit('epiScanpy requires Python >= 3.5')
 from pathlib import Path
-
 from setuptools import setup, find_packages
 import versioneer
-
 
 try:
     from episcanpy import __author__, __email__
@@ -13,8 +11,8 @@ except ImportError:  # Deps not yet installed
     __author__ = __email__ = ''
 
 # extract version
-with open(os.path.join(os.path.dirname(__file__), "episcanpy", "version.py")) as f:
-    version = f.read().split("\n")[0].split("=")[-1].strip(' ').strip('"')
+#with open(os.path.join(os.path.dirname(__file__), "episcanpy", "version.py")) as f:
+#    version = f.read().split("\n")[0].split("=")[-1].strip(' ').strip('"')
 
 setup(
     name='episcanpy',
