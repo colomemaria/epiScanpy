@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import anndata as ad 
 import scanpy.api as sc
+from sklearn.metrics import silhouette_score, silhouette_samples
 
 def silhouette(adata_name, cluster_annot, key=None,
               xlabel=None, ylabel=None, title=None, size='large',
@@ -10,8 +11,10 @@ def silhouette(adata_name, cluster_annot, key=None,
     Only plot the product of tl.silhouette
     """
 
+    
     silhouette_avg = silhouette_score(X, cluster_labels, metric)
     sample_silhouette_values = silhouette_samples(X, cluster_labels, metric)
+    
     if key!=None:
         sample_silhouette_values = adata_name.obs[key]
         silhouette_avg = adata_name.uns[key]
