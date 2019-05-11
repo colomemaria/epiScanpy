@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import anndata as ad 
 import scanpy.api as sc
 from sklearn.metrics import silhouette_score, silhouette_samples
+import matplotlib.cm as cm
+import numpy as np
 
 def silhouette(adata_name, cluster_annot, key=None,
               xlabel=None, ylabel=None, title=None, size='large',
