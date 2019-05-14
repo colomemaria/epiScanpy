@@ -14,7 +14,7 @@ First step is to build the count matrix. It requires -omic specific approaches a
 All the functions to build the count matrices (that are either for ATAC, methylation or other) will  use ``epi.ct``
 
 When it comes to calculationg tSNE, UMAP, PCA etc. we take advantage of the shared datastructure with scanpy and we can use most (if not all) Scanpy functions.
-
+https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png
 To see Scanpy usage principles: <https://scanpy.readthedocs.io/en/latest/basic_usage.html>`__.
 
 
@@ -41,10 +41,10 @@ To obtain cell-cell distance calculations or low dimensional representation we u
 
 .. raw:: html
 
-   <img      src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
-   <img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
-   <img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
-   <img src="https://github.com/DaneseAnna/Episcanpy/tree/master/docs/api/umapSatb2_CLUSTER_NORM.png" style="width: 200px">
+   <img      src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
+   <img src="" style="width: 100px">
+   <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
+   <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png" style="width: 200px">
 
 
 
