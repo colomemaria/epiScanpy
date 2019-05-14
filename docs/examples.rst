@@ -11,7 +11,7 @@ To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data f
 
 
 
-.. image:: http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_PCA_coverage.png
+.. image:: "http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_PCA_coverage.png"
    :width: 400      
   
    
@@ -29,7 +29,7 @@ Single cell DNA methylation
 
 Here you can find a tutorial for the preprocessing, clustering and identification of cell types for single-cell DNA methylation data using the publicly available data from Luo et al. (Ecker lab). The tutorial shows how to build the count matrices for the different feature spaces and how to use them and compare the results. The data used comes from mouse brain (frontal cortex).
 
-.. image:: http://drive.google.com/open?id=1TbCZAtglylm0k_Ss_JNMGGCbBNKrYKcs
+.. image:: "http://drive.google.com/open?id=1TbCZAtglylm0k_Ss_JNMGGCbBNKrYKcs"
    :width: 400
 
 .. raw:: html
