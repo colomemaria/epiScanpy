@@ -45,7 +45,7 @@ Similarly to Scanpy, the methylation and ATAC matrices are stored as anndata obj
     
 .. raw:: html
 
-   <img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 300px" style="width: 400px">
+   <img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 400px">
   
 
 
