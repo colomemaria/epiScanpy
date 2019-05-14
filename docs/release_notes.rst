@@ -10,7 +10,7 @@
 .. role:: smaller
 
 
-Version 0.0.1 :small:`April 15, 2019`
+Version 0.1.0 :small:`May 10, 2019`
 --------------------------------------
 
-Currently beta release.
+Initial release.
