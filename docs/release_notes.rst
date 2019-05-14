@@ -1,6 +1,7 @@
 .. note::
 
    Also see the `release notes <https://scanpy.readthedocs.io>`__ of :mod:`scanpy`.
+   
    Also see the `release notes <https://anndata.readthedocs.io>`__ of :mod:`anndata`.
 
 
