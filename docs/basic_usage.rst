@@ -38,7 +38,7 @@ To obtain cell-cell distance calculations or low dimensional representation we u
         sc.tl.tsne(adata, **tool_params)
         sc.pl.tsne(adata, **plotting_params)
     
-.. image:: https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png
+.. image:: "https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png"
 .. raw:: html
 
    <img      src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
