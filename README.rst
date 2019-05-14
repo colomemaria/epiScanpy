@@ -19,6 +19,6 @@ If epiScanpy is useful to your research, consider citing `epiScanpy<https://Bior
 
 EpiScanpy is based on Scanpy (`Genome Biology <https://doi.org/10.1186/s13059-017-1382-0>`__, 2018) a python package to analyse single cell transcriptomic data (RNAseq). For more information, read scanpy documentation `<https://scanpy.readthedocs.io>`__. 
 
-.. image:: "http://github.com/DaneseAnna/episcanpy-pictures/blob/master/Scanpy_Logo_RGB.png"
-   :width: 70px
-   :align: left
+.. raw:: html
+
+   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/Scanpy_Logo_RGB.png" style="width: 100px" "align: left"><img
