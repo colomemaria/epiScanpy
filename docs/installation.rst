@@ -12,6 +12,7 @@ installing Miniconda_ (see `Installing Miniconda`_). Then run::
     conda create -n scanpy python=3.6 scanpy
     
 Finally, run::  
+
     conda install -c annadanese episcanpy
 
 
