@@ -21,4 +21,4 @@ EpiScanpy is based on Scanpy (`Genome Biology <https://doi.org/10.1186/s13059-01
 
 .. raw:: html
 
-   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/Scanpy_Logo_RGB.png" style="width: 100px" "align: left"><img
+   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/Scanpy_Logo_RGB.png" style="width: 100px"><img
