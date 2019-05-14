@@ -35,7 +35,7 @@ Here you can find a tutorial for the preprocessing, clustering and identificatio
 
 .. raw:: html
 
-   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/umap_markers_hodology_ecker.png" style="width: 100px">
+   <img src="https://drive.google.com/open?id=1TbCZAtglylm0k_Ss_JNMGGCbBNKrYKcs" style="width: 100px">
    
    
 .. _tutorialhere: http://github.com/colomemaria/epiScanpy/blob/readthedocs/docs/beta_tutorial_10x_pbmc.html
