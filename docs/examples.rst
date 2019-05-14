@@ -22,8 +22,7 @@ Soon available, there will be a tutorial on preprocessing, clustering and identi
 
 .. raw:: html
 
-   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/umap.png" style="width: 40px"><img
-   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/heatmap.png" style="width: 40px"><img
+   <img src="https://drive.google.com/open?id=1TbCZAtglylm0k_Ss_JNMGGCbBNKrYKcs" style="width: 100px">
 
 
 
