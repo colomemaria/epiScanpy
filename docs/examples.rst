@@ -12,8 +12,7 @@ To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data f
 
 
 .. image:: "http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_PCA_coverage.png" style="width: 100px"><img"
-.. raw:: html
-   
+   <img      src="http://static.wixstatic.com/media/33f6fb_b17411ac22294b08a2da19907a128030~mv2.png/v1/fill/w_360,h_357,al_c,usm_0.66_1.00_0.01/33f6fb_b17411ac22294b08a2da19907a128030~mv2.png" style="width: 100px">
    <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_umap.png"><img style="width: 40px"><img
    <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_diffmap.png" style="width: 40px"><img
    
