@@ -20,7 +20,7 @@ To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data f
 Soon available, there will be a tutorial on preprocessing, clustering and identification of cell types for the Cusanovich mouse scATAC-seq atlas [Cusanovich18]_ (prefrontal cortex data). In this tutorial we focus on the use of different feature space count matrices (peak and enhancer based count matrices).
 
 .. image:: pictures/umap.png
-   :width: 250px
+   :width: 350px
 .. image:: pictures/umap_ATACseq_Astrocyte_marker.png
    :width: 250px
 .. image:: pictures/heatmap.png
@@ -37,7 +37,7 @@ Here you can find a tutorial for the preprocessing, clustering and identificatio
 .. image:: pictures/umap_markers_hodology_ecker.png
    :width: 600px
 .. image:: pictures/umapSatb2_CLUSTER_NORM.png
-   :width: 100px  
+   :width: 300px  
    
 
 
