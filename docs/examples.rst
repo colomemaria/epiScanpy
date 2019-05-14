@@ -11,10 +11,9 @@ To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data f
 
 
 
-.. image:: "http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_PCA_coverage.png" style="width: 100px"><img"
-   <img      src="http://static.wixstatic.com/media/33f6fb_b17411ac22294b08a2da19907a128030~mv2.png/v1/fill/w_360,h_357,al_c,usm_0.66_1.00_0.01/33f6fb_b17411ac22294b08a2da19907a128030~mv2.png" style="width: 100px">
-   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_umap.png"><img style="width: 40px"><img
-   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_diffmap.png" style="width: 40px"><img
+.. image:: "http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_PCA_coverage.png"
+   :width: 400      
+  
    
    
 Soon available, there will be a tutorial on preprocessing, clustering and identification of cell types for the Cusanovich mouse scATAC-seq atlas (ref Cusanovich mouse atlas paper) (prefrontal cortex data). In this tutorial we focus on the use of different feature space count matrices (peak and enhancer based count matrices).
