@@ -41,12 +41,11 @@ To obtain cell-cell distance calculations or low dimensional representation we u
 Data structure
 ^^^^^^^^^^^^^^
 
-Similarly to Scanpy, the methylation and ATAC matrices are stored as anndata object. 
+Similarly to Scanpy, the methylation and ATAC matrices are stored as anndata object. FOr more information on the datastructure see here`here <https://anndata.readthedocs.io/en/latest/>`__
     
 .. raw:: html
 
-   <img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 300px" style="width: 400px"><img
-   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/heatmap.png" style="width: 300px" style="width: 400px">
+   <img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 300px" style="width: 400px">
   
 
 
