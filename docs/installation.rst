@@ -12,7 +12,7 @@ installing Miniconda_ (see `Installing Miniconda`_). Then run::
     conda create -n scanpy python=3.6 scanpy
     
 Finally, run::  
-    conda install episcanpy
+    conda install -c annadanese episcanpy
 
 
 
@@ -26,7 +26,6 @@ using ``pip3`` to access Python 3)::
 Github
 ~~~~~~
 
-you can also (right know it is the only way available) install
-epiScanpy like the following::
+you can also install epiScanpy directly from Github::
 
     pip install git+https://github.com/colomemaria/epiScanpy
