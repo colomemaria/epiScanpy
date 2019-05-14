@@ -21,7 +21,8 @@ EpiScanpy is based on Scanpy (`Genome Biology`__, 2018) a python package to anal
 
 We are currently working on releasing a stable version as well as pip and conda install procedure. It shall be available very soon.
 
-:hidden:
-.. _Biorxiv_link: https://Biorxiv_link_
-.. _Genome_Biology: https://doi.org/10.1186/s13059-017-1382-0
-.. _documentation: https://scanpy.readthedocs.io
+.. toctree::
+   :hidden:
+   .. epiScanpy: https://Biorxiv_link_
+   .. Genome_Biology: https://doi.org/10.1186/s13059-017-1382-0
+   .. documentation: https://scanpy.readthedocs.io
