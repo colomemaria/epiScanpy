@@ -42,6 +42,7 @@ To obtain cell-cell distance calculations or low dimensional representation we u
 .. raw:: html
 
    <img      src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
+   <img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 300px">
    <img src="" style="width: 100px">
    <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
    <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png" style="width: 200px">
