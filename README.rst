@@ -19,4 +19,4 @@ If epiScanpy is useful to your research, consider citing `epiScanpy <https://git
 
 
 .. image:: docs/pictures/umap_markers_hodology_ecker.png
-   :width: 200
+   :width: 200px
