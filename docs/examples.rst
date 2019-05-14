@@ -20,9 +20,6 @@ To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data f
 Soon available, there will be a tutorial on preprocessing, clustering and identification of cell types for the Cusanovich mouse scATAC-seq atlas (ref Cusanovich mouse atlas paper) (prefrontal cortex data). In this tutorial we focus on the use of different feature space count matrices (peak and enhancer based count matrices).
 
 
-.. raw:: html
-
-   <img src="https://drive.google.com/open?id=1TbCZAtglylm0k_Ss_JNMGGCbBNKrYKcs" style="width: 100px">
 
 
 
@@ -33,9 +30,8 @@ Single cell DNA methylation
 
 Here you can find a tutorial for the preprocessing, clustering and identification of cell types for single-cell DNA methylation data using the publicly available data from Luo et al. (Ecker lab). The tutorial shows how to build the count matrices for the different feature spaces and how to use them and compare the results. The data used comes from mouse brain (frontal cortex).
 
+.. image:: <img src="http://drive.google.com/open?id=1TbCZAtglylm0k_Ss_JNMGGCbBNKrYKcs" style="width: 100px">
 .. raw:: html
 
    <img src="http://drive.google.com/open?id=1TbCZAtglylm0k_Ss_JNMGGCbBNKrYKcs" style="width: 100px">
    
-   
-.. _tutorialhere: http://github.com/colomemaria/epiScanpy/blob/readthedocs/docs/beta_tutorial_10x_pbmc.html
