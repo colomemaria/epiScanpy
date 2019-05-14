@@ -7,7 +7,9 @@ Tutorials
 Single cell ATAC-seq
 --------------------
 
-To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data for 10k PBMCs from 10x Genomics. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found here_ 
+To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data for 10k PBMCs from 10x Genomics. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found here.
+
+
 
 .. image:: "http://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_PCA_coverage.png" style="width: 100px"><img"
 .. raw:: html
