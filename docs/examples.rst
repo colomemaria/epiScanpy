@@ -4,38 +4,43 @@ Tutorials
 
 ------------
 
-single cell ATAC
-----------------
+Single cell ATAC-seq
+--------------------
 
-For getting started, we recommend epiScanpy's adaptation PBMC clustering tutorial of `Scanpy's to the 10k PBMCs from 10x Genomics. The tutorial focus on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. tutorial here_ 
+To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data for 10k PBMCs from 10x Genomics. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found here.
 
-.. raw:: html
+.. image:: pictures/pbmc_PCA_coverage.png
+   :width: 200px
+.. image:: pictures/pbmc_umap.png
+   :width: 190px
+.. image:: pictures/pbmc_diffmap.png
+   :width: 200px
 
-   <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_PCA_coverage.png" style="width: 100px"><img
-   <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_umap.png" style="width: 100px"><img
-   <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/pbmc_diffmap.png" style="width: 100px"><img
    
-   
-Soon available, there will be a tutorial on clustering comparison between peak and enhancer based count matrices usinf prefrontal cortex data from the Cusanovich mouse ATAC atlas (ref Cusanovich mouse atlas paper).
+Soon available, there will be a tutorial on preprocessing, clustering and identification of cell types for the Cusanovich mouse scATAC-seq atlas [Cusanovich18]_ (prefrontal cortex data). In this tutorial we focus on the use of different feature space count matrices (peak and enhancer based count matrices).
 
-.. raw:: html
-
-   <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umap.png" style="width: 100px"><img
-   <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/heatmap.png" style="width: 100px"><img
-
+.. image:: pictures/umap.png
+   :width: 350px
+.. image:: pictures/umap_ATACseq_Astrocyte_marker.png
+   :width: 250px
+.. image:: pictures/heatmap.png
+   :width: 600px
 
 
 ------------
 
-Single cell methylation
------------------------
+Single cell DNA methylation
+---------------------------
 
-Soon a tutorial on windows based methylation data analysis using the publicly available data from Luo et al. (Ecker lab).
-Another tutorial will arrive as a follow up comparing promoters and enhancers in frontal cortex brain.
+Here you can find a tutorial for the preprocessing, clustering and identification of cell types for single-cell DNA methylation data using the publicly available data from Luo et al. [Luo17]_. The tutorial shows how to build the count matrices for the different feature spaces and how to use them and compare the results. The data used comes from mouse brain (frontal cortex).
 
-.. raw:: html
-
-   <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/umap_markers_hodology_ecker.png" style="width: 450px">
+.. image:: pictures/umap_markers_hodology_ecker.png
+   :width: 600px
+.. image:: pictures/umapexcitatory_neurons_promoters.png
+   :width: 300px 
+.. image:: pictures/umapSatb2_CLUSTER_NORM.png
+   :width: 250px  
    
+
+
    
-.. _tutorialhere: https://github.com/colomemaria/epiScanpy/blob/readthedocs/docs/beta_tutorial_10x_pbmc.html
