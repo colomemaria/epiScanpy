@@ -10,8 +10,6 @@ Report issues and access the code on `GitHub <https://github.com/AnnaDanese/epiS
 
 .. include:: release_notes.rst
 
-.. put references first so all references are resolved
-.. NO! there is a particular meaning to this sequence
 .. toctree::
    :maxdepth: 1
    :hidden:
