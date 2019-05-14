@@ -36,6 +36,9 @@ Here you can find a tutorial for the preprocessing, clustering and identificatio
 
 .. image:: pictures/umap_markers_hodology_ecker.png
    :width: 600px
+.. image:: pictures/umap_markers_hodology_ecker.png
+   :width: 300px 
+   
 .. image:: pictures/umapSatb2_CLUSTER_NORM.png
    :width: 250px  
    
