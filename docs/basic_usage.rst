@@ -33,7 +33,7 @@ To visualise how common features are and what the coverage distribution of the c
     epi.pp.coverage_cells(adata, **plotting_params)
     
 
-To obtain cell-cell distance calculations or low dimensional representation we use the tools developped by  ``Scanpy`` and make use of the the ``adata`` object, to store *n_obs* observations (cells) of *n_vars* variables (expression, methylation, chromatin features). For each tool, there typically is an associated plotting function in ``sc.tl`` and``sc.pl``::
+To obtain cell-cell distance calculations or low dimensional representation we use the tools developped by  ``scanpy`` and make use of the the ``adata`` object, to store *n_obs* observations (cells) of *n_vars* variables (expression, methylation, chromatin features). For each tool, there typically is an associated plotting function in ``sc.tl`` and``sc.pl``::
 
         sc.tl.tsne(adata, **tool_params)
         sc.pl.tsne(adata, **plotting_params)
@@ -45,7 +45,8 @@ Similarly to Scanpy, the methylation and ATAC matrices are stored as anndata obj
     
 .. raw:: html
 
-   <img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 300px" style="width: 100px">
+   <img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 300px" style="width: 400px">
+   <img src="https://github.com/DaneseAnna/episcanpy-pictures/blob/master/heatmap.png" style="width: 300px" style="width: 400px">
   
 
 
