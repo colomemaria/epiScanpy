@@ -18,7 +18,7 @@ To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data f
    
    
 Soon available, there will be a tutorial on preprocessing, clustering and identification of cell types for the Cusanovich mouse scATAC-seq atlas (ref Cusanovich mouse atlas paper) (prefrontal cortex data).In this tutorial we focus on the use of different feature space count matrices (peak and enhancer based count matrices).
-.. You can also find a tutorial on preprocessing...
+
 
 .. raw:: html
 
