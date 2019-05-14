@@ -35,7 +35,7 @@ Another tutorial will arrive as a follow up comparing promoters and enhancers in
 
 .. raw:: html
 
-   <img src="https://github.com/colomemaria/epiScanpy/blob/master/umap_markers_hodology_ecker.png" style="width: 450px">
+   <img src="https://drive.google.com/open?id=1uNiR60DgT4heX4N52l38Ssk5nFFuCYZV" style="width: 450px">
    
    
 .. _tutorialhere: https://github.com/colomemaria/epiScanpy/blob/readthedocs/docs/beta_tutorial_10x_pbmc.html
