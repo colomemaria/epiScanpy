@@ -29,7 +29,7 @@ To visualise how common features are and what is the coverage distribution of th
     epi.pp.coverage_cells(adata, **processing_params)
     
     
-The next step, is the calculation of tSNE, UMAP, PCA etc. For that, we take advantage of the embedding into Scanpy and we use mostly Scanpy functions, which are called using ``sc.tl`` (tl = tool). For that, see Scanpy usage principles: <https://scanpy.readthedocs.io/en/latest/basic_usage.html>`__. For example, to obtain cell-cell distance calculations or low dimensional representation we make use of the ``adata`` object, and store *n_obs* observations (cells) of *n_vars* variables (expression, methylation, chromatin features). For each tool, there typically is an associated plotting function in ``sc.tl`` and ``sc.pl`` (pl = plot) ::
+The next step, is the calculation of tSNE, UMAP, PCA etc. For that, we take advantage of the embedding into Scanpy and we use mostly Scanpy functions, which are called using ``sc.tl`` (tl = tool) [Wolf18]_. For that, see Scanpy usage principles: <https://scanpy.readthedocs.io/en/latest/basic_usage.html>`__. For example, to obtain cell-cell distance calculations or low dimensional representation we make use of the ``adata`` object, and store *n_obs* observations (cells) of *n_vars* variables (expression, methylation, chromatin features). For each tool, there typically is an associated plotting function in ``sc.tl`` and ``sc.pl`` (pl = plot) ::
 
         sc.tl.tsne(adata, **tool_params)
         sc.pl.tsne(adata, **plotting_params)
