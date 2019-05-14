@@ -18,5 +18,3 @@ The documentation for epiScanpy is available at <https://episcanpy.readthedocs.i
 If epiScanpy is useful to your research, consider citing `epiScanpy <https://github.com/colomemaria/epiScanpy>`__.
 
 
-.. image:: docs/pictures/umap_markers_hodology_ecker.png
-   :width: 600px
