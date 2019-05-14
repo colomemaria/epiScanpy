@@ -43,11 +43,9 @@ Data structure
 
 Similarly to Scanpy, the methylation and ATAC matrices are stored as anndata object. 
     
-.. image:: "http://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png"
 .. raw:: html
 
    <img src="http://falexwolf.de/img/scanpy/anndata.svg" style="width: 300px" style="width: 100px">
-   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png" style="width: 100px">
-   <img src="http://github.com/DaneseAnna/episcanpy-pictures/blob/master/umapSatb2_CLUSTER_NORM.png" style="width: 200px">
+  
 
 
