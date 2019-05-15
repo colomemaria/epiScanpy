@@ -487,8 +487,9 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         writing_option = [writing_option for x in range(nb_annotation)]
     if type(threshold) != list:
         threshold = [threshold for x in range(nb_annotation)]
-    if type(output_file) != list:
-        output_file = [output_file]
+    if (output_file != None):
+        if (type(output_file) != list):
+            output_file = [output_file]
         
     #################################
     for cell in cells:
@@ -507,15 +508,18 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         # build the cell vector for the count matrix at every set of annotations
         for index_annot in range(nb_annotation):
             meth_level_annot = methylation_level(tmp_file, annotation[index_annot], chromosome, threshold[index_annot])
-            if output_file[index_annot] != None:
+            if type(output_file) == list:
                 write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names[index_annot])
             else:
-                if ct_mtx[index_annot] != None:
-                    ct_mtx[index_annot] = np.vstack([ct_mtx[index_annot], meth_level_annot])
+                if ct_mtx == None:
+                    ct_mtx = [np.matrix(meth_level_annot)]
+                    #ct_mtx[index_annot] = np.matrix(meth_level_annot)
+                elif index_annot>=len(ct_mtx):
+                    ct_mtx.append(np.matrix(meth_level_annot))
                 else:
-                    ct_mtx[index_annot] = np.matrix(meth_level_annot)
+                    ct_mtx[index_annot] = np.vstack([ct_mtx[index_annot], meth_level_annot])
                 
-    if output_file == None:
+    if ct_mtx != None:
         return(ct_mtx)
     else:
         return()
