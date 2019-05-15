@@ -99,7 +99,7 @@ def plot_size_features(loaded_feature, bins=50, return_length=False):
         return(length)
     
     
-def name(loaded_features):
+def name_features(loaded_features):
     feat_names = []
     i = 0
     for c in loaded_features.keys():
