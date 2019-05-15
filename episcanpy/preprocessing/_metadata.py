@@ -1,6 +1,12 @@
 import anndata as ad
 
 def load_metadata(adata, metadata_file, path=''):
+    """
+    Load observational metadata in adata.obs.
+    Input metadata file as csv and adata object.
+    
+    return annotated adata object 
+    """
     dict_annot = {}
     with open(path+metadata_file) as f:
         head = f.readline().split(';')
@@ -27,3 +33,5 @@ def load_metadata(adata, metadata_file, path=''):
 
     for key in head:
         adata.obs[key] = dict_annot[key]
+
+    return()
