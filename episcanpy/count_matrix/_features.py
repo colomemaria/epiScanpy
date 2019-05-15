@@ -104,6 +104,9 @@ def name(loaded_features):
     i = 0
     for c in loaded_features.keys():
         for name in loaded_features[c]:
-            feat_names.append('_'.join([name[-1], str(i)]))
+            add_name = '_'.join(['chr', c, name[-1].rstrip('\n'), str(i)])
+            if add_name[-1] =='\n':
+                add_name = add_name[:-1]
+            feat_names.append(add_name)
             i += 1
     return(feat_names)
