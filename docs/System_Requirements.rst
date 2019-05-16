@@ -26,6 +26,7 @@ Additionally, this package ``epiScanpy`` depends on other Python dependencies an
   numpy
   pandas
   pyliftOver
+  pysam
   scanpy
   scipy
   scikit-learn
