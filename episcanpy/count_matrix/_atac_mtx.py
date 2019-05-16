@@ -18,6 +18,7 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file='', path='', writing_o
     HUMAN=['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
     
     """
+        
     if output_file=='':
         output_file='std_output_ct_mtx.txt'
     # open file to write
