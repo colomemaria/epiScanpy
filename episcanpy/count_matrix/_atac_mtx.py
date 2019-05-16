@@ -133,7 +133,7 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC'):
         
     # writing the file as h5ad --> sparse matrix with minimum annotations
     if output_file=='.h5ad':
-        output_file = ".".join([initial_matrix.split('.')[0], output_file])
+        output_file = "".join([initial_matrix.split('.')[0], output_file])
         
     adata.write(output_file)
     
