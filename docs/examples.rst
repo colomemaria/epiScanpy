@@ -17,6 +17,9 @@ To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data f
    :width: 200px
 
    
+If you want to see how to build count matrices from ATAC-seq bam files for different set of annotations (such as enhancers).
+The tutorial can be found `here <https://github.com/colomemaria/epiScanpy/blob/ATAC_tutorial_2/docs/tutorials/ATAC_bld_ct_mtx_tutorial.html>`__. 
+
 Soon available, there will be a tutorial on preprocessing, clustering and identification of cell types for the Cusanovich mouse scATAC-seq atlas [Cusanovich18]_ (prefrontal cortex data). In this tutorial we focus on the use of different feature space count matrices (peak and enhancer based count matrices).
 
 .. image:: pictures/umap.png
@@ -41,6 +44,6 @@ Here you can find a tutorial for the preprocessing, clustering and identificatio
 .. image:: pictures/umapSatb2_CLUSTER_NORM.png
    :width: 250px  
    
-
+Finaly, to to build different methylation data matrices, for different set of features (windows, promoters) and different cytosine contexts. Here is the  `tutorial  <https://github.com/colomemaria/epiScanpy/blob/ATAC_tutorial_2/docs/tutorials/bld_count_matrix_methylation_tutorial.html>`__.
 
    
