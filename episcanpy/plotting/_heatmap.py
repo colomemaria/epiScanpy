@@ -3,9 +3,28 @@ import seaborn as sns
 import numpy as np
 
 
-def prct_overlap(adata, key_1, key_2, color="Blues", norm=False, ax_norm="line", sort_index=False):
+def prct_overlap(adata, key_1, key_2, norm=False, ax_norm="row", sort_index=False):
     """
-    % of overlap between cell types. 
+    % or cell count corresponding to the overlap of different cell types 
+    between 2 set of annotations/clusters. 
+
+    Parameters
+    ----------
+
+    adata: AnnData objet
+
+    key_1: observational key corresponding to one cell division/ one set of clusters
+
+    key_2: bservational key corresponding to one cell division/ one set of clusters
+
+    norm: normalise the ratio to the cell numbers given the total number of cells per
+    cluster in key_1
+
+    Return
+    ------
+
+    Table containing the ratio of cells within a cluster
+    
     """
     
     data_1 = adata.obs[key_1].tolist()
@@ -32,7 +51,7 @@ def prct_overlap(adata, key_1, key_2, color="Blues", norm=False, ax_norm="line",
         #total_matrix.append([x/curr_sum for x in curr_key_list])
         total_matrix.append(curr_key_list)
         
-    if norm and ax_norm == "line":
+    if norm and ax_norm == "row":
         total_matrix = []
         for key, value in count.items():
             value = sorted(value)
@@ -63,18 +82,36 @@ def prct_overlap(adata, key_1, key_2, color="Blues", norm=False, ax_norm="line",
     return(data_heatmap)
 
 
-def overlap_heatmap(adata, key_1, key_2, color="Blues", norm=False, ax_norm="line", sort_index=False):
+def overlap_heatmap(adata, key_1, key_2, color="Blues", norm=False, ax_norm="row", sort_index=False):
     """
-    If you want to normalize the ocunt matrix you put norm = True and you put in  
-    ax_norm either "line" or "col"
-    I am not 100 percent convinced with the normalisation right now. I prefer the visual
-    as simple cell count. Despite the bias torward large cell clusters.
-    
-    Also, you need pandas and seaborn 
-    
-    Options for colors: "YlGnBu", "BuPu", "Greens", "Blues" etc.
-    """
+
+    Heatmap of the cluster correspondance between 2 set of annaotations. 
+
+    Parameters
+    ----------
+
+    adata: AnnData objet
+
+    key_1: observational key corresponding to one cell division/ one set of clusters
+
+    key_2: bservational key corresponding to one cell division/ one set of clusters
    
-    data_heatmap = prct_overlap(adata, key_1, key_2, color, norm, ax_norm, sort_index)
+    norm: normalisation on the total number of cells per row/column or not.
+
+    ax_norm: normalistion (if norm=True) on row or col
+    
+    colors: gradient displayed in the heatmap. "YlGnBu", "BuPu", "Greens", "Blues"
+
+    Return
+    ------
+
+    Heatmap.
+
+
+    """
+    #  I am not 100 percent convinced with the normalisation right now. I prefer the visual
+    # as simple cell count. Despite the bias torward large cell clusters.
+   
+    data_heatmap = prct_overlap(adata, key_1, key_2, norm, ax_norm, sort_index)
     
     return(sns.heatmap(data_heatmap, xticklabels=True, yticklabels=True, cmap=color))

@@ -8,21 +8,54 @@ MOUSE = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
 HUMAN = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22',
         '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
 
-def bld_atac_mtx(list_bam_files, loaded_feat, output_file='', path='', writing_option='a', header=None, chromosomes=MOUSE):
+def bld_atac_mtx(list_bam_files, loaded_feat, output_file=None, path=None, writing_option='a', header=None, chromosomes=MOUSE):
     """
-    Differently to the methylation function to build count matrix, you can only write one
-    set of data at any given time. I need to change this to allow to build multiple matrices at the same time. 
+    Build a count matrix one set of features at a time. It is specific of ATAC-seq data.
+    It curently do not write down a sparse matrix. It writes down a regular count matrix
+    as a text file. 
     
-    chromose is either MOUSE, HUMAN or a list of chromosomes. 
-    MOUSE=['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
-    HUMAN=['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
-    
+    Parameters
+    ----------
+
+    list_bam_files: input must be a list of bam file names. One for each cell to 
+        build the count matrix for
+
+    loaded_feat: the features for which you want to build the count matrix
+        
+    output_file: name of the output file. The count matrix that will be written
+        down in the current directory. If this parameter is not specified, 
+        the output count amtrix will be named 'std_output_ct_mtx.txt'
+
+    path: path where to find the input file. The output file will be written down
+    in your current directory, it is not affected by this parameter.
+
+    writing_option: standard writing options for the output file. 'a' or 'w'
+        'a' to append to an already existing matrix. 'w' to overwrite any 
+        previously exisiting matrix. 
+        default: 'a'
+
+    header: if you want to write down the feature name specify this argument.
+        Input must be a list.
+
+    chromosomes: chromosomes of the species you are considering. default value
+        is the mouse genome (not including mitochondrial genome).
+        MOUSE = '1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
+
+    Return
+    ------
+    It does not return any object. The function write down the desired count
+    matrix in a txt file
+
     """
         
-    if output_file=='':
+    if output_file==None:
         output_file='std_output_ct_mtx.txt'
     # open file to write
     output_file = open(path+output_file, writing_option)
+
+    if path==None:
+        path=''
     
     # write header if specified
     if header != None:
@@ -98,13 +131,32 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file='', path='', writing_o
 
     output_file.close()
     
-#convert the matrix into a sparse matrix:
+#
 
 def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC'):
     """
-    I need to add the methylation conversion to sparse matrix. Right now there is no need for
-    the omic argument because I haven't added the conversion for methylation. It only deal with "dropout omics"
-    like ChIPseq, ATACseq or RNAseq
+    Convert regular atac matrix into a sparse matrix:
+
+    Parameters
+    ----------
+
+    initial_matrix: the name of the regular count matrix for any given omic to load and convert into 
+        a sparse matrix (actually, AnnData object)
+
+    output_file: name of the output file for the AnnData object. Standard output if nothing is specified
+        is the name of the inoput file with .h5ad extension
+
+    path: path to the input count matrix. The AnnData object is written in the current directory, 
+        not the location specified in path.
+
+    omic: 'ATAC', 'RNA' or 'methylation' are the 3 currently recognised omics in epiScanpy. 
+        However, other omic name can be accepted but are not yet recognised in other functions.
+        default: 'ATAC'
+
+    Return
+    ------
+
+    It returns the loaded matrix as an AnnData object.
     """
     head = None
     data = []
@@ -131,9 +183,11 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC'):
     else:
         adata = ad.AnnData(np.array(data), obs=pd.DataFrame(index=cell_names))
         
+    adata.uns['omic'] = omic
     # writing the file as h5ad --> sparse matrix with minimum annotations
     if output_file=='.h5ad':
         output_file = "".join([initial_matrix.split('.')[0], output_file])
         
     adata.write(output_file)
+    return(adata)
     

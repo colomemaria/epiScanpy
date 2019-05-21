@@ -20,8 +20,7 @@ __doc__ = """\
 API
 ===
 
-
-Import Scanpy's high-level API as::
+Import epiScanpy's high-level API as::
 
    import episcanpy.api as epi
 
@@ -31,101 +30,115 @@ Count Matrices: CT
 Loading data, loading annotations, building count matrices, filtering of lowly covered methylation variables.
 Filtering of lowly covered cells.
 
-Load & Generate Features
-~~~~~~~~~~~~~~~~~~~~~~~~
+Load features
+~~~~~~~~~~~~~
 
-To load known annotations of the genome to build count matrices. Or, to generate non-overlapping windows of different sizes.
+In order to build a count matrix for either methylation or open chromatin data, loading the segmentation of the genome of interest or the set of features of interest is a prerequirement.
 
 .. autosummary::
    :toctree: .
-   
+
    ct.load_features
    ct.make_windows
    ct.size_feature_norm
    ct.plot_size_features
+   ct.name_features
 
-Building Count matrices
-~~~~~~~~~~~~~~~~~~~~~~~
+Reading methylation file
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-To build the count matrix (based on annotations or windows)
+Functions to read methylation files, extract methylation and buildthe count matrices:
+ 
  
 .. autosummary::
    :toctree: .
 
    ct.build_count_mtx
    ct.read_cyt_summary
+   ct.load_met_noimput
+
    
+Reading open chromatin(ATAC) file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ATAC-seq specific functions to build count matrices and load data:
+ 
+ 
+.. autosummary::
+   :toctree: .
+   
+   ct.bld_atac_mtx
+   ct.save_sparse_mtx
+
+   
+General functions
+~~~~~~~~~~~~~~~~~
+
+Functions non -omic specific:
+
+   .. autosummary::
+   :toctree: .
+
+   ct.save_sparse_mtx
+
 
 Preprocessing: PP
 ------------------
 
-Imputing missing data (methylation), filterinf lowly covered cells or variables, correction for batch effect...
+Imputing missing data (methylation), filtering lowly covered cells or variables, correction for batch effect.
 
-Loading the data
-~~~~~~~~~~~~~~~~
 
 .. autosummary::
    :toctree: .
-   
-   pp.readandimputematrix
 
-Quality Controls
-~~~~~~~~~~~~~~~~
-
-.. autosummary::
-   :toctree: .
-   
    pp.coverage_cells
    pp.commoness_features
-
-
-Preprocessing
-~~~~~~~~~~~~~
- 
- 
-.. autosummary::
-   :toctree: .
-   
    pp.binarize
    pp.lazy
+   pp.load_metadata
+   pp.read_ATAC_10x
 
 
+Methylation matrices
+~~~~~~~~~~~~~~~~~~~~
+
+Methylation specific count matrices. 
+
+.. autosummary::
+   :toctree: .
+
+   pp.imputation_met
+   pp.load_met_noimput
+   pp.readandimputematrix
+
+
+   
 Tools: TL
 ---------
 
-These functions should probably be in preprocessing
 .. autosummary::
    :toctree: .
 
-   tl.read_ATAC
-   tl.readandimputematrix
-   tl.read_MET
-   
-   
-tl.lazy should be there and not in preprocessing
-
-.. autosummary::
-   :toctree: .
-   tl.lazy
-   tl. rank_features
+   tl.rank_features
    tl.silhouette
+   tl.lazy
+   tl.load_markers
+   tl.identify_cluster
+
 
 Plotting: PL
 ------------
 
-Most of the functions that actually produce plot.
+The plotting module :class:`episcanpy.plotting` largely parallels the ``tl.*`` and a few of the ``pp.*`` functions.
+For most tools and for some preprocessing functions, you'll find a plotting function with the same name.
 
-I need to put back the coverage and commonness functions from above (or a "plotting onluy' equivalent).
-
-.. toctree::
-   :hidden:
-   :maxdepth: 1
-
-   pl.plot_rank_features
-   pl.overlap_heatmap
+.. autosummary::
+   :toctree: .
    pl.prct_overlap
+   pl.overlap_heatmap
    pl.silhouette
    pl.silhouette_tot
-   
+
+
    
 """

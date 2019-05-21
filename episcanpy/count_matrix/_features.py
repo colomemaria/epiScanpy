@@ -75,6 +75,22 @@ def make_windows(size, chromosomes=HUMAN, max_length=1000000000):
 
 
 def size_feature_norm(loaded_feature, size):
+    """If the features loaded are too smalls or of different sizes, 
+    it is possible to normalise them to a unique given size by extending the 
+    feature coordinate in both directions.
+
+    Parameters
+    ----------
+    loaded_feature: loaded feature to normalise
+
+    size: desired size of the feature
+
+    Return
+    ------
+    Update the input features
+
+    """
+
     for key in loaded_feature.keys():
         for i in range(len(loaded_feature[key])):
             length = loaded_feature[key][i][1] - loaded_feature[key][i][0]
@@ -87,6 +103,9 @@ def size_feature_norm(loaded_feature, size):
                 loaded_feature[key][i][1] = loaded_feature[key][i][1] + add_length//2
                 
 def plot_size_features(loaded_feature, bins=50, return_length=False):
+    """
+    Plot the different feature sizes in an histogram. 
+    """
     length = []
     for key in loaded_feature.keys():
         for line in loaded_feature[key]:
@@ -100,6 +119,10 @@ def plot_size_features(loaded_feature, bins=50, return_length=False):
     
     
 def name_features(loaded_features):
+    """
+    Extract the names of the loaded features, specifying the chromosome they originated from.
+    It also contain the feature coordinates and an unique identifier.
+    """
     feat_names = []
     i = 0
     for c in loaded_features.keys():

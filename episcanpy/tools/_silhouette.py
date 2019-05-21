@@ -5,6 +5,32 @@ from sklearn.metrics import silhouette_score, silhouette_samples
 def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean',
                key_added=None, copy=False):
     """
+
+    Compute silhouette scores.
+
+    It computes the general silhouette score as well as a silhouette score for every cell according 
+    to the cell cluster assigned to it. 
+
+    Parameters
+    ----------
+    adata_name: AnnData object
+
+    cluster_annot: observational variable corresponding to a cell clustering
+
+    value: measure used to build the silhouette plot (X_pca, X_tsne, X_umap)
+
+    metric: 'euclidean'
+
+    key_added: key to save the computed silhouette scores
+
+    Return
+    ------
+
+    general silhouette score in 'uns' of the AnnData object
+    individual silhouette scores in 'obs' of the AnnData object
+
+
+
     Credit to sklearn script : 
     https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html#sphx-glr-auto-examples-cluster-plot-kmeans-silhouette-analysis-py
     return score and silhouette plot. Still some work to do to finish the function.

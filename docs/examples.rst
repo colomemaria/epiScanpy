@@ -7,7 +7,10 @@ Tutorials
 Single cell ATAC-seq
 --------------------
 
-To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data for 10k PBMCs from 10x Genomics. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found here.
+To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data for 10k PBMCs from 10x Genomics. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found `here <https://github.com/colomemaria/epiScanpy/blob/ATAC_tutorial_2/docs/tutorials/bld_count_matrix_methylation_tutorial.html>`__.
+
+NB: The current tutorial is a beta version that do not include either optimal low embedding & clustering setiings or proper cell type identifications. To check out performance see other tutorials below and an updated version will be available very soon.
+
 
 .. image:: pictures/pbmc_PCA_coverage.png
    :width: 200px
@@ -35,7 +38,11 @@ Soon available, there will be a tutorial on preprocessing, clustering and identi
 Single cell DNA methylation
 ---------------------------
 
-Here you can find a tutorial for the preprocessing, clustering and identification of cell types for single-cell DNA methylation data using the publicly available data from Luo et al. [Luo17]_. The tutorial shows how to build the count matrices for the different feature spaces and how to use them and compare the results. The data used comes from mouse brain (frontal cortex).
+Here you can find a tutorial for the preprocessing, clustering and identification of cell types for single-cell DNA methylation data using the publicly available data from Luo et al. [Luo17]_. 
+
+The first tutorial shows how to build the count matrices for the different feature spaces (windows, promoters) in different cytosine contexts. Here is the  `tutorial  <https://github.com/colomemaria/epiScanpy/blob/ATAC_tutorial_2/docs/tutorials/bld_count_matrix_methylation_tutorial.html>`__.
+
+Then, there is a second tutorial on how to use them and compare the results. The data used comes from mouse brain (frontal cortex). It will be available very soon.
 
 .. image:: pictures/umap_markers_hodology_ecker.png
    :width: 600px
@@ -43,7 +50,3 @@ Here you can find a tutorial for the preprocessing, clustering and identificatio
    :width: 300px 
 .. image:: pictures/umapSatb2_CLUSTER_NORM.png
    :width: 250px  
-   
-Finaly, to to build different methylation data matrices, for different set of features (windows, promoters) and different cytosine contexts. Here is the  `tutorial  <https://github.com/colomemaria/epiScanpy/blob/ATAC_tutorial_2/docs/tutorials/bld_count_matrix_methylation_tutorial.html>`__.
-
-   

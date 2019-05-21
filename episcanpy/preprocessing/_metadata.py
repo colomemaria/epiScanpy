@@ -4,8 +4,20 @@ def load_metadata(adata, metadata_file, path=''):
     """
     Load observational metadata in adata.obs.
     Input metadata file as csv and adata object.
+
+    first raw of the metadata file is considered as a header
+
+    Paramters
+    ---------
+
+    adata: initial AnnData object
+
+    metadata_file: csv file containing as a first column the cell names and in the
+        rest of the columns any king of metadata to load
     
-    return annotated adata object 
+    Return
+    ------
+    Annotated AnnData
     """
     dict_annot = {}
     with open(path+metadata_file) as f:

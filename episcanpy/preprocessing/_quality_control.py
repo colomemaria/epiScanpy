@@ -5,6 +5,10 @@ import numpy as np
 import anndata as ad
 
 def coverage_cells(adata, bins=50, key_added=None):
+    """
+    Histogram of the number of features with an open peak (in the case of ATAC-seq data)
+    for every cells.
+    """
     if key_added == None:
         key_added='sum_peaks'
     # make sum peaks
@@ -21,6 +25,10 @@ def coverage_cells(adata, bins=50, key_added=None):
     plt.show
     
 def commoness_features(adata, threshold=None, bw=0.5, key_added=None):
+    """
+    Display how often a feature is measured as open (for ATAC-seq).
+    Distribution of the feature commoness in cells.
+    """
     if key_added == None:
         key_added='commonness'
     
@@ -42,7 +50,7 @@ def commoness_features(adata, threshold=None, bw=0.5, key_added=None):
     
     
 def binarize(adata, copy=False):
-    # convert into a binary matrix
+    """convert into a binary matrix"""
     threshold, upper, lower = 1.0, 1.0, 0.0
     admatrix = adata.X
     admatrix = np.where(admatrix>threshold, upper, lower)
