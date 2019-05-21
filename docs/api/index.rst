@@ -79,6 +79,7 @@ Imputing missing data (methylation), filtering lowly covered cells or variables,
    pp.binarize
    pp.lazy
    pp.load_metadata
+   pp.read_ATAC_10x
 
 
 Methylation matrices

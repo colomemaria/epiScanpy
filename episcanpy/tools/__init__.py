@@ -2,4 +2,4 @@
 from ..tools._features_selection import rank_features
 from ..tools._silhouette import silhouette
 from ..tools._recipe import lazy
-from ..cell_id import load_markers, identify_cluster
+from ..tools._cell_id import load_markers, identify_cluster

@@ -33,8 +33,8 @@ logger = logging.getLogger(__name__)
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
-#needs_sphinx = '1.7' # autosummary bugfix
-needs_sphinx = '3.0'  
+needs_sphinx = '1.7' # autosummary bugfix
+#needs_sphinx = '3.0'  
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -49,7 +49,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx_autodoc_typehints',
     'sphinx.ext.intersphinx',
-    'scanpydoc',
+    #'scanpydoc',
 ]
 
 # Generate the API documentation when building
@@ -154,7 +154,8 @@ html_context = dict(
 html_static_path = ['_static']
 
 def setup(app):
-    app.add_stylesheet('css/custom.css')
+    #app.add_stylesheet('css/custom.css')
+    app.add_css_file('css/custom.css')
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
