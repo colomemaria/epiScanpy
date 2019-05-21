@@ -12,4 +12,3 @@ natsort
 joblib
 numba>=0.40.0
 pysam
-IndexMixin
