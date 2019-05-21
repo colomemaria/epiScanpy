@@ -34,23 +34,27 @@ def rank_features(adata, groupby, omic=None, use_raw=True, groups='all', referen
         method='t-test'
     if omic == 'methylation':
     	if copy==False:
-    		sc.tl.rank_genes_groups(adata, groupby, use_raw, groups, reference, n_genes,
-    			rankby_abs=True, key_added, copy=False, method='t-test', corr_method='benjamini-hochberg')
+    		sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
+                groups=groups, reference=reference, n_genes=n_genes,
+    			rankby_abs=True, key_added=key_added, copy=False, method='t-test', corr_method='benjamini-hochberg')
     		return()
     	else:
-    		adata2 = sc.tl.rank_genes_groups(adata, groupby, use_raw, groups, reference, n_genes,
-    			rankby_abs=True, key_added, copy=True, method='t-test', corr_method='benjamini-hochberg')
+    		adata2 = sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
+                groups=groups, reference=reference, n_genes=n_genes,
+    			rankby_abs=True, key_added=key_added, copy=True, method='t-test', corr_method='benjamini-hochberg')
     		return(adata2)
     else:
     	if copy==False:
-    		sc.tl.rank_genes_groups(adata, groupby, use_raw, groups, reference, n_genes,
-                     		rankby_abs, key_added, copy=False, method,
-                     		corr_method, **kwds)
+    		sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
+                            groups=groups, reference=reference, n_genes=n_genes,
+                     		rankby_abs, key_added=key_added, copy=False, method=method,
+                     		corr_method=corr_method, **kwds)
     		return()
     	else:
-    		adata2 = sc.tl.rank_genes_groups(adata, groupby, use_raw, groups, reference, n_genes,
-                     		rankby_abs, key_added, copy=Truee, method,
-                     		corr_method, **kwds)
+    		adata2 = sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
+                            groups=groups, reference=reference, n_genes=n_genes,
+                     		rankby_abs, key_added=key_added, copy=True, method=method,
+                            corr_method=corr_method, **kwds)
     		return(adata2)
 
 
