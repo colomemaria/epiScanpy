@@ -48,8 +48,8 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'sphinx_autodoc_typehints',
-    'sphinx.ext.intersphinx',
-    'scanpydoc'
+    'sphinx.ext.intersphinx'
+    #'scanpydoc'
 ]
 
 # Generate the API documentation when building
