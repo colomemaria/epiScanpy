@@ -1,24 +1,20 @@
 import scanpy.api as sc
 import warnings
-
+from collections import Counter
 
 def load_markers(path, marker_list_file):
-    '''
-    takes a list of known cell type markers from literature and converts it to a dictionary
-    input list must be in the format:
-        head          head
-        cell type     marker
-        cell type     marker
-        ...
-
-        
-    Parameters
-    ----------
-
+    """
+    Convert list of known cell type markers from literature to a dictionary
+    Input list of known marker genes 
+    First row is considered the header
+    Paramters
+    ---------
+    marker_list_file: file with the known marker genes (gene name is the 3rd column)
+    
     Return
     ------
-
-    '''
+    cell_type_markers
+    """
     marker_list = []
     cell_type_list = []
     with open(path+marker_list_file) as f:
@@ -26,7 +22,7 @@ def load_markers(path, marker_list_file):
         for line in f:
             line = line.split("\t")
             line[-1] = line[-1][:-1]
-            marker_list.append(line[2])
+            marker_list.append(line[2].upper())
             cell_type_list.append(line[0])
             
     unique_types = list(set(cell_type_list))
@@ -49,15 +45,20 @@ def load_markers(path, marker_list_file):
 
 def identify_cluster(adata, cell_type, cell_type_markers, peak_promoter_file, gene_name_pos=5, path='', n_peaks_per_cluster=1000):
     """
-    Match cell types with markers for a given count matrix. 
-
-    Parameters
-    ----------
-
+    Use markers of a given cell type to plot peak openness for peaks in promoters of the given markers
+    Input cell type, cell type markers, peak promoter intersections 
+    Paramters
+    ---------
+    cell_type: str, cell type that is to be investigated (must be the same as in the dictionary)
+    cell_type_markers: dict, output of load_markers
+    peak_promoter_file: tab-separated file that stores information about peak/promoter intersections and gene names for these promoters
+    gene_name_pose: int, indicates the column in the peak_promoter_file where the gene name is stored
+    path: str, path to the peak_promoter_file
+    n_peaks_per_cluster: int, number of peaks per louvain cluster that should be searched for matches with the markers
+    
     Return
     ------
-
-
+    umap depicting peak openness for promoters of marker genes for a given cell type
     """
     if "omic" in adata.uns.keys():
         if adata.uns['omics'] == 'ATAC':
@@ -80,11 +81,11 @@ def identify_cluster_ATAC(adata, cell_type, cell_type_markers, peak_promoter_fil
     peak_name = []
     gene_name = []
     with open(path+peak_promoter_file) as f:
+        head = f.readline()
         for line in f:
             line = line.split("\t")
-            if line[0][0:3] == "chr":
-                peak_name.append(line[0])
-                gene_name.append(line[gene_name_pos])
+            peak_name.append(line[0])
+            gene_name.append(line[gene_name_pos].upper())
             
     matching_peaks = []
     matching_gene_name = []
@@ -148,4 +149,4 @@ def identify_cluster_ATAC(adata, cell_type, cell_type_markers, peak_promoter_fil
             sig_gene_names.append(cell_type_gene[idx])
             unique_sig_peaks.append(cell_type_peak[idx])
         
-    return(sc.pl.umap(adata, color=unique_sig_peaks, title=sig_gene_names))      
+    return(sc.pl.umap(adata, color=unique_sig_peaks, title=sig_gene_names))   
