@@ -12,8 +12,8 @@ from pathlib import Path
 from datetime import datetime
 from typing import Optional
 
-from sphinx.application import Sphinx
-from sphinx.ext import autosummary
+#from sphinx.application import Sphinx
+#from sphinx.ext import autosummary
 
 import matplotlib  # noqa
 # Don’t use tkinter agg when importing scanpy → … → matplotlib
