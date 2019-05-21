@@ -47,13 +47,13 @@ def rank_features(adata, groupby, omic=None, use_raw=True, groups='all', referen
     	if copy==False:
     		sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
                             groups=groups, reference=reference, n_genes=n_genes,
-                     		rankby_abs, key_added=key_added, copy=False, method=method,
+                     		rankby_abs=rankby_abs, key_added=key_added, copy=False, method=method,
                      		corr_method=corr_method, **kwds)
     		return()
     	else:
     		adata2 = sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
                             groups=groups, reference=reference, n_genes=n_genes,
-                     		rankby_abs, key_added=key_added, copy=True, method=method,
+                     		rankby_abs=rankby_ab, key_added=key_added, copy=True, method=method,
                             corr_method=corr_method, **kwds)
     		return(adata2)
 
