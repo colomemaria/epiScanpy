@@ -35,7 +35,14 @@ logger = logging.getLogger(__name__)
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 needs_sphinx = '1.7' # autosummary bugfix
-#needs_sphinx = '3.0'  
+#needs_sphinx = '3.0'
+
+# General information
+project = 'eoiScanpy'
+author = episcanpy.__author__
+copyright = f'{datetime.now():%Y}, {author}.'
+version = scanpy.__version__.replace('.dirty', '')
+release = version  
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -92,9 +99,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'episcanpy'
-author = 'Anna Danese, Maria Richter'
-copyright = '2019, Anna Danese' #f'{datetime.now():%Y}, {author}'
+#project = 'episcanpy'
+#author = 'Anna Danese, Maria Richter'
+#copyright = '2019, Anna Danese' #f'{datetime.now():%Y}, {author}'
 
 
 # The version info for the project you're documenting, acts as replacement for
