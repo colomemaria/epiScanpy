@@ -7,7 +7,7 @@ sphinx>=2.0.1
 sphinx_autodoc_typehints
 scanpydoc>=0.3.2
 # same as ../requires.txt, but omitting the c++ packages
-anndata>=0.6.18
+anndata>=0.6.20
 scanpy>=1.4.1
 matplotlib>=3.0.0
 pandas>=0.21
