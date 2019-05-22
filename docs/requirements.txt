@@ -18,5 +18,3 @@ networkx
 natsort
 joblib
 numba
-tqdm
-umap
