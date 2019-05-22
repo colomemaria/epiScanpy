@@ -21,4 +21,4 @@ natsort
 joblib
 numba>=0.41.0
 pysam
-umap-learn>=0.3.0
+umap
