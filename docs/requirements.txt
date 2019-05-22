@@ -8,8 +8,8 @@ sphinx_autodoc_typehints
 scanpydoc>=0.3.2
 # same as ../requires.txt, but omitting the c++ packages
 anndata>=0.6.18
-bliblablubb
 scanpy>=1.4.1
+bliblablubb
 matplotlib>=3.0.0
 pandas>=0.21
 scipy<=1.1
