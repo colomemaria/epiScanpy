@@ -31,3 +31,5 @@ from anndata import read_h5ad, read_csv, read_excel, read_hdf, read_loom, read_m
 #from .readwrite import read, read_10x_h5, read_10x_mtx
 #from .neighbors import Neighbors
 from .settings import set_figure_params
+
+import scanpy as sc
