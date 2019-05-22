@@ -49,7 +49,7 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.githubpages',
     'sphinx_autodoc_typehints',
-    #'scanpydoc',
+    'scanpydoc',
 ]
 
 # Generate the API documentation when building
