@@ -1,5 +1,5 @@
 import anndata as ad 
-import scanpy.api as sc
+import scanpy as sc
 from sklearn.metrics import silhouette_score, silhouette_samples
 
 def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean',
