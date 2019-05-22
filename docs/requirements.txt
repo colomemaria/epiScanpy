@@ -5,10 +5,10 @@ sphinx_rtd_theme>=0.3.1
 # sphinx>=1.8
 sphinx>=2.0.1
 sphinx_autodoc_typehints
-bliblablubb
 scanpydoc>=0.3.2
 # same as ../requires.txt, but omitting the c++ packages
 anndata>=0.6.18
+bliblablubb
 scanpy>=1.4.1
 matplotlib>=3.0.0
 pandas>=0.21
