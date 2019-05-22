@@ -41,7 +41,7 @@ needs_sphinx = '1.7' # autosummary bugfix
 project = 'eoiScanpy'
 author = episcanpy.__author__
 copyright = f'{datetime.now():%Y}, {author}.'
-version = scanpy.__version__.replace('.dirty', '')
+version = episcanpy.__version__.replace('.dirty', '')
 release = version  
 
 # Add any Sphinx extension module names here, as strings. They can be
