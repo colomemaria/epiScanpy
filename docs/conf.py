@@ -146,7 +146,11 @@ html_theme = 'sphinx_rtd_theme'#'alabaster'
 # html_theme_options = {}
 html_theme_options = dict(
     navigation_depth=4, # it used to be navigation_depth=2,
+    github_url='https://github.com/colomemaria/epiScanpy/',
+    #canonical_url='http://docs.pylonsproject.org/en/latest/',
+
 )
+
 
 html_context = dict(
     display_github=True,      # Integrate GitHub
