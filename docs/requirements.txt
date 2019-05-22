@@ -2,8 +2,8 @@
 sphinx_rtd_theme>=0.3.1
 # sphinx-autodoc-typehints needs at least sphinx 1.8
 # sphinx version does not make a huge difference
-# sphinx>=1.8
-sphinx>=2.0.1
+sphinx>=1.8
+#sphinx>=2.0.1
 sphinx_autodoc_typehints
 # scanpydoc
 # same as ../requires.txt, but omitting the c++ packages
