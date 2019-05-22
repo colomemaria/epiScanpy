@@ -9,7 +9,7 @@ scanpydoc>=0.3.2
 # anndata>=0.6.16
 matplotlib>=2.2
 pandas>=0.21
-scipy
+scipy<1.2
 seaborn
 h5py
 scikit-learn>=0.19.1
