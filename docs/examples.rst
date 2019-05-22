@@ -7,8 +7,8 @@ Tutorials
 Single cell ATAC-seq
 --------------------
 
-To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data for 10k PBMCs from 10x Genomics. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found `here <http://github.com/colomemaria/epiScanpy/blob/ATAC_tutorial_2/docs/tutorials/bld_count_matrix_methylation_tutorial.html>`__.
-`here <_static/tutorials/bld_count_matrix_methylation_tutorial.html>>`_
+To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data for 10k PBMCs from 10x Genomics. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found `here <_static/tutorials/bld_count_matrix_methylation_tutorial.html>>`_
+
 `here <tutorials/bld_count_matrix_methylation_tutorial.html>>`_
 
 NB: The current tutorial is a beta version that do not include either optimal low embedding & clustering setiings or proper cell type identifications. To check out performance see other tutorials below and an updated version will be available very soon.
