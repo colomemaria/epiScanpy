@@ -1,8 +1,8 @@
 # use highlighting until the merge of https://github.com/rtfd/readthedocs.org/pull/4096
 sphinx_rtd_theme>=0.3.1
 # sphinx-autodoc-typehints needs at least sphinx 1.8
-# sphinx>=1.8
-sphinx>=2.0.1
+sphinx>=1.8
+# sphinx>=2.0.1
 sphinx-autodoc-typehints
 scanpydoc>=0.3.2
 # same as ../requires.txt, but omitting the c++ packages
