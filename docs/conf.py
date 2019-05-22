@@ -41,15 +41,15 @@ needs_sphinx = '1.7' # autosummary bugfix
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
 	'sphinx.ext.doctest',
     'sphinx.ext.coverage',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.githubpages',
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
+    'sphinx.ext.autosummary',
+    #'sphinx.ext.githubpages',
     'sphinx_autodoc_typehints',
-    'sphinx.ext.intersphinx'
-    #'scanpydoc'
+    #'scanpydoc',
 ]
 
 # Generate the API documentation when building
