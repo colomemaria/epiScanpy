@@ -22,7 +22,7 @@ matplotlib.use('agg')
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent))
 import anndata
-import episcanpy  # noqa
+#import episcanpy  # noqa
 
 
 logger = logging.getLogger(__name__)
