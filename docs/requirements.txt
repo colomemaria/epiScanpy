@@ -1,13 +1,14 @@
 # use highlighting until the merge of https://github.com/rtfd/readthedocs.org/pull/4096
 sphinx_rtd_theme>=0.3.1
 # sphinx-autodoc-typehints needs at least sphinx 1.8
-sphinx>=1.8
-# sphinx>=2.0.1
+# sphinx version does not make a huge difference
+# sphinx>=1.8
+sphinx>=2.0.1
 sphinx-autodoc-typehints
 scanpydoc>=0.3.2
 # same as ../requires.txt, but omitting the c++ packages
 anndata>=0.6.15
-matplotlib>=2.2
+matplotlib>=3.0.0
 pandas>=0.21
 scipy>=1.1
 seaborn
@@ -17,4 +18,5 @@ scikit-learn>=0.19.1
 networkx
 natsort
 joblib
-numba
+numba>=0.41.0
+pysam
