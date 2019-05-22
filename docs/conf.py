@@ -47,7 +47,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
-    #'sphinx.ext.githubpages',
+    'sphinx.ext.githubpages',
     'sphinx_autodoc_typehints',
     #'scanpydoc',
 ]
