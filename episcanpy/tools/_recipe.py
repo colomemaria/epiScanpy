@@ -1,4 +1,4 @@
-import scanpy as sc
+import scanpy.api as sc
 import anndata as ad
 
 def lazy(adata, pp_pca=True, copy=False):
