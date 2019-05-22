@@ -22,7 +22,6 @@ matplotlib.use('agg')
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent))
 import anndata
-import scanpy
 import episcanpy  # noqa
 
 
@@ -50,7 +49,7 @@ extensions = [
     'sphinx.ext.autosummary',
     #'sphinx.ext.githubpages',
     'sphinx_autodoc_typehints',
-    'scanpydoc',
+    #'scanpydoc',
 ]
 
 # Generate the API documentation when building
