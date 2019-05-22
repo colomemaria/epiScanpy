@@ -5,7 +5,7 @@ sphinx_rtd_theme>=0.3.1
 #sphinx>=1.8
 sphinx>=2.0.1
 sphinx_autodoc_typehints
-# scanpydoc
+scanpydoc
 # same as ../requires.txt, but omitting the c++ packages
 anndata>=0.6.20
 git+https://github.com/theislab/scanpy.git
