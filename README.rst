@@ -17,6 +17,7 @@ EpiScanpy – Epigenomics single cell analysis in python
 The documentation for epiScanpy is available at <https://episcanpy.readthedocs.io/en/latest/>
 If epiScanpy is useful to your research, consider citing `epiScanpy <https://github.com/colomemaria/epiScanpy>`__.
 
-
+.. image:: docs/pictures/pbmc_PCA_coverage.png
+   :width: 200px
 .. image:: docs/pictures/umapenhancer_CG_Luoetal.png
    :width: 30px
