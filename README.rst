@@ -18,5 +18,5 @@ The documentation for epiScanpy is available at <https://episcanpy.readthedocs.i
 If epiScanpy is useful to your research, consider citing `epiScanpy <https://github.com/colomemaria/epiScanpy>`__.
 
 
-.. image:: ./docs/pictures/umapenhancer_CG_Luoetal.png
-   :width: 300px
+.. image:: docs/pictures/umapenhancer_CG_Luoetal.png
+   :width: 30px
