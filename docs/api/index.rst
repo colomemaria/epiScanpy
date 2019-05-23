@@ -59,10 +59,11 @@ General functions
 
 Functions non -omic specific:
 
-   .. autosummary::
-      :toctree: .
+.. autosummary::
+   :toctree: .
 
    ct.save_sparse_mtx
+
 
 
 Preprocessing: PP
