@@ -19,4 +19,4 @@ If epiScanpy is useful to your research, consider citing `epiScanpy <https://git
 
 
 .. image:: docs/pictures/umapenhancer_CG_Luoetal.png
-   :width: 800px
+   :width: 500px

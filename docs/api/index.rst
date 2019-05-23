@@ -60,7 +60,7 @@ General functions
 Functions non -omic specific:
 
    .. autosummary::
-   :toctree: .
+      :toctree: .
 
    ct.save_sparse_mtx
 
@@ -117,6 +117,7 @@ For most tools and for some preprocessing functions, you'll find a plotting func
 
 .. autosummary::
    :toctree: .
+   
    pl.prct_overlap
    pl.overlap_heatmap
    pl.silhouette
