@@ -2,23 +2,24 @@
 sphinx_rtd_theme>=0.3.1
 # sphinx-autodoc-typehints needs at least sphinx 1.8
 # sphinx version does not make a huge difference
-# sphinx>=1.8
+#sphinx>=1.8
 sphinx>=2.0.1
 sphinx_autodoc_typehints
 scanpydoc
 # same as ../requires.txt, but omitting the c++ packages
 anndata>=0.6.20
-scanpy>=1.4.3
+git+https://github.com/theislab/scanpy.git
+#scanpy>=1.4.3
 matplotlib>=2.2
 pandas>=0.21
 scipy>=1.3
 seaborn
 h5py
-scikit-learn>=0.19.1
+scikit-learn>=0.19.1, != 0.21.0, != 0.21.1
 # statsmodels  # not needed for docs
 networkx
 natsort
 joblib
 numba>=0.41.0
 pysam
-umap-learn
+umap-learn>=0.3.0

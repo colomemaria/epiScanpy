@@ -5,7 +5,7 @@ Anaconda
 ~~~~~~~~
 
 If you do not have a working Python 3.5 or 3.6 installation, consider
-installing Miniconda_ (see `Installing Miniconda`_). Then run::
+installing Miniconda (see `Installing Miniconda <http://conda.pydata.org/miniconda.html>`__). Then run::
 
     conda install seaborn scikit-learn statsmodels numba
     conda install -c conda-forge python-igraph louvain

@@ -12,8 +12,8 @@ from pathlib import Path
 from datetime import datetime
 from typing import Optional
 
-from sphinx.application import Sphinx
-from sphinx.ext import autosummary
+#from sphinx.application import Sphinx
+#from sphinx.ext import autosummary
 
 import matplotlib  # noqa
 # Don’t use tkinter agg when importing scanpy → … → matplotlib
@@ -55,9 +55,9 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
-    #'sphinx.ext.githubpages',
+    'sphinx.ext.githubpages',
     'sphinx_autodoc_typehints',
-    #'scanpydoc',
+    'scanpydoc',
 ]
 
 # Generate the API documentation when building
