@@ -10,7 +10,6 @@ Single cell ATAC-seq
 To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data for 10k PBMCs from 10x Genomics. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found `here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/tutorials/docs/tutorials/beta_tutorial_10x_pbmc.html>`__. 
 
 
-
 NB: The current tutorial is a beta version that do not include either optimal low embedding & clustering setiings or proper cell type identifications. To check out performance see other tutorials below and an updated version will be available very soon. 
 
 
@@ -21,7 +20,7 @@ NB: The current tutorial is a beta version that do not include either optimal lo
 .. image:: pictures/pbmc_diffmap.png
    :width: 200px
 
-   
+
 If you want to see how to build count matrices from ATAC-seq bam files for different set of annotations (like enhancers).
 The tutorial can be found `here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/tutorials/docs/tutorials/ATAC_bld_ct_mtx_tutorial.html>`__. 
 
@@ -53,4 +52,4 @@ Then, there is a second tutorial on how to use them and compare the results. The
 .. image:: pictures/umapSatb2_CLUSTER_NORM.png
    :width: 250px  
 .. image:: pictures/umapenhancer_CG_Luoetal.png
-   :width: 100px
+   :width: 300px

@@ -1,11 +1,12 @@
 import anndata as ad
 
-def load_metadata(adata, metadata_file, path=''):
+def load_metadata(adata, metadata_file, path='', separator=';'):
     """
     Load observational metadata in adata.obs.
-    Input metadata file as csv and adata object.
+    Input metadata file as csv/txt and the adata object to annotate.
 
     first raw of the metadata file is considered as a header
+    first column contain the cell name
 
     Paramters
     ---------
@@ -14,18 +15,22 @@ def load_metadata(adata, metadata_file, path=''):
 
     metadata_file: csv file containing as a first column the cell names and in the
         rest of the columns any king of metadata to load
+
+    path: pathe to the metadata file
+
+    separator: ';' or "\t", character used to split the columns
     
     Return
     ------
-    Annotated AnnData
+    Annotated AnnData 
     """
     dict_annot = {}
     with open(path+metadata_file) as f:
-        head = f.readline().split(';')
+        head = f.readline().split(separator)
         file = f.readlines()
     for key in head:
         dict_annot[key] = []
-    data = [line.split(';') for line in file]
+    data = [line.split(separator) for line in file]
 
     for name in adata.obs_names:
         name = name.split('.')[0]
