@@ -8,7 +8,9 @@ MOUSE = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
 HUMAN = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22',
         '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
 
-def bld_atac_mtx(list_bam_files, loaded_feat, output_file=None, path=None, writing_option='a', header=None, chromosomes=MOUSE):
+def bld_atac_mtx(list_bam_files, loaded_feat, output_file_name=None,
+    path=None, writing_option='a', header=None, mode='rb',
+    check_sq=True, chromosomes=MOUSE):
     """
     Build a count matrix one set of features at a time. It is specific of ATAC-seq data.
     It curently do not write down a sparse matrix. It writes down a regular count matrix
@@ -22,7 +24,7 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file=None, path=None, writi
 
     loaded_feat: the features for which you want to build the count matrix
         
-    output_file: name of the output file. The count matrix that will be written
+    output_file_name: name of the output file. The count matrix that will be written
         down in the current directory. If this parameter is not specified, 
         the output count amtrix will be named 'std_output_ct_mtx.txt'
 
@@ -37,6 +39,12 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file=None, path=None, writi
     header: if you want to write down the feature name specify this argument.
         Input must be a list.
 
+    mode: pysam argument 'r' or 'w' for read and write 'b' and 's' for bam or sam
+        if only 'r' is specified, pysam will try to determine if the input is 
+        either a bam or sam file.
+
+    check_sq: pysam argument. when reading, check if SQ entries are present in header
+
     chromosomes: chromosomes of the species you are considering. default value
         is the mouse genome (not including mitochondrial genome).
         MOUSE = '1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
@@ -49,14 +57,15 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file=None, path=None, writi
 
     """
         
-    if output_file==None:
-        output_file='std_output_ct_mtx.txt'
-    # open file to write
-    output_file = open(path+output_file, writing_option)
+    if output_file_name==None:
+        output_file_name='std_output_ct_mtx.txt'
+
 
     if path==None:
         path=''
     
+    # open file to write
+    output_file = open(path+output_file_name, writing_option)
     # write header if specified
     if header != None:
         output_file.write('sample_name\t')
@@ -64,16 +73,19 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file=None, path=None, writi
             output_file.write(feature)
             output_file.write('\t')
         output_file.write('\n')
-    
+    # close file to write   
+    output_file.close()
+
     # start going through the bam files
     for name_file in list_bam_files[0:]:
+
         ## important variables for output
         index_feat = {key: 0 for key in chromosomes}    
         val_feat = {key: [0 for x in range(len(loaded_feat[key]))] for key in chromosomes}
     
         ## PART 1 read the bam file
         keep_lines = []
-        samfile = pysam.AlignmentFile(path+name_file, "rb")
+        samfile = pysam.AlignmentFile(path+output_file_name, mode="rb", check_sq=False)
         for read in samfile.fetch(until_eof=True):
             line = str(read).split('\t')
             if line[2] in chromosomes:
@@ -121,6 +133,8 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file=None, path=None, writi
                     break
                     
         # PART 3
+        # open
+        output_file = open(path+output_file_name, 'a')
         # write down the result of the cell
         output_file.write(name_file)
         output_file.write('\t')
@@ -128,12 +142,34 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file=None, path=None, writi
             output_file.write('\t'.join([str(p) for p in val_feat[chrom]]))
             output_file.write('\t')
         output_file.write('\n')
-
-    output_file.close()
+        #close
+        output_file.close()
     
-#
+def read_mtx_bed(file_name, path='', omic='ATAC'):
+    """
+    read this specific matrix format. It is the standard output of bedtools when you merge bam files.
+    """
+    peak_name = []
+    cell_matrix = [] 
+    with open('GSM3034623_BoneMarrow_62216.peakmatrix.txt') as f:
+        head = f.readline().split('\t')
+        head[len(head)-1] = head[len(head)-1].split("\n")[0]
+        for line in f:
+            line = line.split('\t')
+            line[len(line)-1] = line[len(line)-1].split("\n")[0]
+            peak_name.append(line[3]) # for some reason it has rownames
+            cell_matrix.append([int(x) for x in line[4:]])
+    cell_names = head[4:]
+    cell_matrix=np.matrix(cell_matrix)
+    cell_matrix = cell_matrix.transpose()
+    adata = ad.AnnData(cell_matrix,
+                   obs=pd.DataFrame(index=cell_names),
+                   var=pd.DataFrame(index=peak_name))
+    if omic != None:
+        adata.uns['omic'] = omic
+    return(adata)
 
-def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC'):
+def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC', bed=False, save=True):
     """
     Convert regular atac matrix into a sparse matrix:
 
@@ -153,6 +189,10 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC'):
         However, other omic name can be accepted but are not yet recognised in other functions.
         default: 'ATAC'
 
+    bed: boolean. If True it consider another input format (bedtools output format for count matrices)
+
+    save: boolean. If True, the sparse matrix is saved as h5ad file. Otherwise it is simply return.
+
     Return
     ------
 
@@ -161,33 +201,42 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC'):
     head = None
     data = []
     cell_names = []
-    # reading the non sparse file
-    with open(path+initial_matrix) as f:
-        first_line = f.readline()
-        first_line = first_line[:-3].split('\t')
-        if first_line[0] == 'sample_name':
-            head = first_line
-        else:
-            cell_names.append(first_line[0])
-            data = [[int(l) for l in first_line[1:]]]
-        file = f.readlines()
-    
-    for line in file:
-        line = line[:-3].split('\t')
-        cell_names.append(line[0])
-        data.append([int(l) for l in line[1:]])
 
-    # convert into an AnnData object
-    if head != None:
-        adata = ad.AnnData(np.array(data), obs=pd.DataFrame(index=cell_names), var=pd.DataFrame(index=head[1:]))
+    # choice between 2 different input count matrix formats
+    if bed == True:
+        adata = read_mtx_bed(file_name, path, omic)
     else:
-        adata = ad.AnnData(np.array(data), obs=pd.DataFrame(index=cell_names))
+        # reading the non sparse file
+        with open(path+initial_matrix) as f:
+            first_line = f.readline()
+            first_line = first_line[:-3].split('\t')
+            if first_line[0] == 'sample_name':
+                head = first_line
+            else:
+                cell_names.append(first_line[0])
+                data = [[int(l) for l in first_line[1:]]]
+            file = f.readlines()
+    
+        for line in file:
+            line = line[:-3].split('\t')
+            cell_names.append(line[0])
+            data.append([int(l) for l in line[1:]])
+
+        # convert into an AnnData object
+        if head != None:
+            adata = ad.AnnData(np.array(data), obs=pd.DataFrame(index=cell_names), var=pd.DataFrame(index=head[1:]))
+        else:
+            adata = ad.AnnData(np.array(data), obs=pd.DataFrame(index=cell_names))
         
-    adata.uns['omic'] = omic
+        if omic != None:
+            adata.uns['omic'] = omic
+
     # writing the file as h5ad --> sparse matrix with minimum annotations
-    if output_file=='.h5ad':
-        output_file = "".join([initial_matrix.split('.')[0], output_file])
+    if save ==True:
+        if output_file=='.h5ad':
+            output_file = "".join([initial_matrix.split('.')[0], output_file])
         
-    adata.write(output_file)
+        adata.write(output_file)
+
     return(adata)
     

@@ -50,3 +50,5 @@ Then, there is a second tutorial on how to use them and compare the results. The
    :width: 300px 
 .. image:: pictures/umapSatb2_CLUSTER_NORM.png
    :width: 250px  
+.. image:: pictures/umapenhancer_CG_Luoetal.png
+   :width: 300px
