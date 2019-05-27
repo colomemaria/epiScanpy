@@ -10,7 +10,7 @@
 
 
 EpiScanpy – Epigenomics single cell analysis in python
-============================================
+======================================================
 
 **EpiScanpy** is a toolkit to analyse single-cell open chromatin (scATAC-seq) and single-cell DNA methylation (for example scBS-seq) data. **EpiScanpy** is the epigenomic extension of the very popular scRNA-seq analysis tool **Scanpy** (`Genome Biology <https://doi.org/10.1186/s13059-017-1382-0>`__, 2018) [Wolf18]. For more information, read scanpy `documentation <https://scanpy.readthedocs.io>`__. 
 
