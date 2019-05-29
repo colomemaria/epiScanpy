@@ -24,7 +24,8 @@ def coverage_cells(adata, bins=50, key_added=None):
     plt.hist(adata.obs[key_added], bins)
     plt.show
     
-def commoness_features(adata, threshold=None, bw=0.5, key_added=None):
+
+ def commoness_features(adata, threshold=None, bw=0.5, key_added=None):
     """
     Display how often a feature is measured as open (for ATAC-seq).
     Distribution of the feature commoness in cells.
@@ -32,14 +33,8 @@ def commoness_features(adata, threshold=None, bw=0.5, key_added=None):
     if key_added == None:
         key_added='commonness'
     
-    adata_tmp = adata.copy()
-    adata_tmp = adata_tmp.transpose()
-    common = []
-    matrix = np.matrix(adata_tmp.X)
-    matrix = matrix.transpose()
-    matrix = matrix.tolist()
-    for var in matrix:
-        common.append(sum(var))
+    common = np.sum(adata.X, axis=0).tolist()
+    common = [item for sublist in common for item in sublist]
     adata.var[key_added] = common
 
     if threshold != None:
@@ -47,7 +42,6 @@ def commoness_features(adata, threshold=None, bw=0.5, key_added=None):
     bw_param = bw
     sns.set_style('whitegrid')
     sns.kdeplot(np.array(adata.var[key_added]), bw=bw_param)
-    
     
 def binarize(adata, copy=False):
     """convert into a binary matrix"""
