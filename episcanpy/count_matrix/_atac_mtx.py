@@ -151,7 +151,7 @@ def read_mtx_bed(file_name, path='', omic='ATAC'):
     """
     peak_name = []
     cell_matrix = [] 
-    with open('GSM3034623_BoneMarrow_62216.peakmatrix.txt') as f:
+    with open(path+file_name) as f:
         head = f.readline().split('\t')
         head[len(head)-1] = head[len(head)-1].split("\n")[0]
         for line in f:
