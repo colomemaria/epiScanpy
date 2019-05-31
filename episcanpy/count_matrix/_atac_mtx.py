@@ -10,7 +10,7 @@ HUMAN = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', 
 
 def bld_atac_mtx(list_bam_files, loaded_feat, output_file_name=None,
     path=None, writing_option='a', header=None, mode='rb',
-    check_sq=True, chromosomes=MOUSE):
+    check_sq=True, chromosomes=HUMAN):
     """
     Build a count matrix one set of features at a time. It is specific of ATAC-seq data.
     It curently do not write down a sparse matrix. It writes down a regular count matrix
