@@ -12,11 +12,11 @@ def coverage_cells(adata, bins=50, key_added=None):
     if key_added == None:
         key_added='sum_peaks'
     # make sum peaks
-    sum_peaks = []
-    matrix = np.matrix(adata.X)
-    matrix = matrix.tolist()
-    for var in matrix:
-        sum_peaks.append(sum(var))
+    
+    sum_peaks = np.sum(adata.X, axis=1)
+    if len(sum_peaks) == 1:
+        sum_peaks = sum_peaks.tolist()
+        sum_peaks = [item for sublist in sum_peaks for item in sublist]
     adata.obs[key_added] = sum_peaks
     
     # number of peaks in a cell
@@ -25,7 +25,7 @@ def coverage_cells(adata, bins=50, key_added=None):
     plt.show
     
 
- def commoness_features(adata, threshold=None, bw=0.5, key_added=None):
+def commoness_features(adata, threshold=None, bw=0.5, key_added=None):
     """
     Display how often a feature is measured as open (for ATAC-seq).
     Distribution of the feature commoness in cells.
@@ -34,7 +34,8 @@ def coverage_cells(adata, bins=50, key_added=None):
         key_added='commonness'
     
     common = np.sum(adata.X, axis=0).tolist()
-    common = [item for sublist in common for item in sublist]
+    if len(common) == 1:
+        common = [item for sublist in common for item in sublist]
     adata.var[key_added] = common
 
     if threshold != None:
