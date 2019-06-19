@@ -34,6 +34,7 @@ Soon available, there will be a tutorial on preprocessing, clustering and identi
 .. image:: pictures/heatmap.png
    :width: 600px
 
+An additional tutorial on processing and clustering count matrices from the Cusanovich atlas. `Here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/ATAC_bld_ct_mtx_tutorial.html>`__.
 
 ------------
 
@@ -42,7 +43,7 @@ Single cell DNA methylation
 
 Here you can find a tutorial for the preprocessing, clustering and identification of cell types for single-cell DNA methylation data using the publicly available data from Luo et al. [Luo17]_. 
 
-The first tutorial shows how to build the count matrices for the different feature spaces (windows, promoters) in different cytosine contexts. Here is the  `tutorial  <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/bld_count_matrix_methylation_tutorial.html>`__.
+The first tutorial shows how to build the count matrices for the different feature spaces (windows, promoters) in different cytosine contexts. Here is the  `tutorial  <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/Tutorial-preprocessing_ATAC_cusanovich.html>`__.
 
 Then, there is a second tutorial on how to use them and compare the results. The data used comes from mouse brain (frontal cortex). It will be available very soon.
 
