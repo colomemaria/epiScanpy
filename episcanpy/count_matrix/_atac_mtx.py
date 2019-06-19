@@ -1,4 +1,4 @@
-import pysam
+import bamnostic as bm
 import numpy as np
 import anndata as ad
 import pandas as pd
@@ -85,7 +85,7 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file_name=None,
     
         ## PART 1 read the bam file
         keep_lines = []
-        samfile = pysam.AlignmentFile(path+output_file_name, mode="rb", check_sq=False)
+        samfile = bm.AlignmentFile(path+output_file_name, mode="rb", check_sq=False)
         for read in samfile.fetch(until_eof=True):
             line = str(read).split('\t')
             if line[2] in chromosomes:
