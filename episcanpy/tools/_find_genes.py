@@ -3,8 +3,8 @@ import anndata as ad
 def top_feature_genes(adata, gtf_file, extension=5000):
     
     # extract_top_markers
-    #print(adata2.uns['rank_genes_groups'].keys())
-    windows = [list(w) for w in adata2.uns['rank_genes_groups']['names'].tolist()]
+    #print(adata.uns['rank_genes_groups'].keys())
+    windows = [list(w) for w in adata.uns['rank_genes_groups']['names'].tolist()]
     windows_all = []
     for w in windows:
         windows_all += w
@@ -17,6 +17,14 @@ def top_feature_genes(adata, gtf_file, extension=5000):
         if line[0] != '#':
             gtf.append(line[:-2].split('\t'))
     del gtf_raw
+    
+    gtf_dic = {}
+    for line in gtf:
+        if line[0] not in gtf_dic.keys():
+            gtf_dic[line[0]] = [line]
+        else:
+            gtf_dic[line[0]].append(line)
+    del gtf
 
     markers = []
     for w in windows_all:
@@ -25,8 +33,8 @@ def top_feature_genes(adata, gtf_file, extension=5000):
         chrom = w2[0][3:]
         w2 = [int(x) for x in w2[1:]]
         for gene in gtf_dic[chrom]:
-            start = int(gene[3])-EXTENSION
-            end = int(gene[4])+EXTENSION
+            start = int(gene[3])-extension
+            end = int(gene[4])+extension
             if (w2[0] < start < w2[1]) or (w2[0] < end < w2[1]):
                 gene_name = gene[-1]
                 for n in gene[-1].split(';'):
