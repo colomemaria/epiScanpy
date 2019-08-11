@@ -40,6 +40,8 @@ def commonness_features(adata, threshold=None, bw=0.5, key_added=None, xlabel=No
     if save!= None:
         fig.savefig(save)
     plt.show()
+
+    adata.var[key_added] = common
     
 def coverage_cells(adata, bins=50, key_added=None, xlabel=None, ylabel=None, title=None, save=None):
     """

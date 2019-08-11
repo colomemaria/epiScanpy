@@ -11,5 +11,6 @@ networkx
 natsort
 joblib
 numba>=0.41.0
-pysam
+#pysam
+bamnostic>=1.0.12
 umap-learn>=0.3.0
