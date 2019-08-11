@@ -38,7 +38,7 @@ needs_sphinx = '1.7' # autosummary bugfix
 #needs_sphinx = '3.0'
 
 # General information
-project = 'eoiScanpy'
+project = 'epiScanpy'
 author = episcanpy.__author__
 copyright = f'{datetime.now():%Y}, {author}.'
 version = episcanpy.__version__.replace('.dirty', '')

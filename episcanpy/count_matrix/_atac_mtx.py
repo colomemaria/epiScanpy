@@ -1,4 +1,5 @@
-import pysam
+#import pysam
+import bamnostic as bs
 import numpy as np
 import anndata as ad
 import pandas as pd
@@ -39,11 +40,11 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file_name=None,
     header: if you want to write down the feature name specify this argument.
         Input must be a list.
 
-    mode: pysam argument 'r' or 'w' for read and write 'b' and 's' for bam or sam
-        if only 'r' is specified, pysam will try to determine if the input is 
+    mode: bamnostic argument 'r' or 'w' for read and write 'b' and 's' for bam or sam
+        if only 'r' is specified, bamnostic will try to determine if the input is 
         either a bam or sam file.
 
-    check_sq: pysam argument. when reading, check if SQ entries are present in header
+    check_sq: bamnostic argument. when reading, check if SQ entries are present in header
 
     chromosomes: chromosomes of the species you are considering. default value
         is the mouse genome (not including mitochondrial genome).
@@ -85,7 +86,7 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file_name=None,
     
         ## PART 1 read the bam file
         keep_lines = []
-        samfile = pysam.AlignmentFile(path+output_file_name, mode="rb", check_sq=False)
+        samfile = bs.AlignmentFile(path+output_file_name, mode="rb", check_sq=False)
         for read in samfile.fetch(until_eof=True):
             line = str(read).split('\t')
             if line[2] in chromosomes:

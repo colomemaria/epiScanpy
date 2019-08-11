@@ -17,7 +17,7 @@ Finally, run::
 
 
 
-Pull Scanpy from `PyPI <https://pypi.org/project/episcanpy>`__ (consider
+Pull epiScanpy from `PyPI <https://pypi.org/project/episcanpy>`__ (consider
 using ``pip3`` to access Python 3)::
 
     pip install episcanpy

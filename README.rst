@@ -1,12 +1,11 @@
-|Docs| |PyPI| |bioconda|
+|Docs| |PyPI| 
 
 
 .. |Docs| image:: https://readthedocs.com/projects/icb-scanpy/badge/?version=latest
    :target: https://episcanpy.readthedocs.io/en/latest/
 .. |PyPI| image:: https://img.shields.io/pypi/v/episcanpy.svg
     :target: https://pypi.org/project/episcanpy
-.. |bioconda| image:: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square
-   :target: http://bioconda.github.io/recipes/episcanpy/README.html
+
 
 
 EpiScanpy – Epigenomics single cell analysis in python
