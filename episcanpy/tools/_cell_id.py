@@ -1,4 +1,4 @@
-import scanpy as sc
+import scanpy.api as sc
 import warnings
 from collections import Counter
 
