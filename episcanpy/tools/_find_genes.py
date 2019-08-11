@@ -1,4 +1,4 @@
-import annadata as ad
+import anndata as ad
 
 def top_feature_genes(adata, gtf_file, extension=5000):
     
