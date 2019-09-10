@@ -422,7 +422,7 @@ def make_list(dico):
     return final_list
 
 def build_count_mtx(cells, annotation, path="", output_file=None, writing_option="a",
-                    meth_context="CG", chromosome=MOUSE, feature_names=None,
+                    meth_context="CG", chromosome=HUMAN, feature_names=None,
                    threshold=1, ct_mtx=None, sparse=False):
     """
     Build methylation count matrix for a given annotation.

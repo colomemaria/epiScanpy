@@ -47,7 +47,9 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file_name=None,
     check_sq: bamnostic argument. when reading, check if SQ entries are present in header
 
     chromosomes: chromosomes of the species you are considering. default value
-        is the mouse genome (not including mitochondrial genome).
+        is the human genome (not including mitochondrial genome).
+        HUMAN = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22',
+                '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
         MOUSE = '1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
                 '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
 
