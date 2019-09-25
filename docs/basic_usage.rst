@@ -36,7 +36,7 @@ The next step, is the calculation of tSNE, UMAP, PCA etc. For that, we take adva
         
 There are also epiScanpy specific tools and plotting functions that can be accessed using ``epi.tl`` and ``epi.pl`` ::
 
-        epi.tl.silhoouette(adata, **tool_params)
+        epi.tl.silhouette(adata, **tool_params)
         epi.pl.silhouette(adata, **plotting_params)
         epi.pl.prct_overlap(adata, **plotting_params)
         
