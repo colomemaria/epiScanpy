@@ -40,4 +40,5 @@ Thumbs.db
 /__pycache__/
 .Rproj.user
 epiScanpy.Rproj
+.Rhistory
 
