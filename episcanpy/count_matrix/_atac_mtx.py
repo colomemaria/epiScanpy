@@ -88,10 +88,12 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file_name=None,
     
         ## PART 1 read the bam file
         keep_lines = []
-        samfile = bs.AlignmentFile(path+output_file_name, mode="rb", check_sq=False)
-        for read in samfile.fetch(until_eof=True):
+        #samfile = bs.AlignmentFile(path+output_file_name, mode="rb", check_sq=False)
+        samfile = bs.AlignmentFile(path+name_file, mode="rb", check_sq=False)
+        #for read in samfile.fetch(until_eof=True):
+        for read in samfile:
             line = str(read).split('\t')
-            if line[2] in chromosomes:
+            if line[2][3:] in chromosomes:
                 keep_lines.append(line[2:4])
             ### print -- output
         print(name_file, len(keep_lines), 'mapped reads')
@@ -100,7 +102,7 @@ def bld_atac_mtx(list_bam_files, loaded_feat, output_file_name=None,
         ## PART2 reads that fall into 
         for element in keep_lines:
             ## 2 things per line:
-            chrom = element[0]
+            chrom = element[0][3:]
             read_pos = int(element[1])
             max_value_index = len(loaded_feat[chrom])
             ## I want to check if the read map to a feature in the same chrom
