@@ -1,17 +1,18 @@
 import scanpy as sc
 # function copied from scanpy. default parameters changed
 
-def neighbors(adata: AnnData,
-    n_neighbors: int = 15,
-    n_pcs: Optional[int] = None,
-    use_rep: Optional[str] = None,
-    knn: bool = True,
-    random_state: Optional[Union[int, RandomState]] = 0,
-    method: str = 'gauss',
-    metric: Union[str, Metric] = 'euclidean',
-    metric_kwds: Mapping[str, Any] = {},
-    copy: bool = False):
-	"""\
+def neighbors(adata,
+    n_neighbors = 15,
+    n_pcs = None,
+    use_rep = None,
+    knn = True,
+    random_state = 0,
+    method = 'gauss',
+    metric = 'euclidean',
+    metric_kwds = {},
+    copy = False):
+
+    """\
     Compute a neighborhood graph of observations [McInnes18]_.
 
     The neighbor search efficiency of this heavily relies on UMAP [McInnes18]_,
@@ -65,7 +66,7 @@ def neighbors(adata: AnnData,
         neighbors.
     """
 
-    sc.pp.neighbors(adata, n_neighbors,n_pcs, use_rep, knn, random_state,
-    	method, metric, metric_kwds, copy)
+    sc.pp.neighbors(adata, n_neighbors, n_pcs, use_rep, knn, random_state, 
+        method, metric, metric_kwds, copy)
 
     
