@@ -16,8 +16,8 @@ def pca(adata, n_comps=50, zero_center=True, svd_solver='auto', random_state=0,
     See epi.pp.pca
     """
     if copy:
-	   return(sc.tl.pca(adata, n_comps, zero_center, svd_solver, random_state,
-        return_info, use_highly_variable, dtype, copy, chunked, chunk_size))
+        return(sc.tl.pca(adata, n_comps, zero_center, svd_solver, random_state,
+            return_info, use_highly_variable, dtype, copy, chunked, chunk_size))
     else:
         sc.tl.pca(adata, n_comps, zero_center, svd_solver, random_state,
             return_info, use_highly_variable, dtype, copy, chunked, chunk_size)
@@ -198,7 +198,7 @@ def tsne(adata,
         tSNE coordinates of data.
     """
     if copy:
-        return(sc.tl.tsne(adata, n_pcs, use_rep, perplexity, early_exaggeration,
+        return(sc.tl.tsne(adata, n_pcs, use_rep, perplexity, early_exaggeration, 
             learning_rate, random_state, use_fast_tsne, n_jobs, copy))
     else:
         sc.tl.tsne(adata, n_pcs, use_rep, perplexity, early_exaggeration,
@@ -300,12 +300,10 @@ def umap(adata,
     """
     if copy:
         return(sc.tl.umap(adata, min_dist, spread, n_components, maxiter, alpha, gamma,
-        negative_sample_rate, init_pos, random_state, a, b,copy, #method
-        ))
+            negative_sample_rate, init_pos, random_state, a, b,copy))
     else:
         sc.tl.umap(adata, min_dist, spread, n_components, maxiter, alpha, gamma,
-        negative_sample_rate, init_pos, random_state, a, b,copy, #method
-        )
+            negative_sample_rate, init_pos, random_state, a, b,copy)
 
 def louvain(adata, resolution=None, random_state=0, restrict_to=None, 
 	key_added='louvain', adjacency=None, flavor='vtraag', directed=True,
