@@ -1,7 +1,7 @@
 from scanpy.api.tl import rank_genes_groups
 import scanpy.api as sc
 import warnings
-from warnings import warning
+from warnings import warn
 
 def rank_features(adata, groupby, omic=None, use_raw=True, groups='all', reference='rest', n_genes=100,
                      rankby_abs=False, key_added='rank_features_groups', copy=False, method='',
@@ -26,7 +26,7 @@ def rank_features(adata, groupby, omic=None, use_raw=True, groups='all', referen
     	if 'omic' in adata.uns.keys():
     		omic = adata.uns['omic']
     	else:
-    		warning.warn("""Attention: no omic specified. We used default settings of the original Scanpy function\n
+    		warn("""Attention: no omic specified. We used default settings of the original Scanpy function\n
     			When the parameters where not specified in input""")
     		omic = 'RNA'
 
