@@ -286,9 +286,10 @@ def umap(adata,
     **X_umap** : `adata.obsm` field
         UMAP coordinates of data.
     """
+
     sc.tl.umap(adata, min_dist, spread, n_components, maxiter,
         alpha, gamma, negative_sample_rate, init_pos, random_state,
-         a, b,copy, method)
+        a, b,copy, method)
 
 def louvain(adata, resolution=None, random_state=0, restrict_to=None, 
 	key_added='louvain', adjacency=None, flavor='vtraag', directed=True,
@@ -416,6 +417,6 @@ def leiden(adata,
     `adata.uns['leiden']['params']`
         A dict with the values for the parameters `resolution`, `random_state`, and `n_iterations`.
     """
-    
+
     sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added,
         adjacency, directed, use_weights, n_iterations, partition_type, copy)
