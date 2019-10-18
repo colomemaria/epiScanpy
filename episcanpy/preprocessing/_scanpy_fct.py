@@ -1,15 +1,16 @@
 ## all functions here are a direct copy from Scanpy version ### (October 18)
 import scanpy as sc
 
+N_PCS = 50
+
 def filter_cells(
-    adata: AnnData,
-    min_counts: Optional[int] = None,
-    min_features:  Optional[int] = None,
-    max_counts: Optional[int] = None,
-    max_features:  Optional[int] = None,
-    inplace: bool = True,
-    copy: bool = False,
-):
+    adata,
+    min_counts = None,
+    min_features = None,
+    max_counts = None,
+    max_features = None,
+    inplace = True,
+    copy = False):
     """Filter cell outliers based on counts and numbers of genes expressed.
 
     For instance, only keep cells with at least `min_counts` counts or
@@ -130,65 +131,18 @@ def filter_features(data,
     filter_genes(data, min_counts, min_cells, max_counts, max_cells, inplace, copy)
     
 
-def filter_features(
-    data: AnnData,
-    min_counts: Optional[int] = None,
-    min_cells:  Optional[int] = None,
-    max_counts: Optional[int] = None,
-    max_cells:  Optional[int] = None,
-    inplace: bool = True,
-    copy: bool = False) -> Union[AnnData, None, Tuple[np.ndarray, np.ndarray]]:
-    """Filter features based on number of cells or counts.
 
-    Keep features that have at least ``min_counts`` counts or are expressed in at
-    least ``min_cells`` cells or have at most ``max_counts`` counts or are expressed
-    in at most ``max_cells`` cells.
-
-    Only provide one of the optional parameters ``min_counts``, ``min_cells``,
-    ``max_counts``, ``max_cells`` per call.
-
-    Parameters
-    ----------
-    data
-        An annotated data matrix of shape `n_obs` × `n_vars`. Rows correspond
-        to cells and columns to features.
-    min_counts
-        Minimum number of counts required for a feature to pass filtering.
-    min_cells
-        Minimum number of cells expressed required for a feature to pass filtering.
-    max_counts
-        Maximum number of counts required for a feature to pass filtering.
-    max_cells
-        Maximum number of cells expressed required for a feature to pass filtering.
-    inplace
-        Perform computation inplace or return result.
-
-    Returns
-    -------
-    Depending on `inplace`, returns the following arrays or directly subsets
-    and annotates the data matrix
-
-    feature_subset : numpy.ndarray
-        Boolean index mask that does filtering. `True` means that the
-        feature is kept. `False` means the feature is removed.
-    number_per_feature : numpy.ndarray
-        Depending on what was tresholded (`counts` or `cells`), the array stores
-        `n_counts` or `n_cells` per feature.
-    """
-
-
-def pca(
-    adata: Union[AnnData, np.ndarray, spmatrix],
-    n_comps: int = N_PCS,
-    zero_center: Optional[bool] = True,
-    svd_solver: str = 'auto',
-    random_state: Optional[Union[int, RandomState]] = 0,
-    return_info: bool = False,
-    use_highly_variable: Optional[bool] = False,
-    dtype: str = 'float32',
-    copy: bool = False,
-    chunked: bool = False,
-    chunk_size: Optional[int] = None) -> Union[AnnData, np.ndarray, spmatrix]:
+def pca(adata,
+    n_comps = N_PCS,
+    zero_center = True,
+    svd_solver = 'auto',
+    random_state = 0,
+    return_info = False,
+    use_highly_variable = False,
+    dtype = 'float32',
+    copy = False,
+    chunked = False,
+    chunk_size = None):
     """Principal component analysis [Pedregosa11]_.
 
     Computes PCA coordinates, loadings and variance decomposition. Uses the
@@ -274,7 +228,7 @@ def normalize_per_cell(
     copy=False,
     layers=[],
     use_rep=None,
-    min_counts=1) -> Optional[AnnData]:
+    min_counts=1):
     """Normalize total counts per cell.
 
     .. warning::
@@ -348,7 +302,7 @@ def normalize_per_cell(
 
     
 
-def regress_out(adata, keys, n_jobs=None, copy=False) -> Optional[AnnData]:
+def regress_out(adata, keys, n_jobs=None, copy=False):
     """Regress out unwanted sources of variation.
 
     Uses simple linear regression. This is inspired by Seurat's `regressOut`
@@ -373,7 +327,7 @@ def regress_out(adata, keys, n_jobs=None, copy=False) -> Optional[AnnData]:
     sc.pp.regress_out(adata, keys, n_jobs, copy)
     
 
-def subsample(data, fraction=None, n_obs=None, random_state=0, copy=False) -> Optional[AnnData]:
+def subsample(data, fraction=None, n_obs=None, random_state=0, copy=False):
     """Subsample to a fraction of the number of observations.
 
     Parameters
@@ -400,12 +354,12 @@ def subsample(data, fraction=None, n_obs=None, random_state=0, copy=False) -> Op
     sc.pp.subsample(data, fraction, n_obs, random_state, copy)
     
 def downsample_counts(
-    adata: AnnData,
-    counts_per_cell: Optional[Union[int, Collection[int]]] = None,
-    total_counts: Optional[int] = None,
-    random_state: Optional[Union[int, RandomState]] = 0,
-    replace: bool = False,
-    copy: bool = False) -> Optional[AnnData]:
+    adata,
+    counts_per_cell = None,
+    total_counts = None,
+    random_state = 0,
+    replace = False,
+    copy = False):
     """Downsample counts from count matrix.
 
     If `counts_per_cell` is specified, each cell will downsampled. If
