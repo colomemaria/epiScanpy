@@ -53,7 +53,8 @@ def diffmap(adata, n_comps=15, copy=False):
     **diffmap_evals** : :class:`numpy.ndarray` (`adata.uns`)
         Array of size (number of eigen vectors). Eigenvalues of transition matrix.
     """
-	sc.tl.diffmap(adata, n_comps, copy)
+
+    sc.tl.diffmap(adata, n_comps, copy)
 
 
 def draw_graph(adata,
@@ -125,7 +126,7 @@ def draw_graph(adata,
     **X_draw_graph_layout** : `adata.obsm`
         Coordinates of graph layout. E.g. for layout='fa' (the default), the field is called 'X_draw_graph_fa'
     """
-	sc.tl.draw_graph(adata, layout, init_pos, root, random_state, n_jobs,
+    sc.tl.draw_graph(adata, layout, init_pos, root, random_state, n_jobs,
         adjacency, key_added_ext, copy)
 
 def tsne(adata,
