@@ -439,9 +439,11 @@ def leiden(adata,
     """
 
     if copy:
-        return(sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added, 
-            adjacency, directed, use_weights, n_iterations, partition_type, copy))
+        return(sc.tl.leiden(adata, resolution, #restrict_to, random_state, key_added, 
+            #adjacency, directed, use_weights, n_iterations, partition_type, copy
+            ))
     else:
-        sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added, 
-            adjacency, directed, use_weights, n_iterations, partition_type, copy)
+        sc.tl.leiden(adata, resolution, #restrict_to, random_state, key_added, 
+            #adjacency, directed, use_weights, n_iterations, partition_type, copy
+            )
 

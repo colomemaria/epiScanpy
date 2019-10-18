@@ -181,7 +181,7 @@ def diffmap(adata,
     -------
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
-	sc.pl.diffmap(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+	sc.pl.diffmap(adata, color=color, gene_symbols=feature_symbols, use_raw=use_raw,
         layer=layer, sort_order=sort_order, groups=groups, components=components,
         projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
         legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
@@ -190,6 +190,7 @@ def diffmap(adata,
         save=save)
 
 def draw_graph(adata,
+    layout=None,
 	color=None,
 	feature_symbols=None,
 	use_raw=None,
@@ -230,7 +231,7 @@ def draw_graph(adata,
     -------
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
-	sc.pl.draw_graph(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+	sc.pl.draw_graph(adata, layout, color=color, gene_symbols=feature_symbols, use_raw=use_raw,
         layer=layer, sort_order=sort_order, groups=groups, components=components,
         projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
         legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,

@@ -119,34 +119,35 @@ def cal_var(adata, show=True):
         plt.title('Distribution of feature coverage')
         plt.show()
 
-def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, copy=False):
+def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, inplace=True):
     """
     This function compute a score to rank the most shared features across all cells. 
     Then it selects the most variable features according to a minimum variance or select a given number of features.
     
     adata: adata object
-    var_score: minimum threshold to retain features
+    min_score: minimum threshold to retain features
     nb_features: default value is None, if specify it will select a the top most variable features.
-    if the nb_features is larger than the total number of feature, it filters based on the in_score argument
+    if the nb_features is larger than the total number of feature, it filters based on the min_score argument
     show: default value True, it will plot the distribution of var.
     copy: overwrite the adata object or return another object
     """
+    adata = adata.copy() if not inplace else adata
     
     # calculate variability score
-    cal_var(adata, show=show)
-    adata.var['variablility_score'] = abs(adata.var['prop_shared_cells']-0.5)
-    var_annot = adata.var.sort_values(ascending=True, by ='variablility_score')
+    cal_var(adata, show=show) # adds variability score for each feature 
+    # adata.var['variablility_score'] = abs(adata.var['prop_shared_cells']-0.5)
+    var_annot = adata.var.sort_values(ascending=True, by ='variability_score')
 
     # calculate the min score to get a specific number of feature        
-    if nb_features < len(adata.var_names):
-        min_score = var_annot['variablility_score'][nb_features]
-        
+    if nb_features != None and nb_features < len(adata.var_names):  
+            min_score = var_annot['variability_score'][nb_features]    
+     
+    
+    adata_tmp = adata[:,adata.var['variability_score']<=min_score].copy()
+    
     ## return the filtered AnnData objet.
-    if copy:
-        adata_tmp = adata[:,adata.var['variablility_score']<=min_score]
+    if not inplace:
+        adata_tmp = adata[:,adata.var['variability_score']<=min_score]
         return(adata_tmp)
     else:
-        adata = adata[:,adata.var['variablility_score']<=min_score]
-
-
-
+        adata._inplace_subset_var(adata.var['variability_score']<=min_score)
