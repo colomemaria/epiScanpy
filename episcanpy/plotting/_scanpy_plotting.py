@@ -187,7 +187,7 @@ def diffmap(adata,
         legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
         size=size, color_map=color_map, palette=palette, frameon=frameon, ncols=ncols,
         wspace=wspace, hspace=hspace, title=title, return_fig=return_fig, show=show,
-        save=save)3
+        save=save)
 
 def draw_graph(adata,
 	color=None,
