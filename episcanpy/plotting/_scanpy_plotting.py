@@ -43,7 +43,7 @@ def pca(adata,
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
 
-	sc.pl.pca(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+	sc.pl.pca(adata, color=color, gene_symbols=feature_symbols, use_raw=use_raw,
         layer=layer, sort_order=sort_order, groups=groups, components=components,
         projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
         legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
@@ -89,7 +89,7 @@ def tsne(adata,
     -------
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
-	sc.pl.tsne(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+	sc.pl.tsne(adata, color=color, gene_symbols=feature_symbols, use_raw=use_raw,
         layer=layer, sort_order=sort_order, groups=groups, components=components,
         projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
         legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
@@ -135,7 +135,7 @@ def umap(adata,
     -------
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
-	sc.pl.umap(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+	sc.pl.umap(adata, color=color, gene_symbols=feature_symbols, use_raw=use_raw,
         layer=layer, sort_order=sort_order, groups=groups, components=components,
         projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
         legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
@@ -187,7 +187,7 @@ def diffmap(adata,
         legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
         size=size, color_map=color_map, palette=palette, frameon=frameon, ncols=ncols,
         wspace=wspace, hspace=hspace, title=title, return_fig=return_fig, show=show,
-        save=save)
+        save=save)3
 
 def draw_graph(adata,
 	color=None,

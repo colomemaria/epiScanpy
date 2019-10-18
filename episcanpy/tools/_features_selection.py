@@ -1,6 +1,7 @@
 from scanpy.api.tl import rank_genes_groups
 import scanpy.api as sc
 import warnings
+from warnings import warning
 
 def rank_features(adata, groupby, omic=None, use_raw=True, groups='all', reference='rest', n_genes=100,
                      rankby_abs=False, key_added='rank_features_groups', copy=False, method='',

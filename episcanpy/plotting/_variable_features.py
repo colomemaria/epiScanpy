@@ -4,10 +4,11 @@ import matplotlib.pyplot as plt
 import matplotlib.axes as pltax
 
 # function to calculate the variance
+# function to calculate the variance
 def cal_var(adata, show=True):
     
-    if str(type(adata.X)) == "<class 'scipy.sparse.csc.csc_matrix'>":
-        adata.var['n_cells'] = adata.X.sum(axis=0).tolist()[0]
+    if str(type(adata.X)) != "numpy.ndarray":
+        adata.var['n_cells'] = adata.X.sum(axis=0)
         adata.var['prop_shared_cells'] = adata.var['n_cells']/len(adata.obs_names.tolist())
         adata.var['variablility_score'] = abs(adata.var['prop_shared_cells']-0.5)
     else:

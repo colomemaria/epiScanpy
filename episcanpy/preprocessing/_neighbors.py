@@ -65,8 +65,11 @@ def neighbors(adata,
         Instead of decaying weights, this stores distances for each pair of
         neighbors.
     """
-
-    sc.pp.neighbors(adata, n_neighbors, n_pcs, use_rep, knn, random_state, 
-        method, metric, metric_kwds, copy)
+    if copy:
+        return(sc.pp.neighbors(adata, n_neighbors, n_pcs, use_rep, knn, random_state, 
+            method, metric, metric_kwds, copy))
+    else:
+        sc.pp.neighbors(adata, n_neighbors, n_pcs, use_rep, knn, random_state, 
+            method, metric, metric_kwds, copy)
 
     

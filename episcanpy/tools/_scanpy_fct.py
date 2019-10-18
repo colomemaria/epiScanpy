@@ -12,10 +12,15 @@ import scanpy as sc
 def pca(adata, n_comps=50, zero_center=True, svd_solver='auto', random_state=0,
 	return_info=False, use_highly_variable=False, dtype='float32', copy=False,
 	chunked=False, chunk_size=None):
-
-	sc.tl.pca(adata, n_comps, zero_center, svd_solver, random_state,
-		return_info, use_highly_variable, dtype, copy,
-		chunked, chunk_size)
+    """
+    See epi.pp.pca
+    """
+    if copy:
+	   return(sc.tl.pca(adata, n_comps, zero_center, svd_solver, random_state,
+        return_info, use_highly_variable, dtype, copy, chunked, chunk_size))
+    else:
+        sc.tl.pca(adata, n_comps, zero_center, svd_solver, random_state,
+            return_info, use_highly_variable, dtype, copy, chunked, chunk_size)
 
 
 
@@ -53,8 +58,10 @@ def diffmap(adata, n_comps=15, copy=False):
     **diffmap_evals** : :class:`numpy.ndarray` (`adata.uns`)
         Array of size (number of eigen vectors). Eigenvalues of transition matrix.
     """
-
-    sc.tl.diffmap(adata, n_comps, copy)
+    if copy:
+        return(sc.tl.diffmap(adata, n_comps, copy))
+    else:
+        sc.tl.diffmap(adata, n_comps, copy)
 
 
 def draw_graph(adata, layout= 'fa', init_pos = None, root = None,
@@ -120,8 +127,12 @@ def draw_graph(adata, layout= 'fa', init_pos = None, root = None,
     **X_draw_graph_layout** : `adata.obsm`
         Coordinates of graph layout. E.g. for layout='fa' (the default), the field is called 'X_draw_graph_fa'
     """
-    sc.tl.draw_graph(adata, layout, init_pos, root, random_state, n_jobs,
-        adjacency, key_added_ext, copy)
+    if copy:
+        return(sc.tl.draw_graph(adata, layout, init_pos, root, random_state, n_jobs, 
+            adjacency, key_added_ext, copy))
+    else:
+        sc.tl.draw_graph(adata, layout, init_pos, root, random_state, n_jobs,
+            adjacency, key_added_ext, copy)
 
 def tsne(adata,
     n_pcs=None,
@@ -186,8 +197,13 @@ def tsne(adata,
     **X_tsne** : `np.ndarray` (`adata.obs`, dtype `float`)
         tSNE coordinates of data.
     """
-    sc.tl.tsne(adata, n_pcs, use_rep, perplexity, early_exaggeration,
-        learning_rate, random_state, use_fast_tsne, n_jobs, copy)
+    if copy:
+        return(sc.tl.tsne(adata, n_pcs, use_rep, perplexity, early_exaggeration,
+            learning_rate, random_state, use_fast_tsne, n_jobs, copy))
+    else:
+        sc.tl.tsne(adata, n_pcs, use_rep, perplexity, early_exaggeration,
+            learning_rate, random_state, use_fast_tsne, n_jobs, copy)
+
 
 def umap(adata,
     min_dist=0.5,
@@ -202,7 +218,8 @@ def umap(adata,
     a=None,
     b=None,
     copy=False,
-    method='gauss'):
+    #method='gauss',
+    ):
 
     """Embed the neighborhood graph using UMAP [McInnes18]_.
 
@@ -281,9 +298,14 @@ def umap(adata,
     **X_umap** : `adata.obsm` field
         UMAP coordinates of data.
     """
-
-    sc.tl.umap(adata, min_dist, spread, n_components, maxiter, alpha, gamma,
-        negative_sample_rate, init_pos, random_state, a, b,copy, method)
+    if copy:
+        return(sc.tl.umap(adata, min_dist, spread, n_components, maxiter, alpha, gamma,
+        negative_sample_rate, init_pos, random_state, a, b,copy, #method
+        ))
+    else:
+        sc.tl.umap(adata, min_dist, spread, n_components, maxiter, alpha, gamma,
+        negative_sample_rate, init_pos, random_state, a, b,copy, #method
+        )
 
 def louvain(adata, resolution=None, random_state=0, restrict_to=None, 
 	key_added='louvain', adjacency=None, flavor='vtraag', directed=True,
@@ -344,12 +366,18 @@ def louvain(adata, resolution=None, random_state=0, restrict_to=None,
         When ``copy=True`` is set, a copy of ``adata`` with those fields is returned.
     """
 
-    sc.tl.louvain(adata, resolution, random_state, restrict_to, key_added, 
-        adjacency, flavor, directed, use_weights, partition_type, 
-        partition_kwargs, copy)
+    if copy:
+        return(sc.tl.louvain(adata, resolution, random_state, restrict_to,
+            key_added, adjacency, flavor, directed, use_weights,
+            partition_type, partition_kwargs, copy))
+    else:
+        sc.tl.louvain(adata, resolution, random_state, restrict_to,
+            key_added, adjacency, flavor, directed, use_weights,
+            partition_type, partition_kwargs, copy)
 
 def leiden(adata,
     resolution= 1,
+    *,
     restrict_to = None,
     random_state = 0,
     key_added = 'leiden',
@@ -412,6 +440,10 @@ def leiden(adata,
         A dict with the values for the parameters `resolution`, `random_state`, and `n_iterations`.
     """
 
-    sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added,
-        adjacency, directed, use_weights, n_iterations, partition_type, copy)
+    if copy:
+        return(sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added, 
+            adjacency, directed, use_weights, n_iterations, partition_type, copy))
+    else:
+        sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added, 
+            adjacency, directed, use_weights, n_iterations, partition_type, copy)
 

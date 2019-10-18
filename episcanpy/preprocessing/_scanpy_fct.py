@@ -78,10 +78,18 @@ def filter_cells(
     >>> adata.obs['n_features'].min()
     3
     """
-    sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts,
-        max_genes=max_features, inplace=inplace, copy=copy)
-    adata.obs['n_features'] = adata.obs['n_genes'] 
-    del adata.obs['n_genes']
+    if copy:
+        adata_copy = sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts,
+            max_genes=max_features, inplace=inplace, copy=copy)
+        adata_copy.obs['n_features'] = adata_copy.obs['n_genes'] 
+        del adata_copy.obs['n_genes']
+        return(adata_copy)
+    else:
+        sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts, 
+            max_genes=max_features, inplace=inplace, copy=copy)
+        adata.obs['n_features'] = adata.obs['n_genes'] 
+        del adata.obs['n_genes']
+
 
 
 def filter_features(data,
@@ -128,7 +136,11 @@ def filter_features(data,
         Depending on what was tresholded (`counts` or `cells`), the array stores
         `n_counts` or `n_cells` per gene.
     """
-    filter_genes(data, min_counts, min_cells, max_counts, max_cells, inplace, copy)
+    if copy:
+        return(sc.pp.filter_genes(data, min_counts, min_cells, max_counts,
+            max_cells, inplace, copy))
+    else:
+        sc.pp.filter_genes(data, min_counts, min_cells, max_counts, max_cells, inplace, copy)
     
 
 
@@ -216,8 +228,13 @@ def pca(adata,
              Explained variance, equivalent to the eigenvalues of the covariance matrix.
     """
     # chunked calculation is not randomized, anyways
-    sc.pp.pca(adata, n_comps, zero_center, svd_solver, random_state, return_info,
-        use_highly_variable, dtype, copy, chunked, chunk_size)
+
+    if copy:
+        return(sc.pp.pca(adata, n_comps, zero_center, svd_solver, random_state, return_info,
+            use_highly_variable, dtype, copy, chunked, chunk_size))
+    else:
+        sc.pp.pca(adata, n_comps, zero_center, svd_solver, random_state, return_info, 
+            use_highly_variable, dtype, copy, chunked, chunk_size)
 
 
 def normalize_per_cell(
@@ -297,9 +314,109 @@ def normalize_per_cell(
     2      11.0        3.0
     [ 1.  1.  1.]
     """
-    sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell, key_n_counts,
-        copy, layers, use_rep, min_counts)
 
+    if copy:
+        return(sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell,
+            key_n_counts,copy, layers, use_rep, min_counts))
+    else:
+        sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell,
+            key_n_counts,copy, layers, use_rep, min_counts)
+
+def normalize_total(adata,
+    target_sum = None,
+    exclude_highly_expressed = False,
+    max_fraction = 0.05,
+    key_added = None,
+    layers = None,
+    layer_norm = None,
+    inplace = True,
+):
+    """\
+    Normalize counts per cell.
+
+    If choosing ``target_sum=1e6``, this is CPM normalization.
+
+    If ``exclude_highly_expressed=True``, very highly expressed genes are excluded
+    from the computation of the normalization factor (size factor) for each
+    cell. This is meaningful as these can strongly influence the resulting
+    normalized values for all other genes [Weinreb17]_.
+
+    Similar functions are used, for example, by Seurat [Satija15]_, Cell Ranger
+    [Zheng17]_ or SPRING [Weinreb17]_.
+
+    Params
+    ------
+    adata
+        The annotated data matrix of shape ``n_obs`` × ``n_vars``. Rows correspond
+        to cells and columns to features.
+    target_sum
+        If ``None``, after normalization, each observation (cell) has a total count
+        equal to the median of total counts for observations (cells)
+        before normalization.
+    exclude_highly_expressed
+        Exclude (very) highly expressed genes for the computation of the
+        normalization factor (size factor) for each cell. A gene is considered
+        highly expressed, if it has more than ``max_fraction`` of the total counts
+        in at least one cell. The not-excluded genes will sum up to
+        ``target_sum``.
+    max_fraction
+        If ``exclude_highly_expressed=True``, consider cells as highly expressed
+        that have more counts than ``max_fraction`` of the original total counts
+        in at least one cell.
+    key_added
+        Name of the field in ``adata.obs`` where the normalization factor is
+        stored.
+    layers
+        List of layers to normalize. Set to ``'all'`` to normalize all layers.
+    layer_norm
+        Specifies how to normalize layers:
+
+        * If `None`, after normalization, for each layer in *layers* each cell
+          has a total count equal to the median of the *counts_per_cell* before
+          normalization of the layer.
+        * If `'after'`, for each layer in *layers* each cell has
+          a total count equal to `target_sum`.
+        * If `'X'`, for each layer in *layers* each cell has a total count
+          equal to the median of total counts for observations (cells) of
+          `adata.X` before normalization.
+
+    inplace
+        Whether to update ``adata`` or return dictionary with normalized copies of
+        ``adata.X`` and ``adata.layers``.
+
+    Returns
+    -------
+    Returns dictionary with normalized copies of `adata.X` and `adata.layers`
+    or updates `adata` with normalized version of the original
+    `adata.X` and `adata.layers`, depending on `inplace`.
+
+    Example
+    --------
+    >>> from anndata import AnnData
+    >>> import scanpy as sc
+    >>> sc.settings.verbosity = 2
+    >>> np.set_printoptions(precision=2)
+    >>> adata = AnnData(np.array([[3, 3, 3, 6, 6], [1, 1, 1, 2, 2], [1, 22, 1, 2, 2]]))
+    >>> adata.X
+    array([[ 3.,  3.,  3.,  6.,  6.],
+           [ 1.,  1.,  1.,  2.,  2.],
+           [ 1., 22.,  1.,  2.,  2.]], dtype=float32)
+    >>> X_norm = sc.pp.normalize_total(adata, target_sum=1, inplace=False)['X']
+    >>> X_norm
+    array([[0.14, 0.14, 0.14, 0.29, 0.29],
+           [0.14, 0.14, 0.14, 0.29, 0.29],
+           [0.04, 0.79, 0.04, 0.07, 0.07]], dtype=float32)
+    >>> X_norm = sc.pp.normalize_total(adata, target_sum=1, exclude_highly_expressed=True, max_fraction=0.2, inplace=False)['X']
+    The following highly-expressed genes are not considered during normalization factor computation:
+    ['1', '3', '4']
+    >>> X_norm
+    array([[ 0.5,  0.5,  0.5,  1. ,  1. ],
+           [ 0.5,  0.5,  0.5,  1. ,  1. ],
+           [ 0.5, 11. ,  0.5,  1. ,  1. ]], dtype=float32)
+    """
+
+    sc.pp.normalize_total(adata, target_sum, exclude_highly_expressed, 
+        max_fraction, key_added, layers, layer_norm, inplace)
     
 
 def regress_out(adata, keys, n_jobs=None, copy=False):
@@ -324,7 +441,10 @@ def regress_out(adata, keys, n_jobs=None, copy=False):
     -------
     Depending on `copy` returns or updates `adata` with the corrected data matrix.
     """
-    sc.pp.regress_out(adata, keys, n_jobs, copy)
+    if copy:
+        return(sc.pp.regress_out(adata, keys, n_jobs, copy))
+    else:
+        sc.pp.regress_out(adata, keys, n_jobs, copy)
     
 
 def subsample(data, fraction=None, n_obs=None, random_state=0, copy=False):
@@ -351,15 +471,13 @@ def subsample(data, fraction=None, n_obs=None, random_state=0, copy=False):
     subsamples the passed :class:`~anndata.AnnData` (`copy == False`) or
     returns a subsampled copy of it (`copy == True`).
     """
-    sc.pp.subsample(data, fraction, n_obs, random_state, copy)
+    if copy:
+        return(sc.pp.subsample(data, fraction, n_obs, random_state, copy))
+    else:
+        sc.pp.subsample(data, fraction, n_obs, random_state, copy)
     
-def downsample_counts(
-    adata,
-    counts_per_cell = None,
-    total_counts = None,
-    random_state = 0,
-    replace = False,
-    copy = False):
+def downsample_counts(adata, counts_per_cell = None, total_counts = None,
+    random_state = 0, replace = False, copy = False):
     """Downsample counts from count matrix.
 
     If `counts_per_cell` is specified, each cell will downsampled. If
@@ -390,8 +508,13 @@ def downsample_counts(
     -------
     Depending on `copy` returns or updates an `adata` with downsampled `.X`.
     """
-    sc.pp.downsample_counts(adata, counts_per_cell, total_counts, random_state, 
-        replace, copy)
+
+    if copy:
+        return(sc.pp.downsample_counts(adata, counts_per_cell, total_counts,
+            random_state, replace, copy))
+    else:
+        sc.pp.downsample_counts(adata, counts_per_cell, total_counts,
+            random_state, replace, copy)
     
     
 
