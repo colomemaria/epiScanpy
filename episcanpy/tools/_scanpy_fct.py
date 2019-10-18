@@ -209,7 +209,8 @@ def umap(adata,
     b=None,
     copy=False,
     method='gauss'):
-	"""Embed the neighborhood graph using UMAP [McInnes18]_.
+
+    """Embed the neighborhood graph using UMAP [McInnes18]_.
 
     UMAP (Uniform Manifold Approximation and Projection) is a manifold learning
     technique suitable for visualizing high-dimensional data. Besides tending to
@@ -287,9 +288,8 @@ def umap(adata,
         UMAP coordinates of data.
     """
 
-    sc.tl.umap(adata, min_dist, spread, n_components, maxiter,
-        alpha, gamma, negative_sample_rate, init_pos, random_state,
-        a, b,copy, method)
+    sc.tl.umap(adata, min_dist, spread, n_components, maxiter, alpha, gamma,
+        negative_sample_rate, init_pos, random_state, a, b,copy, method)
 
 def louvain(adata, resolution=None, random_state=0, restrict_to=None, 
 	key_added='louvain', adjacency=None, flavor='vtraag', directed=True,
