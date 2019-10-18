@@ -134,7 +134,7 @@ def tsne(adata,
     use_fast_tsne=True,
     n_jobs=None,
     copy=False):
-"""\
+    """\
     t-SNE [Maaten08]_ [Amir13]_ [Pedregosa11]_.
 
     t-distributed stochastic neighborhood embedding (tSNE) [Maaten08]_ has been

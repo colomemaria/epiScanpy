@@ -153,8 +153,7 @@ def filter_genes(
     max_counts: Optional[int] = None,
     max_cells:  Optional[int] = None,
     inplace: bool = True,
-    copy: bool = False,
-) -> Union[AnnData, None, Tuple[np.ndarray, np.ndarray]]:
+    copy: bool = False) -> Union[AnnData, None, Tuple[np.ndarray, np.ndarray]]:
     """Filter genes based on number of cells or counts.
 
     Keep genes that have at least ``min_counts`` counts or are expressed in at
@@ -248,8 +247,7 @@ def filter_features(
     max_counts: Optional[int] = None,
     max_cells:  Optional[int] = None,
     inplace: bool = True,
-    copy: bool = False,
-) -> Union[AnnData, None, Tuple[np.ndarray, np.ndarray]]:
+    copy: bool = False) -> Union[AnnData, None, Tuple[np.ndarray, np.ndarray]]:
     """Filter features based on number of cells or counts.
 
     Keep features that have at least ``min_counts`` counts or are expressed in at
@@ -348,8 +346,7 @@ def pca(
     dtype: str = 'float32',
     copy: bool = False,
     chunked: bool = False,
-    chunk_size: Optional[int] = None,
-) -> Union[AnnData, np.ndarray, spmatrix]:
+    chunk_size: Optional[int] = None) -> Union[AnnData, np.ndarray, spmatrix]:
     """Principal component analysis [Pedregosa11]_.
 
     Computes PCA coordinates, loadings and variance decomposition. Uses the
@@ -537,8 +534,7 @@ def normalize_per_cell(
     copy=False,
     layers=[],
     use_rep=None,
-    min_counts=1,
-) -> Optional[AnnData]:
+    min_counts=1) -> Optional[AnnData]:
     """Normalize total counts per cell.
 
     .. warning::
@@ -661,8 +657,7 @@ def normalize_per_cell(
 def normalize_per_cell_weinreb16_deprecated(
     X,
     max_fraction=1,
-    mult_with_mean=False,
-) -> np.ndarray:
+    mult_with_mean=False) -> np.ndarray:
     """Normalize each cell [Weinreb17]_.
 
     This is a deprecated version. See `normalize_per_cell` instead.
@@ -880,8 +875,7 @@ def downsample_counts(
     total_counts: Optional[int] = None,
     random_state: Optional[Union[int, RandomState]] = 0,
     replace: bool = False,
-    copy: bool = False,
-) -> Optional[AnnData]:
+    copy: bool = False) -> Optional[AnnData]:
     """Downsample counts from count matrix.
 
     If `counts_per_cell` is specified, each cell will downsampled. If
@@ -990,8 +984,7 @@ def _downsample_array(
     target: int,
     random_state: Optional[Union[int, RandomState]] = 0,
     replace: bool = True,
-    inplace: bool = False,
-):
+    inplace: bool = False):
     """
     Evenly reduce counts in cell to target amount.
 
