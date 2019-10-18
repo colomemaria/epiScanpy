@@ -77,8 +77,8 @@ def filter_cells(
     >>> adata.obs['n_features'].min()
     3
     """
-    sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts,
-        max_genes=max_features, inplace, copy)
+    sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts,
+        max_genes=max_features, inplace=inplace, copy=copy)
     adata.obs['n_features'] = adata.obs['n_genes'] 
     del adata.obs['n_genes']
 
