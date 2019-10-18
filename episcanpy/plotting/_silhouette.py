@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import anndata as ad 
-import scanpy.api as sc
+import scanpy as sc
 from sklearn.metrics import silhouette_score, silhouette_samples
 import matplotlib.cm as cm
 import numpy as np

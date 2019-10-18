@@ -86,13 +86,67 @@ def coverage_cells(adata, bins=50, key_added=None, xlabel=None, ylabel=None, tit
     
 def binarize(adata, copy=False):
     """convert into a binary matrix"""
-    threshold, upper, lower = 1.0, 1.0, 0.0
-    admatrix = adata.X
-    admatrix = np.where(admatrix>threshold, upper, lower)
+
     if copy:
         adata2 = adata.copy()
-        adata2.X = admatrix
+        adata2.X[adata2.X != 0] = 1
         return(adata2)
     else:
-        adata.X = admatrix
+        adata.X[adata.X != 0] = 1
+
         
+
+# function to calculate the variance
+def cal_var(adata, show=True):
+    
+    if str(type(adata.X)) == "<class 'scipy.sparse.csc.csc_matrix'>":
+        adata.var['n_cells'] = adata.X.sum(axis=0).tolist()[0]
+        adata.var['prop_shared_cells'] = adata.var['n_cells']/len(adata.obs_names.tolist())
+        adata.var['variablility_score'] = abs(adata.var['prop_shared_cells']-0.5)
+    else:
+        adata.var['n_cells'] = adata.X.sum(axis=0).tolist()[0]
+        adata.var['prop_shared_cells'] = adata.var['n_cells']/len(adata.obs_names.tolist())
+        adata.var['variablility_score'] = abs(adata.var['prop_shared_cells']-0.5)
+    
+    if show: # plotting
+        
+        fig = plt.figure(figsize=(8,6))
+        sns.distplot(adata.var['variablility_score'], bins=40)
+        sns.distplot(adata.var['prop_shared_cells'], bins=40)
+        fig.legend(labels=['variablility_score','prop_shared_cells'],
+                   loc='upper right')
+        plt.ylabel('nb of features')
+        plt.title('Distribution of feature coverage')
+        plt.show()
+
+def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, copy=False):
+    """
+    This function compute a score to rank the most shared features across all cells. 
+    Then it selects the most variable features according to a minimum variance or select a given number of features.
+    
+    adata: adata object
+    var_score: minimum threshold to retain features
+    nb_features: default value is None, if specify it will select a the top most variable features.
+    if the nb_features is larger than the total number of feature, it filters based on the in_score argument
+    show: default value True, it will plot the distribution of var.
+    copy: overwrite the adata object or return another object
+    """
+    
+    # calculate variability score
+    cal_var(adata, show=show)
+    adata.var['variablility_score'] = abs(adata.var['prop_shared_cells']-0.5)
+    var_annot = adata.var.sort_values(ascending=True, by ='variablility_score')
+
+    # calculate the min score to get a specific number of feature        
+    if nb_features < len(adata.var_names):
+        min_score = var_annot['variablility_score'][nb_features]
+        
+    ## return the filtered AnnData objet.
+    if copy:
+        adata_tmp = adata[:,adata.var['variablility_score']<=min_score]
+        return(adata_tmp)
+    else:
+        adata = adata[:,adata.var['variablility_score']<=min_score]
+
+
+
