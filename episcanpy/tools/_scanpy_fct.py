@@ -294,8 +294,7 @@ def umap(adata,
 def louvain(adata, resolution=None, random_state=0, restrict_to=None, 
 	key_added='louvain', adjacency=None, flavor='vtraag', directed=True,
 	use_weights=False, partition_type=None, partition_kwargs=None, copy=False):
-
-	"""Cluster cells into subgroups [Blondel08]_ [Levine15]_ [Traag17]_.
+    """Cluster cells into subgroups [Blondel08]_ [Levine15]_ [Traag17]_.
 
     Cluster cells using the Louvain algorithm [Blondel08]_ in the implementation
     of [Traag17]_. The Louvain algorithm has been proposed for single-cell
@@ -350,8 +349,9 @@ def louvain(adata, resolution=None, random_state=0, restrict_to=None,
     :class:`~anndata.AnnData`
         When ``copy=True`` is set, a copy of ``adata`` with those fields is returned.
     """
-    sc.tl.louvain(adata, resolution, random_state, restrict_to, key_added,
-        adjacency, flavor, directed, use_weights, partition_type,
+
+    sc.tl.louvain(adata, resolution, random_state, restrict_to, key_added, 
+        adjacency, flavor, directed, use_weights, partition_type, 
         partition_kwargs, copy)
 
 def leiden(adata,
@@ -420,3 +420,4 @@ def leiden(adata,
 
     sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added,
         adjacency, directed, use_weights, n_iterations, partition_type, copy)
+    
