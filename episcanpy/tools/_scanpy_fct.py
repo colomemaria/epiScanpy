@@ -192,8 +192,8 @@ def tsne(adata,
     **X_tsne** : `np.ndarray` (`adata.obs`, dtype `float`)
         tSNE coordinates of data.
     """
-	sc.tl.tsne(adata, n_pcs, use_rep, perplexity, early_exaggeration,
-		learning_rate, random_state, use_fast_tsne, n_jobs, copy)
+    sc.tl.tsne(adata, n_pcs, use_rep, perplexity, early_exaggeration,
+        learning_rate, random_state, use_fast_tsne, n_jobs, copy)
 
 def umap(adata,
     min_dist=0.5,
@@ -286,10 +286,9 @@ def umap(adata,
     **X_umap** : `adata.obsm` field
         UMAP coordinates of data.
     """
-	sc.tl.umap(adata, min_dist, spread, n_components, maxiter,
-    	alpha, gamma,
-    	negative_sample_rate, init_pos, random_state, a, b,
-    	copy, method)
+    sc.tl.umap(adata, min_dist, spread, n_components, maxiter,
+        alpha, gamma, negative_sample_rate, init_pos, random_state,
+         a, b,copy, method)
 
 def louvain(adata, resolution=None, random_state=0, restrict_to=None, 
 	key_added='louvain', adjacency=None, flavor='vtraag', directed=True,
@@ -350,10 +349,9 @@ def louvain(adata, resolution=None, random_state=0, restrict_to=None,
     :class:`~anndata.AnnData`
         When ``copy=True`` is set, a copy of ``adata`` with those fields is returned.
     """
-
-	sc.tl.louvain(adata, resolution, random_state, restrict_to, key_added,
-		adjacency, flavor, directed, use_weights, partition_type,
-		partition_kwargs, copy)
+    sc.tl.louvain(adata, resolution, random_state, restrict_to, key_added,
+        adjacency, flavor, directed, use_weights, partition_type,
+        partition_kwargs, copy)
 
 def leiden(adata,
     resolution= 1,
@@ -418,5 +416,6 @@ def leiden(adata,
     `adata.uns['leiden']['params']`
         A dict with the values for the parameters `resolution`, `random_state`, and `n_iterations`.
     """
-	sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added,
+    
+    sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added,
         adjacency, directed, use_weights, n_iterations, partition_type, copy)
