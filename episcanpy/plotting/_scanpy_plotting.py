@@ -43,10 +43,13 @@ def pca(adata,
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
 
-	sc.pl.pca(adata, color, gene_symbols=feature_symbols, use_raw, layer, sort_order,
-		groups, components, projection, legend_loc, legend_fontsize, legend_fontweight,
-		legend_fontoutline, size, color_map, palette, frameon, ncols, wspace, hspace,
-		title, return_fig, show, save)
+	sc.pl.pca(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+        layer=layer, sort_order=sort_order, groups=groups, components=components,
+        projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
+        legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
+        size=size, color_map=color_map, palette=palette, frameon=frameon, ncols=ncols,
+        wspace=wspace, hspace=hspace, title=title, return_fig=return_fig, show=show,
+        save=save)
 
 def tsne(adata,
 	color=None,
@@ -86,10 +89,13 @@ def tsne(adata,
     -------
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
-	sc.pl.tsne(adata, color, gene_symbols=feature_symbols, use_raw, layer, sort_order,
-		groups, components, projection, legend_loc, legend_fontsize, legend_fontweight,
-		legend_fontoutline, size, color_map, palette, frameon, ncols, wspace, hspace,
-		title, return_fig, show, save)
+	sc.pl.tsne(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+        layer=layer, sort_order=sort_order, groups=groups, components=components,
+        projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
+        legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
+        size=size, color_map=color_map, palette=palette, frameon=frameon, ncols=ncols,
+        wspace=wspace, hspace=hspace, title=title, return_fig=return_fig, show=show,
+        save=save)
 
 def umap(adata,
 	color=None,
@@ -129,10 +135,13 @@ def umap(adata,
     -------
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
-	sc.pl.umap(adata, color, gene_symbols=feature_symbols, use_raw, layer, sort_order,
-		groups, components, projection, legend_loc, legend_fontsize, legend_fontweight,
-		legend_fontoutline, size, color_map, palette, frameon, ncols, wspace, hspace,
-		title, return_fig, show, save)
+	sc.pl.umap(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+        layer=layer, sort_order=sort_order, groups=groups, components=components,
+        projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
+        legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
+        size=size, color_map=color_map, palette=palette, frameon=frameon, ncols=ncols,
+        wspace=wspace, hspace=hspace, title=title, return_fig=return_fig, show=show,
+        save=save)
 
 
 def diffmap(adata,
@@ -172,10 +181,13 @@ def diffmap(adata,
     -------
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
-	sc.pl.diffmap(adata, color, gene_symbols=feature_symbols, use_raw, layer, sort_order,
-		groups, components, projection, legend_loc, legend_fontsize, legend_fontweight,
-		legend_fontoutline, size, color_map, palette, frameon, ncols, wspace, hspace,
-		title, return_fig, show, save)
+	sc.pl.diffmap(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+        layer=layer, sort_order=sort_order, groups=groups, components=components,
+        projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
+        legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
+        size=size, color_map=color_map, palette=palette, frameon=frameon, ncols=ncols,
+        wspace=wspace, hspace=hspace, title=title, return_fig=return_fig, show=show,
+        save=save)
 
 def draw_graph(adata,
 	color=None,
@@ -218,10 +230,13 @@ def draw_graph(adata,
     -------
     If `show==False` a :class:`~matplotlib.axes.Axes` or a list of it.
     """
-	sc.pl.draw_graph(adata, color, gene_symbols=feature_symbols, use_raw, layer, sort_order,
-		groups, components, projection, legend_loc, legend_fontsize, legend_fontweight,
-		legend_fontoutline, size, color_map, palette, frameon, ncols, wspace, hspace,
-		title, return_fig, show, save)
+	sc.pl.draw_graph(adata, color, gene_symbols=feature_symbols, use_raw=use_raw,
+        layer=layer, sort_order=sort_order, groups=groups, components=components,
+        projection=projection, legend_loc=legend_loc, legend_fontsize=legend_fontsize,
+        legend_fontweight=legend_fontweight, legend_fontoutline=legend_fontoutline,
+        size=size, color_map=color_map, palette=palette, frameon=frameon, ncols=ncols,
+        wspace=wspace, hspace=hspace, title=title, return_fig=return_fig, show=show,
+        save=save)
 
 def rank_feat_groups_violin(adata,
     groups=None,
@@ -271,8 +286,9 @@ def rank_feat_groups_violin(adata,
     {show_save_ax}
     """
 	sc.pl.rank_genes_groups_violin(adata, groups, n_genes=n_features,
-		gene_names=feature_names, gene_symbols=feature_symbols, use_raw,
-		key, split, scale, strip, jitter, size, ax, show, save)
+		gene_names=feature_names, gene_symbols=feature_symbols, use_raw=use_raw,
+		key=key, split=split, scale=scale, strip=strip, jitter=jitter, size=size, 
+        ax=ax, show=show, save=save)
 
 def rank_feat_groups(adata,
     groups = None,
@@ -309,7 +325,7 @@ def rank_feat_groups(adata,
     {show_save_ax}
     """
 	sc.pl.rank_genes_groups(adata, groups, n_genes=n_features, gene_symbols=feature_symbols,
-		key, fontsize, ncols, sharey, show, save, ax)
+		key=key, fontsize=fontsize, ncols=ncols, sharey=sharey, show=show, save=save , ax=ax)
 
 def rank_feat_groups_dotplot(adata,
     groups = None,
@@ -341,8 +357,8 @@ def rank_feat_groups_dotplot(adata,
     **kwds
         Are passed to :func:`~scanpy.pl.dotplot`.
     """
-	sc.pl.rank_genes_groups_dotplot(adata, groups, n_genes=n_features, groupby,
-		key, show, save)
+	sc.pl.rank_genes_groups_dotplot(adata, groups, n_genes=n_features, groupby=groupby,
+        key=key, show=show, save=save)
 
 def rank_feat_groups_heatmap(adata,
     groups= None,
@@ -374,8 +390,8 @@ def rank_feat_groups_heatmap(adata,
         Are passed to :func:`~scanpy.pl.heatmap`.
     {show_save_ax}
     """
-	sc.pl.rank_genes_groups_heatmap(adata, groups, n_genes=n_features, groupby,
-		key, show, save)
+	sc.pl.rank_genes_groups_heatmap(adata, groups, n_genes=n_features, groupby=groupby,
+        key=key, show=show, save=save)
 
 def rank_feat_groups_stacked_violin(adata,
     groups = None,
@@ -407,8 +423,8 @@ def rank_feat_groups_stacked_violin(adata,
     **kwds
         Are passed to :func:`~scanpy.pl.stacked_violin`.
     """
-	sc.pl.rank_genes_groups_stacked_violin(adata, groups, n_genes=n_features, groupby,
-		key, show, save)
+	sc.pl.rank_genes_groups_stacked_violin(adata, groups, n_genes=n_features, groupby=groupby,
+        key=key, show=show, save=save)
 
 def rank_feat_groups_matrixplot(adata,
     groups = None,
@@ -440,8 +456,8 @@ def rank_feat_groups_matrixplot(adata,
     **kwds
         Are passed to :func:`~scanpy.pl.matrixplot`.
     """
-	sc.pl.rank_genes_groups_matrixplot(adata, groups, n_genes=n_features, groupby,
-		key, show, save)
+	sc.pl.rank_genes_groups_matrixplot(adata, groups, n_genes=n_features, groupby=groupby,
+		key=key, show=show, save=save)
 
 def rank_feat_groups_tracksplot(adata,
     groups = None,
@@ -473,8 +489,8 @@ def rank_feat_groups_tracksplot(adata,
         Are passed to :func:`~scanpy.pl.tracksplot`.
     {show_save_ax}
     """
-	sc.pl.rank_genes_groups_tracksplot(adata, groups, n_genes=n_features, groupby,
-		key, show, save)
+	sc.pl.rank_genes_groups_tracksplot(adata, groups, n_genes=n_features, groupby=groupby,
+        key=key, show=show, save=save)
 
 def pca_loadings(adata,
     components = None,
