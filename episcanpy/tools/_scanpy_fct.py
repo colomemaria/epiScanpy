@@ -12,9 +12,12 @@ import scanpy as sc
 def pca(adata, n_comps=50, zero_center=True, svd_solver='auto', random_state=0,
 	return_info=False, use_highly_variable=False, dtype='float32', copy=False,
 	chunked=False, chunk_size=None):
+
 	sc.tl.pca(adata, n_comps, zero_center, svd_solver, random_state,
 		return_info, use_highly_variable, dtype, copy,
 		chunked, chunk_size)
+
+
 
 def diffmap(adata, n_comps=15, copy=False):
     """Diffusion Maps [Coifman05]_ [Haghverdi15]_ [Wolf18]_.
@@ -51,6 +54,7 @@ def diffmap(adata, n_comps=15, copy=False):
         Array of size (number of eigen vectors). Eigenvalues of transition matrix.
     """
 	sc.tl.diffmap(adata, n_comps, copy)
+
 
 def draw_graph(adata,
     layout= 'fa',
