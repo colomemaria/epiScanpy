@@ -57,15 +57,9 @@ def diffmap(adata, n_comps=15, copy=False):
     sc.tl.diffmap(adata, n_comps, copy)
 
 
-def draw_graph(adata,
-    layout= 'fa',
-    init_pos= None,
-    root= None,
-    random_state = 0,
-    n_jobs = None,
-    adjacency = None,
-    key_added_ext = None,
-    copy):
+def draw_graph(adata, layout= 'fa', init_pos = None, root = None,
+    random_state = 0, n_jobs = None, adjacency = None, key_added_ext = None,
+    copy = False):
 
     """\
     Force-directed graph drawing [Islam11]_ [Jacomy14]_ [Chippada18]_.
@@ -420,4 +414,4 @@ def leiden(adata,
 
     sc.tl.leiden(adata, resolution, restrict_to, random_state, key_added,
         adjacency, directed, use_weights, n_iterations, partition_type, copy)
-    
+
