@@ -5,7 +5,7 @@ import numpy as np
 import anndata as ad
 
 def commonness_features(adata, threshold=None, bw=0.5,
-    key_added=None, xlabel=None, title=None, , color=None,
+    key_added=None, xlabel=None, title=None, color=None,
     edgecolor=None, save=None, log=False):
     """
     Display how often a feature is measured as open (for ATAC-seq).
