@@ -4,13 +4,18 @@ import matplotlib.axes as pltax
 import numpy as np
 import anndata as ad
 
-def commonness_features(adata, threshold=None, bw=0.5, key_added=None, xlabel=None, title=None, save=None):
+def commonness_features(adata, threshold=None, bw=0.5, key_added=None, xlabel=None, title=None, save=None, log=False):
     """
     Display how often a feature is measured as open (for ATAC-seq).
     Distribution of the feature commoness in cells.
     """
     if key_added == None:
         key_added='commonness'
+        
+    if xlabel ==None:
+        plt.xlabel('cells sharing a feature')
+    else:
+        plt.xlabel(xlabel)    
     
     common = np.sum(adata.X, axis=0).tolist()
     if len(common) == 1:
@@ -23,25 +28,24 @@ def commonness_features(adata, threshold=None, bw=0.5, key_added=None, xlabel=No
     sns.set_style('whitegrid')
     #sns.kdeplot(np.array(adata.var[key_added]), bw=bw_param)
     
-    plot = sns.distplot(common, hist=False, kde=True,
-                    bins=int(80), color = 'darkblue', 
-                    hist_kws={'edgecolor':'black'},
-                    kde_kws={'linewidth': 1})
-    if xlabel ==None:
-        plt.xlabel('cells sharing a feature')
+    if log:
+        plt.xlabel('cells sharing a feature (log scale)')
+        fig = plt.hist(np.log(common), bins=int(100))
     else:
-        plt.xlabel(xlabel)
+        fig = plt.hist(common, bins=int(80))
         
     
     if title !=None:
         plt.title(title)
     
-    fig = plot.get_figure()
+    #fig = plot.get_figure()
     if save!= None:
         fig.savefig(save)
     plt.show()
 
     adata.var[key_added] = common
+
+    
     
 def coverage_cells(adata, bins=50, key_added=None, xlabel=None, ylabel=None, title=None, save=None):
     """
@@ -52,7 +56,9 @@ def coverage_cells(adata, bins=50, key_added=None, xlabel=None, ylabel=None, tit
         key_added='sum_peaks'
     # make sum peaks
     
-    sum_peaks = np.sum(adata.X, axis=1)
+    #sum_peaks = np.sum(adata.X, axis=1)
+    tmp_array = adata.X[adata.X != 0] = 1
+    sum_peaks = np.sum(tmp_array, axis=1)
     if len(sum_peaks) == 1:
         sum_peaks = sum_peaks.tolist()
         sum_peaks = [item for sublist in sum_peaks for item in sublist]
