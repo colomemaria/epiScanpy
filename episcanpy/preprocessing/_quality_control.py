@@ -4,7 +4,9 @@ import matplotlib.axes as pltax
 import numpy as np
 import anndata as ad
 
-def commonness_features(adata, threshold=None, bw=0.5, key_added=None, xlabel=None, title=None, save=None, log=False):
+def commonness_features(adata, threshold=None, bw=0.5,
+    key_added=None, xlabel=None, title=None, , color=None,
+    edgecolor=None, save=None, log=False):
     """
     Display how often a feature is measured as open (for ATAC-seq).
     Distribution of the feature commoness in cells.
@@ -28,11 +30,16 @@ def commonness_features(adata, threshold=None, bw=0.5, key_added=None, xlabel=No
     sns.set_style('whitegrid')
     #sns.kdeplot(np.array(adata.var[key_added]), bw=bw_param)
     
+    if color == None:   
+        color='c'
+    if edgecolor == None:
+        edgecolor='k'
+
     if log:
         plt.xlabel('cells sharing a feature (log scale)')
-        fig = plt.hist(np.log(common), bins=int(100))
+        fig = plt.hist(np.log(common), bins=int(100), color, edgecolor)
     else:
-        fig = plt.hist(common, bins=int(80))
+        fig = plt.hist(common, bins=int(80), color, edgecolor)
         
     
     if title !=None:
@@ -46,14 +53,17 @@ def commonness_features(adata, threshold=None, bw=0.5, key_added=None, xlabel=No
     adata.var[key_added] = common
 
     
-    
-def coverage_cells(adata, bins=50, key_added=None, xlabel=None, ylabel=None, title=None, save=None):
+
+
+def coverage_cells(adata, bins=50, key_added=None, xlabel=None,
+    ylabel=None, title=None, log=False, color=None,
+    edgecolor=None, save=None):
     """
     Histogram of the number of features with an open peak (in the case of ATAC-seq data)
     for every cells.
     """
     if key_added == None:
-        key_added='sum_peaks'
+        key_added='nb_features'
     # make sum peaks
     
     #sum_peaks = np.sum(adata.X, axis=1)
@@ -82,12 +92,21 @@ def coverage_cells(adata, bins=50, key_added=None, xlabel=None, ylabel=None, tit
     if title !=None:
         plt.title(title)
         
-    fig = plt.hist(adata.obs[key_added], bins)
+    if color == None:   
+        color='c'
+    if edgecolor == None:
+        edgecolor='k'
+
+    if log:
+        plt.xlabel('number of features (log scale)')
+        fig = plt.hist(np.log(adata.obs[key_added]), bins, color, edgecolor)
+    else:
+        fig = plt.hist(adata.obs[key_added], bins, color, edgecolor)
     
     #fig = plot.get_figure()
     if save!= None:
         plt.savefig(save)
-    plt.show()
+plt.show()
     
     
 def binarize(adata, copy=False):
