@@ -14,7 +14,7 @@ def cal_var(adata, show=True):
     else:
         adata.var['n_cells'] = adata.X.sum(axis=0).tolist()[0]
         adata.var['prop_shared_cells'] = adata.var['n_cells']/len(adata.obs_names.tolist())
-        adata.var['variablility_score'] = abs(adata.var['prop_shared_cells']-0.5)
+        adata.var['variability_score'] = abs(adata.var['prop_shared_cells']-0.5)
     
     if show: # plotting
         
