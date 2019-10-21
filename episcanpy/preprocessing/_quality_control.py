@@ -37,9 +37,9 @@ def commonness_features(adata, threshold=None, bw=0.5,
 
     if log:
         plt.xlabel('cells sharing a feature (log scale)')
-        fig = plt.hist(np.log(common), bins=int(100), color, edgecolor)
+        fig = plt.hist(np.log(common), bins=int(100), color=color, edgecolor=edgecolor)
     else:
-        fig = plt.hist(common, bins=int(80), color, edgecolor)
+        fig = plt.hist(common, bins=int(80), color=color, edgecolor=edgecolor)
         
     
     if title !=None:
@@ -99,9 +99,9 @@ def coverage_cells(adata, bins=50, key_added=None, xlabel=None,
 
     if log:
         plt.xlabel('number of features (log scale)')
-        fig = plt.hist(np.log(adata.obs[key_added]), bins, color, edgecolor)
+        fig = plt.hist(np.log(adata.obs[key_added]), bins, color=color, edgecolor=edgecolor)
     else:
-        fig = plt.hist(adata.obs[key_added], bins, color, edgecolor)
+        fig = plt.hist(adata.obs[key_added], bins, color=color, edgecolor=edgecolor)
     
     #fig = plot.get_figure()
     if save!= None:
