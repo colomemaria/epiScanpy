@@ -3,6 +3,7 @@ import bamnostic as bs
 import numpy as np
 import anndata as ad
 import pandas as pd
+from scipy.sparse  import  csc_matrix
 
 MOUSE = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', 
         '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
@@ -174,18 +175,18 @@ def read_mtx_bed(file_name, path='', omic='ATAC'):
         adata.uns['omic'] = omic
     return(adata)
 
+
 def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC', bed=False, save=True):
     """
-    Convert regular atac matrix into a sparse matrix:
+    Convert regular atac matrix into a sparse Anndata:
 
     Parameters
     ----------
 
-    initial_matrix: the name of the regular count matrix for any given omic to load and convert into 
-        a sparse matrix (actually, AnnData object)
+    initial_matrix: initial dense count matrix to load and convert into a sparse matrix 
 
-    output_file: name of the output file for the AnnData object. Standard output if nothing is specified
-        is the name of the inoput file with .h5ad extension
+    output_file: name of the output file for the AnnData object.
+    Default output is the name of the input file with .h5ad extension
 
     path: path to the input count matrix. The AnnData object is written in the current directory, 
         not the location specified in path.
@@ -216,22 +217,23 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC', b
             first_line = f.readline()
             first_line = first_line[:-3].split('\t')
             if first_line[0] == 'sample_name':
-                head = first_line
+                head = first_line[:-1]
             else:
                 cell_names.append(first_line[0])
-                data = [[int(l) for l in first_line[1:]]]
+                data = [[int(l) for l in first_line[1:-1]]]
             file = f.readlines()
     
         for line in file:
             line = line[:-3].split('\t')
             cell_names.append(line[0])
-            data.append([int(l) for l in line[1:]])
+            data.append([int(l) for l in line[1:-1]])
+            
 
         # convert into an AnnData object
         if head != None:
-            adata = ad.AnnData(np.array(data), obs=pd.DataFrame(index=cell_names), var=pd.DataFrame(index=head[1:]))
+            adata = ad.AnnData(csc_matrix(data), obs=pd.DataFrame(index=cell_names), var=pd.DataFrame(index=head[1:]))
         else:
-            adata = ad.AnnData(np.array(data), obs=pd.DataFrame(index=cell_names))
+            adata = ad.AnnData(csc_matrix(data), obs=pd.DataFrame(index=cell_names))
         
         if omic != None:
             adata.uns['omic'] = omic
@@ -244,4 +246,3 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC', b
         adata.write(output_file)
 
     return(adata)
-    
