@@ -8,6 +8,7 @@ import matplotlib.axes as pltax
 import pandas as pd
 import pyranges as pr
 
+
 def top_feature_genes(adata, gtf_file, extension=5000):
     
     # extract_top_markers
@@ -56,7 +57,6 @@ def top_feature_genes(adata, gtf_file, extension=5000):
     for n in markers:
         markers_dict[n[1].split(' "')[1][:-1]] = n[0]
     return(markers_dict)
-
 
 
 def find_genes(adata, gtf_file_name, path='', extension=5000,
