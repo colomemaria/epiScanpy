@@ -50,17 +50,19 @@ def top_feature_genes(adata, gtf_file, extension=5000):
     return(markers_dict)
 
 
+### function to optimize running time
+
 def find_genes(adata, gtf_file_name, path='', extension=5000,
                key_added='gene_name', feature_coordinates=None, copy=True):
     """
-    Given a gtf file, you can match the feature of the AnnData object (stored in adata.var_names or
+    Given a gtf file, you can match peak coordinates (stored in adata.var_names or
     in a var annotation) to genes.
-    The feature/variable annotation has to be written as chr1:20000-20500 or chr1_20000_20500.
+    The peak annotation has to be written as chr1:20000-20500 or chr1_20000_20500.
     the corresponding gene (if any) will be sotred in a var annotation 
-    It extend the search to match a gene to an window of + and - extensions size (5kb
+    It extend the search to match a gene to an window of + and - extensions size(5kb
     for example).
     """
-    start = time.time()
+    #start = time.time()
 
     # load the gtf file
     gtf_file = []
@@ -119,7 +121,7 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
     overlap3['Index'] = overlap3.index
     overlap4 = overlap3.sort_values(['Chromosome', 'Start_ext', 'End_ext', 'Index'])
      
-    print(time.time()-start)
+    #print(time.time()-start)
     
     adata.var = adata.var.sort_values(['Chromosome', 'start_ext', 'end_ext'])
     adata_var = pr.PyRanges(adata.var)
@@ -133,7 +135,6 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
         overlap3 = overlap3.sort_values(['Chromosome', 'Start_ext', 'End_ext', 'Index'])
         overlap_chrom = overlap3['Start_ext'].tolist()
         #for line_adata in curr_adata[['start_ext']].iterrows():
-        j = 0
         for line_adata in adata_var[chrom].df[['start_ext']].iterrows():
             gene_annot = []
             for start_gtf in overlap_chrom[index_gtf:]:
@@ -149,36 +150,10 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
                 tot_gene_annot.append(('NA'))
             else:
                 tot_gene_annot.append(tuple(gene_annot))
-                
-            if j == 100:
-                print(j, time.time()-start)
-                j = 0
-            else:
-                j +=1
-                
-        print(chrom, time.time()-start)
+        #print(chrom, time.time()-start)
     
     
     adata.var[key_added] = tot_gene_annot
     adata.var.sort_values(['Index'])
-    print(time.time()-start)
-    
-    
-    adata.var['gene_infos'] = adata.var['gene_name']
-
-    all_gene_names = []
-    for line in tot_gene_annot:
-        if line =='NA':
-            all_gene_names.append(['NA'])
-        else:
-            curr_gene_name = []
-            for element in line:
-                info_gene = element['extra_info'][:-1].split(';')
-                for n in info_gene:
-                    if 'gene_name' in n:
-                        n = n[:-1].split(' "')
-                        curr_gene_name.append(n[-1])
-        
-            all_gene_names.append(list(set(curr_gene_name)))
-        
+    #print(time.time()-start)
     return(tot_gene_annot, overlap4)
