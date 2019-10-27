@@ -1,4 +1,14 @@
+import episcanpy.api as epi
 import anndata as ad
+import scanpy as sc
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib.axes as pltax
+import pandas as pd
+import pyranges as pr
+import scanpy.external as sce
+
 
 def top_feature_genes(adata, gtf_file, extension=5000):
     
@@ -50,10 +60,8 @@ def top_feature_genes(adata, gtf_file, extension=5000):
     return(markers_dict)
 
 
-### function to optimize running time
 
-def find_genes(adata, gtf_file_name, path='', extension=5000,
-               key_added='gene_name', feature_coordinates=None, copy=True):
+def find_genes(adata, gtf_file_name, path='', extension=5000, key_added='gene_name', feature_coordinates=None, copy=True):
     """
     Given a gtf file, you can match peak coordinates (stored in adata.var_names or
     in a var annotation) to genes.
@@ -63,7 +71,7 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
     for example).
     """
     #start = time.time()
-
+    
     # load the gtf file
     gtf_file = []
     with open(gtf_file_name) as f:
@@ -72,8 +80,8 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
                 gtf_file.append(line)
     gtf_file = pd.DataFrame([l.split('\t') for l in gtf_file])
     gtf_file.columns = ['Chromosome', 'source', 'gene_type', 'Start', 'End',
-                   'NA', 'Strand', 'NA2', 'extra_info'] 
-    
+                   'NA', 'Strand', 'NA2', 'extra_info']
+                   
     del gtf_file['NA'], gtf_file['NA2']
     
     # extract the variable names
@@ -108,52 +116,18 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
     adata.var['end_ext'] = [x+extension for x in end_feature]
     #adata.var['Strand'] = len(end_feature)*['+']
     
+    peak = adata.var.copy()
     
-    # match the feature with 
-    gtf = pr.PyRanges(gtf_file)
-    del gtf_file
-    adata_var = pr.PyRanges(chromosomes=adata.var.loc[:,'Chromosome'], #strands=adata.var.loc[:,'strand_feature'],
-               starts=adata.var.loc[:,'start_ext'], ends=adata.var.loc[:,'end_ext'])
-    
-    merge = gtf.join(adata_var, suffix="_ext")
-    merge = merge.dfs
-    overlap3 = pd.concat([merge[key] for key in merge.keys()])
-    overlap3['Index'] = overlap3.index
-    overlap4 = overlap3.sort_values(['Chromosome', 'Start_ext', 'End_ext', 'Index'])
-     
+    # Mapping on the fly to reduce memory usage
+    # This part takes very long time to run
+    anno = {}
+    for i in adata.var['Index']:
+        ex4 = (gtf_file['Chromosome'] == adata.var['Chromosome'][i]) & \
+        (pd.to_numeric(gtf_file['Start']) >= pd.to_numeric(adata.var['Start_ext'][i])) & \
+        (pd.to_numeric(gtf_file['End']) <= pd.to_numeric(adata.var['End_ext'][i])) 
+        anno[i] = gtf_file['extra_info'][ex4[ex4 == True].index]
+# uncomment this code if you want to debug to test run for a few loop
+#        if i == 10:
+#            break
     #print(time.time()-start)
-    
-    adata.var = adata.var.sort_values(['Chromosome', 'start_ext', 'end_ext'])
-    adata_var = pr.PyRanges(adata.var)
-    tot_gene_annot = []
-    for chrom in list(set(adata.var['Chromosome'])):
-        index_gtf = 0
-        #next_index = 0
-        #curr_adata = adata_var[chrom].df
-        overlap3 = pd.concat([merge[key] for key in [(chrom, '+'), (chrom, '-')]])
-        overlap3['Index'] = overlap3.index
-        overlap3 = overlap3.sort_values(['Chromosome', 'Start_ext', 'End_ext', 'Index'])
-        overlap_chrom = overlap3['Start_ext'].tolist()
-        #for line_adata in curr_adata[['start_ext']].iterrows():
-        for line_adata in adata_var[chrom].df[['start_ext']].iterrows():
-            gene_annot = []
-            for start_gtf in overlap_chrom[index_gtf:]:
-                if start_gtf == line_adata[1][0]:
-                    gene_annot.append(overlap3.iloc[index_gtf])
-                    index_gtf += 1
-                    continue
-                else:
-                    #index_gtf = next_index
-                    break
-                
-            if gene_annot == []:
-                tot_gene_annot.append(('NA'))
-            else:
-                tot_gene_annot.append(tuple(gene_annot))
-        #print(chrom, time.time()-start)
-    
-    
-    adata.var[key_added] = tot_gene_annot
-    adata.var.sort_values(['Index'])
-    #print(time.time()-start)
-    return(tot_gene_annot, overlap4)
+    return(peak, anno)
