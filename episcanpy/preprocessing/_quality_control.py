@@ -27,22 +27,27 @@ def cal_var(adata, show=True):
         plt.title('Distribution of feature coverage')
         plt.show()
         
-def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, inplace=True):
-    """
-    This function compute a score to rank the most shared features across all cells. 
-    Then it selects the most variable features according to a minimum variance or select a given number of features.
+def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, copy=False):
+"""
+    This function computes a score to rank the most variable features across all cells. 
+    Then it selects the most variable features according to either a specified number of features (nb_features) or a minimum variance score (min_score).
     
     adata: adata object
     
-    min_score: minimum threshold to retain features
+    min_score: minimum threshold of the variability score to retain features, where ### is the score of the most variable features and #### is the score of the least variable features.
     
     nb_features: default value is None, if specify it will select a the top most variable features.
     if the nb_features is larger than the total number of feature, it filters based on the min_score argument
     
     show: default value True, it will plot the distribution of var.
     
-    inplace: overwrite the adata object or return a new object if inplace == False.
+    copy: return a new adata object if copy == True.
     """
+    if copy:
+        inplace=False:
+    else:
+        inplace=True:
+
     adata = adata.copy() if not inplace else adata
     
     # calculate variability score
