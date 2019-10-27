@@ -51,7 +51,6 @@ def load_metadata(adata, metadata_file, path='', separator=';'):
     for key in head:
         adata.obs[key] = dict_annot[key]
 
-    return()
 
 ### function to optimize running time
 
@@ -65,7 +64,7 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
     It extend the search to match a gene to an window of + and - extensions size(5kb
     for example).
     """
-    start = time.time()
+    #start = time.time()
 
     # load the gtf file
     gtf_file = []
@@ -124,7 +123,7 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
     overlap3['Index'] = overlap3.index
     overlap4 = overlap3.sort_values(['Chromosome', 'Start_ext', 'End_ext', 'Index'])
      
-    print(time.time()-start)
+    #print(time.time()-start)
     
     adata.var = adata.var.sort_values(['Chromosome', 'start_ext', 'end_ext'])
     adata_var = pr.PyRanges(adata.var)
@@ -153,10 +152,10 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
                 tot_gene_annot.append(('NA'))
             else:
                 tot_gene_annot.append(tuple(gene_annot))
-        print(chrom, time.time()-start)
+        #print(chrom, time.time()-start)
     
     
     adata.var[key_added] = tot_gene_annot
     adata.var.sort_values(['Index'])
-    print(time.time()-start)
+    #print(time.time()-start)
     return(tot_gene_annot, overlap4)
