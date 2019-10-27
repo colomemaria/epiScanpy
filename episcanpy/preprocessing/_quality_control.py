@@ -44,9 +44,9 @@ def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, copy=F
     copy: return a new adata object if copy == True.
     """
     if copy:
-        inplace=False:
+        inplace=False
     else:
-        inplace=True:
+        inplace=True
 
     adata = adata.copy() if not inplace else adata
     
