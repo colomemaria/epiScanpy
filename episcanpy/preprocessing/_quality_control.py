@@ -28,7 +28,7 @@ def cal_var(adata, show=True):
         plt.show()
         
 def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, copy=False):
-"""
+    """
     This function computes a score to rank the most variable features across all cells. 
     Then it selects the most variable features according to either a specified number of features (nb_features) or a minimum variance score (min_score).
     
