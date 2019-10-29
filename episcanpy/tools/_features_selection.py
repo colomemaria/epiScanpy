@@ -37,24 +37,24 @@ def rank_features(adata, groupby, omic=None, use_raw=True, groups='all', referen
     if omic == 'methylation':
     	if copy==False:
     		sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
-                groups=groups, reference=reference, n_genes=n_genes,
+                groups=groups, reference=reference, n_genes=n_features,
     			rankby_abs=True, key_added=key_added, copy=False, method='t-test', corr_method='benjamini-hochberg')
     		return()
     	else:
     		adata2 = sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
-                groups=groups, reference=reference, n_genes=n_genes,
+                groups=groups, reference=reference, n_genes=n_features,
     			rankby_abs=True, key_added=key_added, copy=True, method='t-test', corr_method='benjamini-hochberg')
     		return(adata2)
     else:
     	if copy==False:
     		sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
-                            groups=groups, reference=reference, n_genes=n_genes,
+                            groups=groups, reference=reference, n_genes=n_features,
                      		rankby_abs=rankby_abs, key_added=key_added, copy=False, method=method,
                      		corr_method=corr_method, **kwds)
     		return()
     	else:
     		adata2 = sc.tl.rank_genes_groups(adata=adata, groupby=groupby, use_raw=use_raw,
-                            groups=groups, reference=reference, n_genes=n_genes,
+                            groups=groups, reference=reference, n_genes=n_features,
                      		rankby_abs=rankby_ab, key_added=key_added, copy=True, method=method,
                             corr_method=corr_method, **kwds)
     		return(adata2)
