@@ -80,13 +80,18 @@ import scanpy as sc
 # --------------------------------------------------------------------------------
 
 
-def set_figure_params(scanpy=True, dpi=80, dpi_save=150, frameon=True, vector_friendly=True,
-                      color_map=None, format='pdf', transparent=False, ipython_format='png2x'):
+def set_figure_params(scanpy=True, dpi=80, dpi_save=150, frameon=True, vector_friendly=True, 
+    color_map=None, format='pdf', transparent=False, ipython_format='png2x'):
+    
+
     """Set resolution/size, styling and format of figures.
+
+
     Parameters
     ----------
     scanpy : `bool`, optional (default: `True`)
-        Init default values for ``matplotlib.rcParams`` suited for Scanpy.
+        Init default values for ``matplotlib.rcParams`` suited for Scanpy/epiScanpy.
+
     dpi : `int`, optional (default: `80`)
         Resolution of rendered figures - this influences the size of figures in notebooks.
     dpi_save : `int`, optional (default: `150`)
