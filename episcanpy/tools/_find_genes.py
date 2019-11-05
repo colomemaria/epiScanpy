@@ -31,7 +31,6 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
         Annotated data matrix.
 
     """
-    #start = time.time()
 
     # load the gtf file
     gtf_file = []
