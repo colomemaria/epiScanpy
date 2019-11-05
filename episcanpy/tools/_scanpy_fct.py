@@ -448,3 +448,78 @@ def leiden(adata,
             )
 
 
+def dendogram(
+    adata: AnnData,
+    groupby: str,
+    n_pcs: Optional[int] = None,
+    use_rep: Optional[str] = None,
+    var_names: Optional[Sequence[str]] = None,
+    use_raw: Optional[bool] = None,
+    cor_method: str = 'pearson',
+    linkage_method: str = 'complete',
+    key_added: Optional[str] = None,
+) -> None:
+    """\
+    Computes a hierarchical clustering for the given `groupby` categories.
+
+    By default, the PCA representation is used unless `.X` has less than 50 variables.
+
+    Alternatively, a list of `var_names` (e.g. genes) can be given.
+
+    Average values of either `var_names` or components are used to compute a correlation matrix.
+
+    The hierarchical clustering can be visualized using `sc.pl.dendrogram` or multiple other
+    visualizations that can include a dendrogram: `matrixplot`, `heatmap`, `dotplot` and `stacked_violin`
+
+    .. note::
+        The computation of the hierarchical clustering is based on predefined groups and not
+        per cell. The correlation matrix is computed using by default pearson but other methods
+        are available.
+
+    Parameters
+    ----------
+    adata
+        Annotated data matrix
+    {n_pcs}
+    {use_rep}
+    var_names
+        List of var_names to use for computing the hierarchical clustering.
+        If `var_names` is given, then `use_rep` and `n_pcs` is ignored.
+    use_raw
+        Only when `var_names` is not None.
+        Use `raw` attribute of `adata` if present.
+    cor_method
+        correlation method to use.
+        Options are 'pearson', 'kendall', and 'spearman'
+    linkage_method
+        linkage method to use. See :func:`scipy.cluster.hierarchy.linkage`
+        for more information.
+    key_added
+        By default, the dendrogram information is added to
+        `.uns[f'dendrogram_{{groupby}}']`.
+        Notice that the `groupby` information is added to the dendrogram.
+
+    Returns
+    -------
+    `adata.uns['dendrogram']` (or instead of 'dendrogram' the value selected
+    for `key_added`) is updated with the dendrogram information
+
+    Examples
+    --------
+    >>> import scanpy as sc
+    >>> adata = sc.datasets.pbmc68k_reduced()
+    >>> sc.tl.dendrogram(adata, groupby='bulk_labels')
+    >>> sc.pl.dendrogram(adata)
+    >>> markers = ['C1QA', 'PSAP', 'CD79A', 'CD79B', 'CST3', 'LYZ']
+    >>> sc.pl.dotplot(adata, markers, groupby='bulk_labels', dendrogram=True)
+    """
+
+    sc.tl.dendrogram(adata=adata,
+    groupby=groupby,
+    n_pcs=n_pcs,
+    use_rep=use_rep,
+    var_names=var_names,
+    use_raw=use_raw,
+    cor_method=cor_method,
+    linkage_method=linkage_method,
+    key_added=key_added)

@@ -564,3 +564,107 @@ def pca_variance_ratio(adata, n_pcs=30, log=False, show=None, save=None):
         Infer the filetype if ending on {`'.pdf'`, `'.png'`, `'.svg'`}.
     """
 	sc.pl.pca_variance_ratio(adata, n_pcs, log, show, save)
+
+
+
+def correlation_matrix(
+    adata: AnnData,
+    groupby: str,
+    show_correlation_numbers: bool = False,
+    dendrogram: Union[bool, str, None] = None,
+    figsize: Optional[Tuple[float, float]] = None,
+    show: Optional[bool] = None,
+    save: Optional[Union[bool, str]] = None,
+    ax: Optional[Axes] = None,
+    **kwds,
+) -> Union[Axes, List[Axes]]:
+    """Plots the correlation matrix computed as part of `sc.tl.dendrogram`.
+
+    Parameters
+    ----------
+    adata
+    groupby
+        Categorical data column used to create the dendrogram
+    show_correlation_numbers
+        If `show_correlation` is True, plot the correlation number on top of each cell.
+    dendrogram
+        If True or a valid dendrogram key, a dendrogram based on the hierarchical clustering
+        between the `groupby` categories is added. The dendrogram information is computed
+        using :func:`scanpy.tl.dendrogram`. If `tl.dendrogram` has not been called previously
+        the function is called with default parameters.
+    figsize
+        By default a figure size that aims to produce a squared correlation matrix plot is used.
+        Format is (width, height)
+    {show_save_ax}
+    **kwds
+        Only if `show_correlation` is True:
+        Are passed to :func:`matplotlib.pyplot.pcolormesh` when plotting the
+        correlation heatmap. Useful values to pas are `vmax`, `vmin` and `cmap`.
+
+    Returns
+    -------
+
+    Examples
+    --------
+    >>> import scanpy as sc
+    >>> adata = sc.datasets.pbmc68k_reduced()
+    >>> sc.tl.dendrogram(adata, 'bulk_labels')
+    >>> sc.pl.correlation(adata, 'bulk_labels')
+    """
+    sc.pl.correlation_matrix(
+    adata=adata,
+    groupby=groupby,
+    show_correlation_numbers=show_correlation_numbers,
+    dendrogram=dendrogram,
+    figsize=figsize,
+    show=show,
+    save=save,
+    ax=ax,
+    **kwds)
+
+def dendrogram(
+    adata: AnnData,
+    groupby: str,
+    dendrogram_key: Optional[str] = None,
+    orientation: str = 'top',
+    remove_labels: bool = False,
+    show: Optional[bool] = None,
+    save: Optional[bool] = None,
+):
+    """Plots a dendrogram of the categories defined in `groupby`.
+
+    See :func:`~scanpy.tl.dendrogram`.
+
+    Parameters
+    ----------
+    adata
+    groupby
+        Categorical data column used to create the dendrogram
+    dendrogram_key
+        Key under with the dendrogram information was stored.
+        By default the dendrogram information is stored under .uns['dendrogram_' + groupby].
+    orientation
+        Options are `top` (default), `bottom`, `left`, and `right`.
+        Only when `show_correlation` is False.
+    remove_labels
+    {show_save_ax}
+
+    Returns
+    -------
+    :class:`matplotlib.axes.Axes`
+
+    Examples
+    --------
+    >>> import scanpy as sc
+    >>> adata = sc.datasets.pbmc68k_reduced()
+    >>> sc.tl.dendrogram(adata, 'bulk_labels')
+    >>> sc.pl.dendrogram(adata, 'bulk_labels')
+    """
+    dendrogram(
+    adata=adata,
+    groupby=groupby,
+    dendrogram_key=dendrogram_key,
+    orientation=orientation,
+    remove_labels=remove_labels,
+    show=show,
+    save=save)
