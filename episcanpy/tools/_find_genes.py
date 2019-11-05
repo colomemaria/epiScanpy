@@ -18,6 +18,12 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
     It extend the search to match a gene to an window of + and - extensions size (5kb
     for example).
 
+    Paramters
+    ---------
+    
+
+    Return
+    ------
     
     """
     #start = time.time()
