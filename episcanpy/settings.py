@@ -216,14 +216,14 @@ def set_figure_params(
             :func:`~IPython.display.set_matplotlib_formats` for details.
         """
 
-        sc.set_figure_params(self,
-            scanpy=episcanpy,
-            dpi=dpi,
-            dpi_save=dpi_save,
-            frameon=frameon,
-            vector_friendly=vector_friendly,
-            fontsize=fontsize,
-            color_map=color_map,
-            format=format,
-            transparent=transparent,
-            ipython_format=ipython_format)
+    sc.set_figure_params(self,
+        scanpy=episcanpy,
+        dpi=dpi,
+        dpi_save=dpi_save,
+        frameon=frameon,
+        vector_friendly=vector_friendly,
+        fontsize=fontsize,
+        color_map=color_map,
+        format=format,
+        transparent=transparent,
+        ipython_format=ipython_format)
