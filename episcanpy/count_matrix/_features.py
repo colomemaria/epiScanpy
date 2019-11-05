@@ -38,9 +38,12 @@ def load_features(file_features, chromosomes=HUMAN, path="", sort=False):
         features_chrom[c] = []
     with open(path + file_features) as features:
         for line in features:
-            line = line.split("\t")
+            line = line.strip().split("\t")
             if line[0][3:] in chromosomes:
-                features_chrom[line[0][3:]].append([int(line[1]), int(line[2]), line[3]])
+                try:
+                    features_chrom[line[0][3:]].append([int(line[1]), int(line[2]), line[3]])
+                except:
+                    features_chrom[line[0][3:]].append([int(line[1]), int(line[2]) ])
                 
 #    for c in chromosomes:
 #        if features_chrom[c] ==  []:
@@ -127,7 +130,10 @@ def name_features(loaded_features):
     i = 0
     for c in loaded_features.keys():
         for name in loaded_features[c]:
-            add_name = '_'.join(['chr', c, name[-1].rstrip('\n'), str(i)])
+            #add_name = '_'.join(['chr', c, name[-1].rstrip('\n'), str(i)])
+            add_name = '_'.join([c, str(name[0]), str(name[1])])
+            add_name ='chr' + add_name
+            # the feature names will be like chr1_1234_1245
             if add_name[-1] =='\n':
                 add_name = add_name[:-1]
             feat_names.append(add_name)

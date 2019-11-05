@@ -77,10 +77,22 @@ Imputing missing data (methylation), filtering lowly covered cells or variables,
 
    pp.coverage_cells
    pp.commoness_features
+   pp.select_var_feature
    pp.binarize
    pp.lazy
    pp.load_metadata
    pp.read_ATAC_10x
+   pp.filter_cells
+   pp.filter_features
+   pp.normalize_total
+   pp.pca
+   pp.normalize_per_cell
+   pp.regress_out
+   pp.subsample
+   pp.downsample_counts
+   pp.neighbors
+   pp.sparse
+
 
 
 Methylation matrices
@@ -108,6 +120,15 @@ Tools: TL
    tl.lazy
    tl.load_markers
    tl.identify_cluster
+   tl.top_feature_genes
+   tl.find_genes
+   tl.diffmap
+   tl.draw_graph
+   tl.tsne
+   tl.umap
+   tl.louvain
+   tl.leiden
+
 
 
 Plotting: PL
@@ -119,8 +140,40 @@ For most tools and for some preprocessing functions, you'll find a plotting func
 .. autosummary::
    :toctree: .
    
+
+   pl.pca
+   pl.pca_floadings
+   pl.pca_overview
+   pl.pca_variance_ratio
+
+   pl.tsne
+   pl.umap
+   pl.diffmappl.draw_graph
+
+   pl.rank_feat_groups
+   pl.rank_feat_groups_violin
+   pl.rank_feat_groups_dotplot
+   pl.rank_feat_groups_stacked_violin
+   pl.rank_feat_groups_matrixplot
+   pl.rank_feat_groups_heatmap
+   pl.rank_feat_groups_tracksplot
+   pl.cal_var
+
+   pl.violin
+   pl.scatter
+   pl.ranking
+   pl.clustermap
+   pl.stacked_violin
+   pl.heatmap
+   pl.dotplot
+   pl.matrixplot
+   pl.tracksplot
+   pl.dendrogram
+   pl.correlation_matrix
+
    pl.prct_overlap
    pl.overlap_heatmap
+   pl.cluster_composition
    pl.silhouette
    pl.silhouette_tot
 
