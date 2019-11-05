@@ -27,12 +27,25 @@ To visualise how common features are and what is the coverage distribution of th
     
     epi.pp.commoness_features(adata, **processing_params)
     epi.pp.coverage_cells(adata, **processing_params)
+
+To remove low quality cells you can use the following functions: ::
+
+    epi.pp.filter_cells(adata, min_features=10)
+    epi.pp.filter_features(adata, min_cells=10)
+
+
+To reduce the feature space to the most variable features: ::
+    epi.pl.cal_var(adata)
+    epi.pp.select_var_feature(adata, max_score=0.2, nb_features=50000)
     
     
 The next step, is the calculation of tSNE, UMAP, PCA etc. For that, we take advantage of the embedding into Scanpy and we use mostly Scanpy functions, which are called using ``sc.tl`` (tl = tool) [Wolf18]_. For that, see Scanpy usage principles: <https://scanpy.readthedocs.io/en/latest/basic_usage.html>`__. For example, to obtain cell-cell distance calculations or low dimensional representation we make use of the ``adata`` object, and store *n_obs* observations (cells) of *n_vars* variables (expression, methylation, chromatin features). For each tool, there typically is an associated plotting function in ``sc.tl`` and ``sc.pl`` (pl = plot) ::
 
-        sc.tl.tsne(adata, **tool_params)
-        sc.pl.tsne(adata, **plotting_params)
+        epi.pp.pca(adata, n_comps=100, svd_solver='arpack')
+        epi.pp.neighbors(adata,  n_neighbors=15)
+
+        epi.tl.tsne(adata, **tool_params)
+        epi.pl.tsne(adata, **plotting_params)
         
 There are also epiScanpy specific tools and plotting functions that can be accessed using ``epi.tl`` and ``epi.pl`` ::
 
@@ -44,7 +57,7 @@ There are also epiScanpy specific tools and plotting functions that can be acces
 Data structure
 ^^^^^^^^^^^^^^
 
-Similarly to Scanpy, the methylation and ATAC-seq matrices are stored as anndata object. For more information on the datastructure see here`here <https://anndata.readthedocs.io/en/latest/>`__
+Similarly to Scanpy, the methylation and ATAC-seq matrices are stored as Anndata objects. For more information on the datastructure see here`here <https://anndata.readthedocs.io/en/latest/>`__
     
 .. raw:: html
 

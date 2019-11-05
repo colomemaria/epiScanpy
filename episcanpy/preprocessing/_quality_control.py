@@ -27,14 +27,18 @@ def cal_var(adata, show=True):
         plt.title('Distribution of feature coverage')
         plt.show()
         
-def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, copy=False):
+def select_var_feature(adata, max_score=0.5, nb_features=None, show=True, copy=False):
     """
-    This function computes a score to rank the most variable features across all cells. 
+    This function computes a variability score to rank the most variable features across all cells. 
     Then it selects the most variable features according to either a specified number of features (nb_features) or a minimum variance score (min_score).
     
+    Parameters
+    ----------
+
     adata: adata object
     
-    min_score: minimum threshold of the variability score to retain features, where ### is the score of the most variable features and #### is the score of the least variable features.
+    max_score: max threshold of the variability score to retain features,
+    where 0 is the score of the most variable features and 0.5 is the score of the least variable features.
     
     nb_features: default value is None, if specify it will select a the top most variable features.
     if the nb_features is larger than the total number of feature, it filters based on the min_score argument
@@ -42,6 +46,12 @@ def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, copy=F
     show: default value True, it will plot the distribution of var.
     
     copy: return a new adata object if copy == True.
+
+    Returns
+    -------
+    Depending on ``copy``, returns a new AnnData object or overwrite the input
+
+
     """
     if copy:
         inplace=False
@@ -70,7 +80,20 @@ def select_var_feature(adata, min_score=0.5, nb_features=None, show=True, copy=F
         adata._inplace_subset_var(adata.var['variability_score']<=min_score)
         
 def binarize(adata, copy=False):
-    """convert into a binary matrix"""
+    """convert the count matrix into a binary matrix.
+
+    Parameters
+    ----------
+
+    adata: AnnData object
+
+    copy: return a new adata object if copy == True.
+
+    Returns
+    -------
+    Depending on ``copy``, returns a new AnnData object or overwrite the input
+
+    """
 
     if copy:
         adata2 = adata.copy()
@@ -87,6 +110,11 @@ def coverage_cells(adata, bins=50, key_added=None, log=False, binary=None, xlabe
     ylabel=None, title=None, color=None, edgecolor=None, save=None):
     """
     Histogram of the number of open features (in the case of ATAC-seq data) per cell.
+
+    Parameters
+    ----------
+
+
     """
     if key_added == None:
         key_added='nb_features'
@@ -147,6 +175,11 @@ def commonness_features(adata, threshold=None, log=False, binary=None, key_added
     """
     Display how often a feature is measured as open (for ATAC-seq).
     Distribution of the feature commoness in cells.
+
+    Parameters
+    ----------
+
+    
     """
     
     if key_added == None:

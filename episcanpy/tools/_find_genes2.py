@@ -8,7 +8,7 @@ import matplotlib.axes as pltax
 import pandas as pd
 import pyranges as pr
 
-def find_genes_in_features(adata, gtf_file_name, path='', extension=5000,
+def find_genes(adata, gtf_file_name, path='', extension=5000,
     key_added='gene_name', feature_coordinates=None, copy=True):
     
     """

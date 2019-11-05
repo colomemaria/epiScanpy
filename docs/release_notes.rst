@@ -10,6 +10,22 @@
 .. role:: smaller
 
 
+
+
+
+
+
+
+
+
+Version 0.1.7 :small:`November 5, 2019`
+--------------------------------------
+
+Release for SCOG epiScanpy Hackathon in Saarbrucken.
+
+This version is not fully compatible with previous version. 
+
+
 Version 0.1.0 :small:`May 10, 2019`
 --------------------------------------
 

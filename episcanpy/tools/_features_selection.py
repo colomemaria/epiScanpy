@@ -1,5 +1,5 @@
-from scanpy.api.tl import rank_genes_groups
-import scanpy.api as sc
+#from scanpy.api.tl import rank_genes_groups
+import scanpy as sc
 import warnings
 from warnings import warn
 
