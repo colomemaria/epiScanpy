@@ -10,7 +10,8 @@ from ..plotting._scanpy_plotting import rank_feat_groups_violin, rank_feat_group
 from ..plotting._scanpy_plotting import rank_feat_groups_stacked_violin, rank_feat_groups_matrixplot
 from ..plotting._scanpy_plotting import rank_feat_groups_heatmap, rank_feat_groups_tracksplot
 
-from scanpy import scatter, violin, ranking, clustermap, stacked_violin, heatmap, dotplot, matrixplot, tracksplot, dendrogram, correlation_matrix
+import scanpy as sc
+from scanpy.api.pl import scatter, violin, ranking, clustermap, stacked_violin, heatmap, dotplot, matrixplot, tracksplot, dendrogram, correlation_matrix
 
 from ..plotting._variable_features import cal_var
 
