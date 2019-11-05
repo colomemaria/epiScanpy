@@ -9,7 +9,8 @@ import pandas as pd
 import pyranges as pr
 
 def find_genes(adata, gtf_file_name, path='', extension=5000,
-               key_added='gene_name', feature_coordinates=None, copy=True):
+    key_added='gene_name', feature_coordinates=None, copy=True):
+    
     """
     Given a gtf file, you can match the feature of the AnnData object (stored in adata.var_names or
     in a var annotation) to genes.
@@ -24,7 +25,11 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
 
     Return
     ------
+    if copy == True: 
     
+    adata : :class:`~anndata.AnnData`
+        Annotated data matrix.
+
     """
     #start = time.time()
 
