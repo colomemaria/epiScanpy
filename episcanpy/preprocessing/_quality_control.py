@@ -30,7 +30,7 @@ def cal_var(adata, show=True):
 def select_var_feature(adata, max_score=0.5, nb_features=None, show=True, copy=False):
     """
     This function computes a variability score to rank the most variable features across all cells. 
-    Then it selects the most variable features according to either a specified number of features (nb_features) or a minimum variance score (min_score).
+    Then it selects the most variable features according to either a specified number of features (nb_features) or a maximum variance score (max_score).
     
     Parameters
     ----------
@@ -41,7 +41,7 @@ def select_var_feature(adata, max_score=0.5, nb_features=None, show=True, copy=F
     where 0 is the score of the most variable features and 0.5 is the score of the least variable features.
     
     nb_features: default value is None, if specify it will select a the top most variable features.
-    if the nb_features is larger than the total number of feature, it filters based on the min_score argument
+    if the nb_features is larger than the total number of feature, it filters based on the max_score argument
     
     show: default value True, it will plot the distribution of var.
     
@@ -65,19 +65,19 @@ def select_var_feature(adata, max_score=0.5, nb_features=None, show=True, copy=F
     # adata.var['variablility_score'] = abs(adata.var['prop_shared_cells']-0.5)
     var_annot = adata.var.sort_values(ascending=True, by ='variability_score')
 
-    # calculate the min score to get a specific number of feature        
+    # calculate the max score to get a specific number of feature        
     if nb_features != None and nb_features < len(adata.var_names):  
-            min_score = var_annot['variability_score'][nb_features]    
+            max_score = var_annot['variability_score'][nb_features]    
      
     
-    adata_tmp = adata[:,adata.var['variability_score']<=min_score].copy()
+    adata_tmp = adata[:,adata.var['variability_score']<=max_score].copy()
     
     ## return the filtered AnnData objet.
     if not inplace:
-        adata_tmp = adata[:,adata.var['variability_score']<=min_score]
+        adata_tmp = adata[:,adata.var['variability_score']<=max_score]
         return(adata_tmp)
     else:
-        adata._inplace_subset_var(adata.var['variability_score']<=min_score)
+        adata._inplace_subset_var(adata.var['variability_score']<=max_score)
         
 def binarize(adata, copy=False):
     """convert the count matrix into a binary matrix.
@@ -157,7 +157,7 @@ def coverage_cells(adata, bins=50, key_added=None, log=False, binary=None, xlabe
 
     if log:
         if 0 in sum_peaks:
-            warnings.warn("""Some cells do not contain any open feature. Use epi.pp.filter_cells(adata, min_features=1) to remove these cells.""")
+            warnings.warn("""Some cells do not contain any open feature. Use epi.pp.filter_cells(adata, max_features=1) to remove these cells.""")
         
         plt.xlabel('number of features (log scale)')
         fig = plt.hist(np.log(sum_peaks), bins, color=color, edgecolor=edgecolor)
@@ -219,7 +219,7 @@ def commonness_features(adata, threshold=None, log=False, binary=None, key_added
 
     if log:
         if 0 in common:
-            warnings.warn("""Some features are not open in any cell. Use epi.pp.filter_features(adata, min_cells=1) to remove these features.""")
+            warnings.warn("""Some features are not open in any cell. Use epi.pp.filter_features(adata, max_cells=1) to remove these features.""")
         
         plt.xlabel('cells sharing a feature (log scale)')
         fig = plt.hist(np.log(common), bins=int(100), color=color, edgecolor=edgecolor)
