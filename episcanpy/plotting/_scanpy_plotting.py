@@ -7,6 +7,13 @@ from anndata import AnnData
 from typing import Optional, Union  # Special
 from typing import Sequence, Collection, Iterable  # ABCs
 from typing import Tuple, List  # Classes
+from matplotlib.axes import Axes
+from matplotlib import pyplot as pl
+from matplotlib import rcParams
+from matplotlib import gridspec
+from matplotlib import patheffects
+from matplotlib.colors import is_color_like, Colormap, ListedColormap
+
 
 def pca(adata,
 	color=None,
