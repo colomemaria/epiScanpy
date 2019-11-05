@@ -1,9 +1,12 @@
-
-# Just a bunch of scanopy functions
+## everything here is copied/inspired from scanpy
 
 # to add: violin, ranking, clustermap, stacked_violin, heatmap, dotplot,
 # matrixplot, tracksplot, dendrogram, correlation_matrix
 import scanpy as sc
+from anndata import AnnData
+from typing import Optional, Union  # Special
+from typing import Sequence, Collection, Iterable  # ABCs
+from typing import Tuple, List  # Classes
 
 def pca(adata,
 	color=None,

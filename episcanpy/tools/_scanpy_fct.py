@@ -1,4 +1,9 @@
 import scanpy as sc
+from anndata import AnnData
+from typing import Optional, Union  # Special
+from typing import Sequence, Collection, Iterable  # ABCs
+from typing import Tuple, List  # Classes
+
 
 ## everything here is copied from scanpy
 
@@ -523,3 +528,5 @@ def dendogram(
     cor_method=cor_method,
     linkage_method=linkage_method,
     key_added=key_added)
+
+
