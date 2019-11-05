@@ -38,3 +38,7 @@ Thumbs.db
 /_static/
 /_templates/
 /__pycache__/
+.Rproj.user
+epiScanpy.Rproj
+.Rhistory
+
