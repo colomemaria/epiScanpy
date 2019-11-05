@@ -7,6 +7,7 @@ def load_markers(path, marker_list_file):
     Convert list of known cell type markers from literature to a dictionary
     Input list of known marker genes 
     First row is considered the header
+
     Paramters
     ---------
     marker_list_file: file with the known marker genes (gene name is the 3rd column)
@@ -14,6 +15,7 @@ def load_markers(path, marker_list_file):
     Return
     ------
     cell_type_markers
+
     """
     marker_list = []
     cell_type_list = []
@@ -47,6 +49,7 @@ def identify_cluster(adata, cell_type, cell_type_markers, peak_promoter_file, ge
     """
     Use markers of a given cell type to plot peak openness for peaks in promoters of the given markers
     Input cell type, cell type markers, peak promoter intersections 
+    
     Paramters
     ---------
     cell_type: str, cell type that is to be investigated (must be the same as in the dictionary)

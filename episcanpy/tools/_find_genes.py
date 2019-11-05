@@ -1,54 +1,12 @@
+import episcanpy.api as epi
 import anndata as ad
-
-def top_feature_genes(adata, gtf_file, extension=5000):
-    
-    # extract_top_markers
-    #print(adata.uns['rank_genes_groups'].keys())
-    windows = [list(w) for w in adata.uns['rank_genes_groups']['names'].tolist()]
-    windows_all = []
-    for w in windows:
-        windows_all += w
-
-    # load the gtf file
-    with open(gtf_file) as f:
-        gtf_raw = f.readlines()
-    gtf = []
-    for line in gtf_raw:
-        if line[0] != '#':
-            gtf.append(line[:-2].split('\t'))
-    del gtf_raw
-    
-    gtf_dic = {}
-    for line in gtf:
-        if line[0] not in gtf_dic.keys():
-            gtf_dic[line[0]] = [line]
-        else:
-            gtf_dic[line[0]].append(line)
-    del gtf
-
-    markers = []
-    for w in windows_all:
-        curr_m = []
-        w2 = w.split('_')
-        chrom = w2[0][3:]
-        w2 = [int(x) for x in w2[1:]]
-        for gene in gtf_dic[chrom]:
-            start = int(gene[3])-extension
-            end = int(gene[4])+extension
-            if (w2[0] < start < w2[1]) or (w2[0] < end < w2[1]):
-                gene_name = gene[-1]
-                for n in gene[-1].split(';'):
-                    if 'gene_name' in n:
-                        gene_name = n
-                curr_m.append([w, gene_name])
-        if curr_m != []:
-            markers += curr_m
-    markers = [list(x) for x in set(tuple(x) for x in markers)]
-    markers_dict={}
-    for n in markers:
-        markers_dict[n[1].split(' "')[1][:-1]] = n[0]
-    return(markers_dict)
-
+import scanpy as sc
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib.axes as pltax
+import pandas as pd
+import pyranges as pr
 
 def find_genes(adata, gtf_file_name, path='', extension=5000,
                key_added='gene_name', feature_coordinates=None, copy=True):
@@ -59,8 +17,10 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
     the corresponding gene (if any) will be sotred in a var annotation 
     It extend the search to match a gene to an window of + and - extensions size (5kb
     for example).
+
+    
     """
-    start = time.time()
+    #start = time.time()
 
     # load the gtf file
     gtf_file = []
@@ -119,7 +79,7 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
     overlap3['Index'] = overlap3.index
     overlap4 = overlap3.sort_values(['Chromosome', 'Start_ext', 'End_ext', 'Index'])
      
-    print(time.time()-start)
+    #print(time.time()-start)
     
     adata.var = adata.var.sort_values(['Chromosome', 'start_ext', 'end_ext'])
     adata_var = pr.PyRanges(adata.var)
@@ -156,12 +116,12 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
             else:
                 j +=1
                 
-        print(chrom, time.time()-start)
+        #print(chrom, time.time()-start)
     
     
     adata.var[key_added] = tot_gene_annot
     adata.var.sort_values(['Index'])
-    print(time.time()-start)
+    #print(time.time()-start)
     
     
     adata.var['gene_infos'] = adata.var['gene_name']
