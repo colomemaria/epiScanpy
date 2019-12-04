@@ -13,6 +13,16 @@ Count Matrices: CT
 Loading data, loading annotations, building count matrices, filtering of lowly covered methylation variables.
 Filtering of lowly covered cells.
 
+Building count matrices
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Quickly build a count matrix from tsv/tbi file.
+
+.. autosummary::
+   :toctree: .
+
+   ct.bld_mtx_fly
+
 Load features
 ~~~~~~~~~~~~~
 
