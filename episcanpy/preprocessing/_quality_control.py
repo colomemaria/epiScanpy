@@ -336,7 +336,7 @@ def correlation_PC(adata,
                    pc=1,
                    obs=True,
                    method='pearson',
-                   title=None.
+                   title=None,
                    xlabel=None,
                    ylabel=None,
                    show=True,
