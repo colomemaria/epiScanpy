@@ -3,7 +3,12 @@ import matplotlib.pyplot as plt
 import matplotlib.axes as pltax
 import numpy as np
 import anndata as ad
+
+import warnings
+from warnings import warn
+
 from scipy.sparse import issparse
+from scipy.stats.stats import pearsonr, spearmanr
 
 def cal_var(adata, show=True):
     
@@ -102,40 +107,47 @@ def binarize(adata, copy=False):
     else:
         adata.X[adata.X != 0] = 1
         
-        
-import warnings
-from warnings import warn
 
-def coverage_cells(adata, bins=50, key_added=None, log=False, binary=None, xlabel=None,
-    ylabel=None, title=None, color=None, edgecolor=None, save=None):
+def commonness_features(adata,
+                        binary=None, 
+                        log=False,
+                        key_added=None, 
+                        
+                        threshold=None,
+                        bw=0.5,
+                        bins=50,
+                        xlabel=None, ylabel=None, title=None,
+                        color=None, edgecolor=None,
+                        
+                        save=None):
+    
     """
-    Histogram of the number of open features (in the case of ATAC-seq data) per cell.
+    Display how often a feature is measured as open (for ATAC-seq).
+    Distribution of the feature commoness in cells.
 
     Parameters
     ----------
-
-
+    adata
+    threshold
+    log
+    binary
+    key_added
+    bw
+    xlabel
+    title
+    color
+    edgecolor
+    
     """
+    
     if key_added == None:
-        key_added='nb_features'
-    
-    # calculate the number of features per cell
-    if binary==None:
-        warnings.warn("""The argument binary was not specified. To reduce computing time, you can specify if the matrix is already binary""")
-    if binary:
-        sum_peaks = np.sum(adata.X, axis=1).tolist()
-    else:
-        tmp_array = binarize(adata, copy=True)
-        sum_peaks = np.sum(tmp_array.X, axis=1).tolist()
-  
-    
-    if issparse(adata.X):
-        sum_peaks = [element[0] for element in sum_peaks]        
+        key_added='commonness'
+        
+    #if xlabel ==None:
+    #    plt.xlabel('cells sharing a feature')
+    #else:
+    #    plt.xlabel(xlabel)    
 
-    adata.obs[key_added] = sum_peaks
-    
-
-    
     # plotting parameters
     if xlabel ==None:
         plt.xlabel('number of features')
@@ -149,47 +161,7 @@ def coverage_cells(adata, bins=50, key_added=None, log=False, binary=None, xlabe
     
     if title !=None:
         plt.title(title)
-        
-    if color == None:   
-        color='c'
-    if edgecolor == None:
-        edgecolor='k'
-
-    if log:
-        if 0 in sum_peaks:
-            warnings.warn("""Some cells do not contain any open feature. Use epi.pp.filter_cells(adata, max_features=1) to remove these cells.""")
-        
-        plt.xlabel('number of features (log scale)')
-        fig = plt.hist(np.log(sum_peaks), bins, color=color, edgecolor=edgecolor)
-    else:
-        fig = plt.hist(sum_peaks, bins, color=color, edgecolor=edgecolor)
     
-    #fig = plot.get_figure()
-    if save!= None:
-        plt.savefig(save)
-plt.show()
-
-
-def commonness_features(adata, threshold=None, log=False, binary=None, key_added=None, 
-    bw=0.5,xlabel=None, title=None, color=None, edgecolor=None, save=None):
-    """
-    Display how often a feature is measured as open (for ATAC-seq).
-    Distribution of the feature commoness in cells.
-
-    Parameters
-    ----------
-
-    
-    """
-    
-    if key_added == None:
-        key_added='commonness'
-        
-    if xlabel ==None:
-        plt.xlabel('cells sharing a feature')
-    else:
-        plt.xlabel(xlabel)    
-
     
     # calculate for each feature in how many cell it is open
     if binary==None:
@@ -211,21 +183,34 @@ def commonness_features(adata, threshold=None, log=False, binary=None, key_added
     bw_param = bw
     sns.set_style('whitegrid')
     #sns.kdeplot(np.array(adata.var[key_added]), bw=bw_param)
-    
+
+
     if color == None:   
         color='c'
     if edgecolor == None:
         edgecolor='k'
 
-    if log:
+    if log !=False:
         if 0 in common:
             warnings.warn("""Some features are not open in any cell. Use epi.pp.filter_features(adata, max_cells=1) to remove these features.""")
         
-        plt.xlabel('cells sharing a feature (log scale)')
-        fig = plt.hist(np.log(common), bins=int(100), color=color, edgecolor=edgecolor)
+        # different potential bases for log transfo
+        if log=='log2':
+            plt.xlabel('number of features (log2)')
+            fig = plt.hist(np.log2(common), bins, color=color, edgecolor=edgecolor)
+        elif log=='log1p':
+            plt.xlabel('number of features (log1p)')
+            fig = plt.hist(np.log1p(common), bins, color=color, edgecolor=edgecolor)
+        elif log=='log':
+            plt.xlabel('number of features (log natural base e)')
+            fig = plt.hist(np.log(common), bins, color=color, edgecolor=edgecolor)
+        else:
+            plt.xlabel('number of features (log10)')
+            fig = plt.hist(np.log10(common), bins, color=color, edgecolor=edgecolor)
+    
     else:
         fig = plt.hist(common, bins=int(80), color=color, edgecolor=edgecolor)
-        
+ 
     
     if title !=None:
         plt.title(title)
@@ -236,3 +221,202 @@ def commonness_features(adata, threshold=None, log=False, binary=None, key_added
     plt.show()
 
     adata.var[key_added] = common
+
+
+def coverage_cells(adata,
+                   key_added=None,
+                   log=False,
+                   binary=None,
+                   ## threshold 
+                   threshold=None,
+                   bw=0.5,
+                   ## plotting
+                    bins=50,
+                   xlabel=None, ylabel=None, title=None,
+                   color=None, edgecolor=None,
+                   ## sving
+                   save=None):
+    """
+    Histogram of the number of open features (in the case of ATAC-seq data) per cell.
+
+    Parameters
+    ----------
+
+    adata
+    
+    binary
+    log : default not . Accepted log2, log10, log1p, log (natural log base e).
+    if log is True, log10 used
+
+    bins
+    threshold
+
+    key_added
+
+    xlabel
+    ylabel
+    title
+    color
+    edgecolor
+    save
+
+    """
+    if key_added == None:
+        key_added='nb_features'
+    
+    # calculate the number of features per cell
+    if binary==None:
+        warnings.warn("""The argument binary was not specified. To reduce computing time, you can specify if the matrix is already binary""")
+    if binary:
+        sum_peaks = np.sum(adata.X, axis=1).tolist()
+    else:
+        tmp_array = binarize(adata, copy=True)
+        sum_peaks = np.sum(tmp_array.X, axis=1).tolist()
+  
+    
+    if issparse(adata.X):
+        sum_peaks = [element[0] for element in sum_peaks]        
+
+    adata.obs[key_added] = sum_peaks
+    
+    
+    # plotting parameters
+    if xlabel ==None:
+        plt.xlabel('number of features')
+    else:
+        plt.xlabel(xlabel)
+        
+    if ylabel ==None:
+        plt.ylabel('number of cells')
+    else:
+        plt.ylabel(ylabel)
+    
+    if title !=None:
+        plt.title(title)
+        
+    if color == None:   
+        color='c'
+    if edgecolor == None:
+        edgecolor='k'
+
+    if threshold != None:
+        plt.axvline(x=threshold, color='r')
+    bw_param = bw
+
+    if log!=False:
+        if 0 in sum_peaks:
+            warnings.warn("""Some cells do not contain any open feature. Use epi.pp.filter_cells(adata, max_features=1) to remove these cells.""")
+        
+        if log=='log2':
+            plt.xlabel('number of features (log2)')
+            fig = plt.hist(np.log2(sum_peaks), bins, color=color, edgecolor=edgecolor)
+        elif log=='log1p':
+            plt.xlabel('number of features (log1p)')
+            fig = plt.hist(np.log1p(sum_peaks), bins, color=color, edgecolor=edgecolor)
+        elif log=='log':
+            plt.xlabel('number of features (log natural base e)')
+            fig = plt.hist(np.log(sum_peaks), bins, color=color, edgecolor=edgecolor)
+        else:
+            plt.xlabel('number of features (log10)')
+            fig = plt.hist(np.log10(sum_peaks), bins, color=color, edgecolor=edgecolor)
+
+    else:
+        fig = plt.hist(sum_peaks, bins, color=color, edgecolor=edgecolor)
+    
+    #fig = plot.get_figure()
+    if save!= None:
+        plt.savefig(save)
+
+    plt.show()
+    adata.obs[key_added] = sum_peaks
+
+
+def correlation_PC(adata,
+                   variable,
+                   pc=1,
+                   obs=True,
+                   method='pearson',
+                   title=None.
+                   xlabel=None,
+                   ylabel=None,
+                   show=True,
+                   save=None,
+                  ):
+    """
+    Correlation between a given PC and a covariate.     
+    If show == True, plot a scatter plot. 
+    If obs == True, consider a obs covariate. Else, take a variable covariate.
+    Available methods for correlation: 'pearson' or 'spearman'
+    
+    Parameters
+    ----------
+    
+    adata : input adata
+    
+    variable : covariate either saved in obs or var
+    
+    obs : Boolean that specify if the covariate is stored in obs or in var.
+    In later version, this parameter will not need to be specified
+    
+    method : 'pearson' or 'spearman' available - scipy.stats implementation
+    
+    title : optional title to the plot
+    
+    xlabel : optional xlabel
+    
+    ylabel : optional ylabel
+    
+    show: Print the correlation coefficient and p-value. Additionaly, plot a scatter plot
+    of the PC coordinate and the covariate value for every cell or feature in your matrix
+    
+    save: if specified the name of the picture, save as png
+    
+    Return 
+    ------
+    
+    correlation coefficient and p-value
+    
+    """
+    if pc-1>len(adata.varm['PCs'][0]):
+        warnings.warn("".join(["""You requested a PC that is not currently available.
+                            Please run epi.pp.pca(adata, n_comps=""", int(pc+1), ') ']))
+        
+    
+    if obs:
+        x = adatareduced.obsm['X_pca'][:,pc-1]
+        y = adatareduced.obs[variable]
+    else:
+        x = adatareduced.varm['PCs'][:,pc-1]
+        y = adatareduced.var[variable]
+        
+    if method=='pearson':
+        correlation = pearsonr(x, y)
+    elif method=='spearman':
+        correlation = spearmanr(x, y)
+    
+    if show:
+        ## Add legends and title
+        if xlabel:
+            plt.xlabel(xlabel)
+        else:
+            plt.xlabel(" ".join(['X_PC', pc]))
+            
+        if ylabel:
+            plt.ylabel(ylabel)
+        else:
+            plt.ylabel(variable)
+            
+        if title:
+            plt.title(title)
+            
+        plt.scatter(x, y)
+        print(correlation)
+        
+        
+    if save!= None:
+        plt.savefig(save)
+    
+    
+    return (correlation)
+    
+

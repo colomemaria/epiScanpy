@@ -2,6 +2,7 @@
 from ..preprocessing._readimpute import load_met_noimput, imputation_met
 from ..preprocessing._readimpute import readandimputematrix
 from ..preprocessing._quality_control import coverage_cells, commonness_features, binarize
+from ..preprocessing._quality_control import correlation_PC
 from ..preprocessing._quality_control import select_var_feature#, cal_var
 from ..preprocessing._recipe import lazy
 from ..preprocessing._metadata import load_metadata

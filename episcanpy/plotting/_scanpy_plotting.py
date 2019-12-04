@@ -530,7 +530,7 @@ def pca_loadings(adata,
 	sc.pl.pca_loadings(adata, components, include_lowest, show, save)
 
 
-def pca_overview(adata):
+def pca_overview(adata, color=None, use_raw=True, show=None, save=None):
 	"""\
     Plot PCA results.
 
@@ -554,7 +554,7 @@ def pca_overview(adata):
         A string is appended to the default filename.
         Infer the filetype if ending on {{`'.pdf'`, `'.png'`, `'.svg'`}}.
     """
-	sc.pl.pca_overview(adata)
+	sc.pl.pca_overview(adata, color, use_raw, show, save)
 
 def pca_variance_ratio(adata, n_pcs=30, log=False, show=None, save=None):
 	"""\

@@ -62,32 +62,32 @@ def filter_cells(
     >>> sc.pp.filter_cells(adata, min_features=0)
     >>> adata.n_obs
     640
-    >>> adata.obs['n_features'].min()
+    >>> adata.obs['nb_features'].min()
     1
     >>> # filter manually
-    >>> adata_copy = adata[adata.obs['n_features'] >= 3]
-    >>> adata_copy.obs['n_features'].min()
+    >>> adata_copy = adata[adata.obs['nb_features'] >= 3]
+    >>> adata_copy.obs['nb_features'].min()
     >>> adata.n_obs
     554
-    >>> adata.obs['n_features'].min()
+    >>> adata.obs['nb_features'].min()
     3
     >>> # actually do some filtering
     >>> sc.pp.filter_cells(adata, min_features=3)
     >>> adata.n_obs
     554
-    >>> adata.obs['n_features'].min()
+    >>> adata.obs['nb_features'].min()
     3
     """
     if copy:
         adata_copy = sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts,
             max_genes=max_features, inplace=inplace, copy=copy)
-        adata_copy.obs['n_features'] = adata_copy.obs['n_genes'] 
+        adata_copy.obs['nb_features'] = adata_copy.obs['n_genes'] 
         del adata_copy.obs['n_genes']
         return(adata_copy)
     else:
         sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts, 
             max_genes=max_features, inplace=inplace, copy=copy)
-        adata.obs['n_features'] = adata.obs['n_genes'] 
+        adata.obs['nb_features'] = adata.obs['n_genes'] 
         del adata.obs['n_genes']
 
 
