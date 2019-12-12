@@ -108,7 +108,8 @@ def binarize(adata, copy=False):
         adata.X[adata.X != 0] = 1
         
 
-def commonness_features(adata,
+
+def coverage_features(adata,
                         binary=None, 
                         log=False,
                         key_added=None, 
@@ -231,7 +232,7 @@ def coverage_cells(adata,
                    threshold=None,
                    bw=0.5,
                    ## plotting
-                    bins=50,
+                   bins=50,
                    xlabel=None, ylabel=None, title=None,
                    color=None, edgecolor=None,
                    ## sving
@@ -331,7 +332,7 @@ def coverage_cells(adata,
     adata.obs[key_added] = sum_peaks
 
 
-def correlation_PC(adata,
+def correlation_pc(adata,
                    variable,
                    pc=1,
                    obs=True,
@@ -419,4 +420,99 @@ def correlation_PC(adata,
     
     return (correlation)
     
+
+def commonness_features(adata,
+                        binary=None, 
+                        log=False,
+                        key_added=None, 
+                        
+                        threshold=None,
+                        bw=0.5,
+                        bins=50,
+                        xlabel=None, ylabel=None, title=None,
+                        color=None, edgecolor=None,
+                        
+                        save=None):
+    
+    """
+    Display how often a feature is measured as open (for ATAC-seq).
+    Distribution of the feature commoness in cells.
+
+    Parameters
+    ----------
+    adata
+    threshold
+    log
+    binary
+    key_added
+    bw
+    xlabel
+    title
+    color
+    edgecolor
+    
+    """
+    warnings.warn(""" Function deprecated. Use epi.pp.coverage_features instead.
+        Or use epi.pp.density_features.
+    """) 
+
+    coverage_features(adata,
+                        binary=binary, 
+                        log=log,
+                        key_added=key_added, 
+                        threshold=threshold,
+                        bw=bw,
+                        bins=bins,
+                        xlabel=xlabel, ylabel=ylabel, title=title,
+                        color=color, edgecolor=edgecolor,
+                        save=save)
+
+
+def density_features(adata,
+    threshold=None,
+    bw=0.5,
+    key_added=None,
+    xlabel=None,
+    title=None,
+    save=None):
+    """
+    Display how often a feature is measured as open (for ATAC-seq).
+    Distribution of the feature commoness in cells.
+    """
+    if key_added == None:
+        key_added='commonness'
+    
+    common = np.sum(adata.X, axis=0).tolist()
+    if len(common) == 1:
+        common = [item for sublist in common for item in sublist]
+    adata.var[key_added] = common
+
+    if threshold != None:
+        plt.axvline(x=threshold, color='r')
+    bw_param = bw
+    sns.set_style('whitegrid')
+    #sns.kdeplot(np.array(adata.var[key_added]), bw=bw_param)
+    
+    plot = sns.distplot(common, hist=False, kde=True,
+                    bins=int(80), color = 'darkblue', 
+                    hist_kws={'edgecolor':'black'},
+                    kde_kws={'linewidth': 1})
+    if xlabel ==None:
+        plt.xlabel('cells sharing a feature')
+    else:
+        plt.xlabel(xlabel)
+    
+    plt.ylabel('density')
+    
+    if title !=None:
+        plt.title(title)
+    
+    fig = plot.get_figure()
+    if save!= None:
+        fig.savefig(save)
+    plt.show()
+
+    adata.var[key_added] = common
+
+
 

@@ -1,4 +1,9 @@
-def top_feature_genes(adata, gtf_file, extension=5000):
+def var_features_to_genes(adata, gtf_file, extension=5000):
+    """
+    Once you called the most variable features.
+    You can identify genes neighboring these features of interest.
+
+    """
     
     # extract_top_markers
     #print(adata.uns['rank_genes_groups'].keys())

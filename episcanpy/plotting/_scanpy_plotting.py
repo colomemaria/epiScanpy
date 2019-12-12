@@ -539,6 +539,7 @@ def pca_overview(adata, color=None, use_raw=True, show=None, save=None):
 
     Parameters
     ----------
+    
     adata
         Annotated data matrix.
     color : string or list of strings, optional (default: `None`)
@@ -554,7 +555,7 @@ def pca_overview(adata, color=None, use_raw=True, show=None, save=None):
         A string is appended to the default filename.
         Infer the filetype if ending on {{`'.pdf'`, `'.png'`, `'.svg'`}}.
     """
-	sc.pl.pca_overview(adata, color, use_raw, show, save)
+	sc.pl.pca_overview(adata, color=color, use_raw=use_raw, show=show, save=save)
 
 def pca_variance_ratio(adata, n_pcs=30, log=False, show=None, save=None):
 	"""\
@@ -573,7 +574,7 @@ def pca_variance_ratio(adata, n_pcs=30, log=False, show=None, save=None):
         A string is appended to the default filename.
         Infer the filetype if ending on {`'.pdf'`, `'.png'`, `'.svg'`}.
     """
-	sc.pl.pca_variance_ratio(adata, n_pcs, log, show, save)
+	sc.pl.pca_variance_ratio(adata, n_pcs=n_pcs, log=log, show=show, save=save)
 
 
 
