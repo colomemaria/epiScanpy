@@ -1,3 +1,6 @@
+import warnings
+from warnings import warn
+
 def var_features_to_genes(adata, gtf_file, extension=5000):
     """
     Once you called the most variable features.
@@ -51,3 +54,14 @@ def var_features_to_genes(adata, gtf_file, extension=5000):
     for n in markers:
         markers_dict[n[1].split(' "')[1][:-1]] = n[0]
     return(markers_dict)
+
+
+def top_feature_genes(adata, gtf_file, extension=5000):
+    """
+    Deprecated - Please use epi.tl.var_features_to_genes instead.
+    Once you called the most variable features.
+    You can identify genes neighboring these features of interest.
+
+    """
+    warn.warn('Deprecated - Please use epi.tl.var_features_to_genes instead.')
+    var_features_to_genes(adata=adata, gtf_file=gtf_file, extension=extension)
