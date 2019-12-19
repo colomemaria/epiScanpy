@@ -14,5 +14,5 @@ from ..plotting._scanpy_plotting import dendrogram, correlation_matrix
 import scanpy as sc
 from scanpy.api.pl import scatter, violin, ranking, clustermap, stacked_violin, heatmap, dotplot, matrixplot, tracksplot
 
-from ..plotting._variable_features import cal_var
+from ..preprocessing._quality_control import cal_var, variability_features
 
