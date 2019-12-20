@@ -9,3 +9,4 @@ from ..tools._scanpy_fct import pca, diffmap, draw_graph, tsne, umap
 from ..tools._scanpy_fct import louvain, leiden
 from ..tools._scanpy_fct import dendogram
 #from ..tools._find_genes import find_genes
+from scanpy.api.tl import dpt
