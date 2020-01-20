@@ -13,7 +13,10 @@
 
 
 
+Version 0.1.8 :small:`November 5, 2019`
+--------------------------------------
 
+Release new processing function & quality controls. 
 
 
 
