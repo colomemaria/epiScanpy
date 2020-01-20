@@ -25,7 +25,7 @@ NB: The current tutorial is a beta version that do not include either optimal lo
 If you want to see how to build count matrices from ATAC-seq bam files for different set of annotations (like enhancers).
 The tutorial can be found `here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/ATAC_bld_ct_mtx_tutorial.html>`__. 
 
-Soon available, there will be a tutorial on preprocessing, clustering and identification of cell types for the Cusanovich mouse scATAC-seq atlas [Cusanovich18]_ (prefrontal cortex data). In this tutorial we focus on the use of different feature space count matrices (peak and enhancer based count matrices).
+Soon available, there will be a tutorial providing a function to very quickly build custom count matrices using standard 10x single cell ATAC output. 
 
 .. image:: pictures/umap.png
    :width: 350px
@@ -34,7 +34,7 @@ Soon available, there will be a tutorial on preprocessing, clustering and identi
 .. image:: pictures/heatmap.png
    :width: 600px
 
-An additional tutorial on processing and clustering count matrices from the Cusanovich atlas. `Here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/ATAC_bld_ct_mtx_tutorial.html>`__.
+An additional tutorial on processing and clustering count matrices from the Cusanovich mouse scATAC-seq atlas [Cusanovich18]. `Here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/Cusanovich2018_BoneMarrow_data_processing_diffmap.html>`__.
 
 ------------
 
