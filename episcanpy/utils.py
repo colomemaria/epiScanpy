@@ -30,11 +30,11 @@ def check_versions():
     import anndata
     # NOTE: pytest does not correctly retrieve anndata's version? why?
     #       use the following hack...
-    if anndata.__version__ != '0+unknown':
-        if anndata.__version__ < LooseVersion('0.6.10'):
-            raise ImportError('Scanpy {} needs anndata version >=0.6.10, not {}.\n'
-                              'Run `pip install anndata -U --no-deps`.'
-                              .format(__version__, anndata.__version__))
+    #if anndata.__version__ != '0+unknown':
+    #    if anndata.__version__ < LooseVersion('0.6.10'):
+    #        raise ImportError('Scanpy {} needs anndata version >=0.6.10, not {}.\n'
+    #                          'Run `pip install anndata -U --no-deps`.'
+    #                          .format(__version__, anndata.__version__))
 
 
 
