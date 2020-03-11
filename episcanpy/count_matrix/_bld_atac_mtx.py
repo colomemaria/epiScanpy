@@ -72,9 +72,9 @@ def bld_mtx_fly(tsv_file, tbi_file, annotation, csv_file=None, genome=None, DATA
     window_list = []
     for chrom in sorted(annotation.keys()):
         if genome != None:
-            window_list += [[genome+'_chr'+chrom, int(n[0]), int(n[1])] for n in annotation[chrom]]
+            window_list += [["".join([genome, '_chr',chrom]), int(n[0]), int(n[1])] for n in annotation[chrom]]
         else:
-             window_list += ['chr'+chrom, int(n[0]), int(n[1])] for n in annotation[chrom]]
+             window_list += [["".join(['chr',chrom]), int(n[0]), int(n[1])] for n in annotation[chrom]]
     
     print('building the count matrix')
     mtx = []
