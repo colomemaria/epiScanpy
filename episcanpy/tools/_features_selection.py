@@ -8,18 +8,18 @@ def rank_features(adata, groupby, omic=None, use_raw=True, groups='all', referen
                      corr_method='benjamini-hochberg', **kwds):
 
     """
-    It is a wrap-up function of scanpy sc.tl.rank_genes_groups function. For more information see 
+    It is a wrap-up function of scanpy sc.tl.rank_genes_groups function. For more information see
     Scanpy documentations.
 
     Here, we optimised the default features for the different kind of omics epiScanpy is analysing.
     Parameters for rankby_abs, method and corr_method are fixed byt the omic (if not specified otherwise)
 
-    In case you want to change all the settings, it is advise to directly use the Scanpy function 
-    or to specify the omic parameter as False. 
+    In case you want to change all the settings, it is advise to directly use the Scanpy function
+    or to specify the omic parameter as False.
 
-    If the omic of the input AnnData object is not specified (or incorrect), you can add it in omic 
+    If the omic of the input AnnData object is not specified (or incorrect), you can add it in omic
     (either 'RNA', 'ATAC' or 'methylation'). If the omic of the current matrix is not known by
-    epiScanpy but you wnat to use settings of a known omic, specify which omic as a parameter. 
+    epiScanpy but you wnat to use settings of a known omic, specify which omic as a parameter.
 
     """
     if omic == None:
