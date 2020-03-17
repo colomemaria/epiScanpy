@@ -77,7 +77,8 @@ def bld_mtx_fly(tsv_file, annotation, csv_file=None, genome=None, save=False):
         else:
             df_filtered = df[(df.is_cell_barcode == 1)]
 
-        mtx = mtx[[i in df_filtered.barcode for i in mtx.obs.index]].copy()
+        barcodes = set(df_filtered.barcode.tolist())
+        mtx = mtx[[i in barcodes for i in mtx.obs.index]].copy()
 
     if save:
         mtx.write(save)
