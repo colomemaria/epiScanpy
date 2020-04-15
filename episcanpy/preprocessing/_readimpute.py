@@ -35,6 +35,7 @@ def load_met_noimput(matrix_file, path='', save=False):
         adata = ad.AnnData(matrix, obs=pd.DataFrame(index=cell_names))
     
     adata.uns['omic'] = 'methylation'
+    adata.uns['imputation'] = 'no_imputation'
     
     if save:
         adata.write("".join([".".split(matrix_file)[0],'.h5ad']))
@@ -107,16 +108,18 @@ def imputation_met(adata, number_cell_covered=10, imputation_value='mean', save=
     
     
     new_matrix = np.array(new_matrix)
-    return(new_matrix, new_features_name)
+    #eturn(new_matrix, new_features_name)
     adata2 = ad.AnnData(new_matrix.transpose(), obs=adata.obs_names, var = pd.DataFrame(index=new_features_name))
-    adata2.obs = adata.obs
+    adata2.obs = adata.obs.copy()
+    adata2.uns = adata.uns.copy()
+    adata.uns['imputation'] = imputation_value
     adata2.var['median_before_imput'] = medians # before imputation
     adata2.var['mean_before_imput'] = means # before imputation
-    
+
     if save!= None:
         adata2.write(save.rstrip('.h5ad')+'.h5ad')
     if copy==False:
-        adata = adata2
+        adata = adata2.copy()
     else:
         return(adata2)
 
