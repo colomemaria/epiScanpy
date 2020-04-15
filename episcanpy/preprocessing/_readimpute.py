@@ -65,11 +65,10 @@ def imputation_met(adata, number_cell_covered=10, imputation_value='mean', save=
     
     """
 
-    # This step need to be sped up and coule be multithread.
+    # This step need to be sped up and could be multithread.
     # Only the mean available for now. And only the minimum number of cells covered and not the variety of the 
     # methylation levels
     # also, it odes not return the variable annoations and force to add 2 values
-    matrix = adata.X.transpose().tolist()
     old_features = adata.var_names.tolist()
     
     new_matrix = []
@@ -77,44 +76,19 @@ def imputation_met(adata, number_cell_covered=10, imputation_value='mean', save=
     means = []
     medians = []
     feat_nb = 0
-    for feature in adata.X:
-        nb_cov = 0
-        # also the different number of values
-        val_for_mean = []
-        for f in feature:
-            if 0.0 <= f <= 1.0:
-                nb_cov += 1
-                val_for_mean.append(f)
-    
-    
-        new_feature = []
-    
-        if nb_cov >= number_cell_covered:
-            new_features_name.append(old_features[feat_nb])
-            # also median possible
-            mean = np.mean(val_for_mean)
-            for f in feature:
-                if 0.0 <= f <= 1.0:
-                    new_feature.append(f)
-                else:
-                    new_feature.append(mean)
-                
-            new_matrix.append(new_feature)
-        
-            means.append(mean)
-            medians.append(np.median(val_for_mean))
-            
-        feat_nb += 1
-    
-    
-    new_matrix = np.array(new_matrix)
-    #eturn(new_matrix, new_features_name)
-    adata2 = ad.AnnData(new_matrix.transpose(), obs=adata.obs_names, var = pd.DataFrame(index=new_features_name))
-    adata2.obs = adata.obs.copy()
-    adata2.uns = adata.uns.copy()
-    adata.uns['imputation'] = imputation_value
-    adata2.var['median_before_imput'] = medians # before imputation
-    adata2.var['mean_before_imput'] = means # before imputation
+
+    length1 = len(adata.X[0,:])
+    length2 = len(adata.X[:,0])
+    adata.obs['coverage_cells'] = [length1 - np.isnan(line).sum() for line in adata.X]
+    adata.obs['mean_cell_methylation'] = [np.nansum(line)/length1 for line in adata.X]
+    adata.var['coverage_feature'] = [length2 - np.isnan(line).sum() for line in adata.X.T]
+    adata.var['mean_feature_methylation'] = [np.nansum(line)/length2 for line in adata.X.T]
+
+    adata2 = adata[:, adata.var['coverage_feature']>=number_cell_covered].copy()
+
+    for index in range(len(adata2.var_names.tolist())):
+        adata2.X[:,index] = np.nan_to_num(adata2.X[:,index], nan=adata2.var['mean_feature_methylation'][index])
+
 
     if save!= None:
         adata2.write(save.rstrip('.h5ad')+'.h5ad')
