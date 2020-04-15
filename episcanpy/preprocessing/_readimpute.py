@@ -41,7 +41,7 @@ def load_met_noimput(matrix_file, path='', save=False):
         
     return(adata)
 
-def imputation_met(adata, number_cell_covered=10, imputation_value='mean', save=None):
+def imputation_met(adata, number_cell_covered=10, imputation_value='mean', save=None, copy=False):
     """
     Impute missing values in methyaltion level matrices. The imputsation is based on the average
     methylation value of the given variable.
@@ -113,14 +113,15 @@ def imputation_met(adata, number_cell_covered=10, imputation_value='mean', save=
     adata2.var['median_before_imput'] = medians # before imputation
     adata2.var['mean_before_imput'] = means # before imputation
     
-    if save == None:
-        return(adata2)
+    if save!= None:
+        adata2.write(save.rstrip('.h5ad')+'.h5ad')
+    if copy==False:
+        adata = adata2
     else:
-        if (len(save)>=5) and (save[-5:] == '.h5ad'):
-            adata2.write(save)
-        else:
-            adata2.write(save+'.h5ad')
         return(adata2)
+
+
+
 
 def readandimputematrix(file_name, min_coverage=1):
     """
@@ -195,4 +196,5 @@ def readandimputematrix(file_name, min_coverage=1):
             imputed_matrix.append(row)
 
     imputed_matrix = np.matrix(imputed_matrix).transpose()
-    return(imputed_matrix, sample_names, name_windows_covered)
+    return(ad.AnnData(imputed_matrix, obs=pd.DataFrame(index=sample_names), var=pd.DataFrame(index=name_windows_covered)))
+    #return(imputed_matrix, sample_names, name_windows_covered)
