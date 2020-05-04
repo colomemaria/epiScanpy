@@ -319,8 +319,8 @@ def normalize_per_cell(
     if copy:
         adata2 = sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell,
             key_n_counts,copy, layers, use_rep, min_counts)
-            adata2.obs[key_n_counts] = adata2.obs[None] 
-            del adata2.obs[None]
+        adata2.obs[key_n_counts] = adata2.obs[None] 
+        del adata2.obs[None]
         return(adata2)
     else:
         sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell,
