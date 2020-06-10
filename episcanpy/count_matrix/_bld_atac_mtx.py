@@ -2,7 +2,7 @@ import numpy as np
 import anndata as ad
 import pandas as pd
 import pysam
-from scipy.sparse import csc_matrix
+from scipy.sparse import lil_matrix
 from tqdm import tqdm
 
 
@@ -54,16 +54,13 @@ def bld_mtx_fly(tsv_file, annotation, csv_file=None, genome=None, save=False):
             window_list += [["".join(['chr', chrom]), int(n[0]), int(n[1])] for n in annotation[chrom]]
 
     print('building count matrix')
-    mtx = []
-    for tmp_feat in tqdm(window_list):
-        vector = [0]*nb_barcodes
+    mtx = lil_matrix((nb_barcodes, len(window_list)), dtype=np.float32)
+    for i, tmp_feat in enumerate(tqdm(window_list)):
         for row in tbx.fetch(tmp_feat[0], tmp_feat[1], tmp_feat[2], parser=pysam.asTuple()):
-            vector[dict_barcodes[str(row).split('\t')[-2]]] += 1
-        mtx.append(vector)
+            mtx[dict_barcodes[str(row).split('\t')[-2]], i] += 1
 
     print('building AnnData object')
-    mtx = csc_matrix(np.array(mtx))
-    mtx = ad.AnnData(mtx.transpose(),
+    mtx = ad.AnnData(mtx.tocsr(),
                      obs=pd.DataFrame(index=barcodes),
                      var=pd.DataFrame(index=['_'.join([str(p) for p in n]) for n in window_list]))
 
