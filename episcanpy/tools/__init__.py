@@ -10,3 +10,7 @@ from ..tools._scanpy_fct import louvain, leiden
 from ..tools._scanpy_fct import dendogram
 #from ..tools._find_genes import find_genes
 from scanpy.api.tl import dpt
+
+from ..tools._clustering import getNClusters
+from ..tools._clustering import kmeans, hc
+from ..tools._clustering import ARI, AMI, homogeneity
