@@ -215,7 +215,7 @@ def set_figure_params(
             :func:`~IPython.display.set_matplotlib_formats` for details.
         """
 
-    sc.set_figure_params(self,
+    sc.settings.set_figure_params(self,
         scanpy=episcanpy,
         dpi=dpi,
         dpi_save=dpi_save,
