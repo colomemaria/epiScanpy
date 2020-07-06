@@ -10,6 +10,9 @@ from . import tl
 from . import ct
 from . import pl
 
+from typing import Any, Union, Optional, Iterable, TextIO
+from typing import Tuple, List, ContextManager
+
 def set_figure_params(
     self,
     episcanpy: bool = True,
