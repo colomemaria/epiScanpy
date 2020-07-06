@@ -12,12 +12,12 @@ statsmodels>=0.10.0rc2
 networkx
 natsort
 joblib
-numba>=0.41.0
+numba>=0.50.0
 pysam
 bamnostic>=1.0.12
 umap-learn>=0.3.10
 tqdm
-
+tbb
 legacy-api-wrap
 setuptools_scm
 packaging
