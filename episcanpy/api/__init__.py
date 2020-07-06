@@ -2,6 +2,7 @@ from anndata import AnnData
 
 from anndata import read as read_h5ad
 from anndata import read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
+from scanpy.settings import set_figure_params
 
 from .. import __version__
 
