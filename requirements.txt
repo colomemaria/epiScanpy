@@ -21,4 +21,5 @@ tbb
 legacy-api-wrap
 setuptools_scm
 packaging
+cmake
 MulticoreTSNE
