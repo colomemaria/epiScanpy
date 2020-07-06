@@ -11,10 +11,13 @@ from sklearn.metrics.cluster import homogeneity_score
 import seaborn as sns
 
 
-def getNClusters(adata,n_cluster,range_min=0,range_max=3,max_steps=20):
+def getNClusters(adata,n_cluster,range_min=0,range_max=3,max_steps=20, method='louvain', key_added=None):
     """
     Function will test different settings of louvain to obtain the target number of clusters.
     credit to Lucas Pinello lab. See: https://github.com/pinellolab/scATAC-benchmarking
+
+    It can get cluster for both louvain and leiden.
+    You can specify the obs variable name as key_added. 
     """
     this_step = 0
     this_min = float(range_min)
@@ -22,8 +25,16 @@ def getNClusters(adata,n_cluster,range_min=0,range_max=3,max_steps=20):
     while this_step < max_steps:
         print('step ' + str(this_step))
         this_resolution = this_min + ((this_max-this_min)/2)
-        sc.tl.louvain(adata,resolution=this_resolution)
-        this_clusters = adata.obs['louvain'].nunique()
+        
+        if method == 'louvain':
+            sc.tl.louvain(adata,resolution=this_resolution)
+        else:
+            sc.tl.leiden(adata,resolution=this_resolution)
+            
+        if key_added==None:
+            this_clusters = adata.obs[method].nunique()
+        else:
+            this_clusters = adata.obs[key_added].nunique()
         
         print('got ' + str(this_clusters) + ' at resolution ' + str(this_resolution))
         
