@@ -14,4 +14,4 @@ from scanpy.api.tl import dpt
 from ..tools._clustering import getNClusters
 from ..tools._clustering import kmeans, hc
 from ..tools._clustering import ARI, AMI, homogeneity
-from scanpy.tl import louvain, leiden
+from scanpy.api.tl import louvain, leiden
