@@ -16,3 +16,4 @@ from ..tools._clustering import getNClusters
 from ..tools._clustering import kmeans, hc
 from ..tools._clustering import ARI, AMI, homogeneity
 from scanpy.api.tl import louvain, leiden
+from ..tools._geneactivity import geneactivity
