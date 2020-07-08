@@ -63,7 +63,11 @@ def find_genes(adata,
                     elif (feature_end <= gene[0]): # the gene is after the feature. we need to test the next feature.
                         break
                     else: # the window is overlapping the gene. 
-                        gene_name.append(gene[-1][0].lstrip('gene_id "').rstrip('""'))
+                        for n in gene[-1]:
+                            if 'gene_name' in n:
+                                gene_name.append(n.lstrip('gene_name "').rstrip('""'))
+                            else:
+                                gene_name.append(gene[-1][0].lstrip('gene_id "').rstrip('""'))
                         
                 if gene_name == []:
                     gene_index.append('intergenic')
