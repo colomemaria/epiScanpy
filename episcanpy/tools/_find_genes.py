@@ -66,8 +66,6 @@ def find_genes(adata,
                         for n in gene[-1]:
                             if 'gene_name' in n:
                                 gene_name.append(n.lstrip('gene_name "').rstrip('""'))
-                            else:
-                                gene_name.append(gene[-1][0].lstrip('gene_id "').rstrip('""'))
                         
                 if gene_name == []:
                     gene_index.append('intergenic')
