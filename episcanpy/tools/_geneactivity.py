@@ -9,7 +9,8 @@ def geneactivity(adata,
                  upstream=2000,
                  feature_type='gene',
                  annotation='ENSEMBL',
-                 layer_name='geneactivity'):
+                 layer_name='geneactivity',
+                 raw=False):
     """
     merge values of peaks/windows/features overlapping genebodies + 2kb upstream. 
     It is possible to extend the 
@@ -37,7 +38,10 @@ def geneactivity(adata,
                         gtf[line[0]].append([int(line[3])-upstream, int(line[4]),line[-1].split(';')[:-1]])
 
     # extracting the feature coordinates
-    raw_adata = adata.raw.to_adata()
+    if raw==True:
+        raw_adata = adata.raw.to_adata()
+    else:
+        raw_adata = adata.copy()
     raw_adata_features = {}
     feature_index = 0
     for line in raw_adata.var_names.tolist():
