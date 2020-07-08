@@ -72,6 +72,6 @@ def find_genes(adata,
                 elif len(gene_name)==1:
                     gene_index.append(gene_name[0])
                 else:
-                    gene_index.append(";".join(gene_name))
+                    gene_index.append(";".join(list(set(gene_name))))
                     
     adata.var[key_added] = gene_index
