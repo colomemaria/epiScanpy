@@ -8,7 +8,7 @@ from ..tools._top_feature_genes import top_feature_genes, var_features_to_genes
 from ..tools._scanpy_fct import pca, diffmap, draw_graph, tsne, umap
 #from ..tools._scanpy_fct import louvain, leiden
 from ..tools._scanpy_fct import dendogram
-#from ..tools._find_genes import find_genes
+from ..tools._find_genes import find_genes
 from scanpy.api.tl import dpt
 
 
