@@ -20,6 +20,8 @@ annotate_doc_types(sys.modules[__name__], 'episcanpy')
 del get_versions, sys, check_versions, annotate_doc_types
 
 # the actual API
+# the actual API
+from ._settings import settings, Verbosity
 from . import tools as tl
 from . import preprocessing as pp
 from . import count_matrix as ct

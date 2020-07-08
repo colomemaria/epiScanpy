@@ -1,7 +1,7 @@
 import scanpy as sc
 import anndata as ad
 
-def lazy(adata, pp_pca=True, nb_pcs=50, n_neighbors=15, perplexity=30, 
+def lazy(adata, pp_pca=True, svd_solver='arpack', nb_pcs=50, n_neighbors=15, perplexity=30, 
          method='umap', metric='euclidean', min_dist=0.5, spread=1.0, 
          n_components=2, copy=False):
     '''
@@ -14,6 +14,7 @@ def lazy(adata, pp_pca=True, nb_pcs=50, n_neighbors=15, perplexity=30,
         Annotated data matrix.
     pp_pca :  `bool` (default: `True`)
         Computes PCA coordinates before the neighborhood graph
+    svd_solver : 
     nb_pcs : `int` (default: 50)
         Number of principal component computed for PCA (and therefore neighbors, tsne and umap)
     n_neighbors : `int` (default: 15)
@@ -70,10 +71,10 @@ def lazy(adata, pp_pca=True, nb_pcs=50, n_neighbors=15, perplexity=30,
         adata
 
     if pp_pca:
-        sc.pp.pca(adata, n_comps=nb_pcs)
+        sc.pp.pca(adata, n_comps=nb_pcs, svd_solver=svd_solver)
     
     sc.pp.neighbors(adata,  n_neighbors=n_neighbors, n_pcs=nb_pcs, method=method, metric=metric)
-    sc.tl.pca(adata, n_comps=nb_pcs)
+    #sc.tl.pca(adata, n_comps=nb_pcs)
     sc.tl.tsne(adata, n_pcs=nb_pcs, perplexity=perplexity)
     sc.tl.umap(adata, min_dist, spread, n_components)
     

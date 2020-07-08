@@ -314,13 +314,21 @@ def normalize_per_cell(
     2      11.0        3.0
     [ 1.  1.  1.]
     """
-
+    if key_n_counts == None:
+            key_n_counts = 'n_counts'
     if copy:
-        return(sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell,
-            key_n_counts,copy, layers, use_rep, min_counts))
+        adata2 = sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell,
+            key_n_counts,copy, layers, use_rep, min_counts)
+        if None in adata2.obs_names.tolist():
+            adata2.obs[key_n_counts] = adata2.obs[None] 
+            del adata2.obs[None]
+        return(adata2)
     else:
         sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell,
             key_n_counts,copy, layers, use_rep, min_counts)
+        if None in adata.obs_names.tolist():
+            adata.obs[key_n_counts] = adata.obs[None] 
+            del adata.obs[None]
 
 def normalize_total(adata,
     target_sum = None,

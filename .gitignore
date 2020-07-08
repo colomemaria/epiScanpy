@@ -13,6 +13,7 @@ cache/
 coverage.xml
 episcanpy.egg-info/
 README.html
+*.icloud
 
 # always-ignore extensions
 *~
