@@ -49,10 +49,8 @@ def find_genes(adata,
     
     ## find the genes overlaping the features.
     gene_index = []
- 
     for chrom in raw_adata_features.keys():
         if chrom in gtf.keys():
-            print(chrom)
             chrom_index = 0
             previous_features_index = 0
             for feature in raw_adata_features[chrom]:
@@ -60,17 +58,18 @@ def find_genes(adata,
                 feature_start = feature[0]
                 feature_end = feature[1]
                 for gene in gtf[chrom]:
-                    print(gene)
-                    break
                     if (gene[1]<= feature_start): # the gene is before the feature. we need to test the next gene.
                         continue
                     elif (feature_end <= gene[0]): # the gene is after the feature. we need to test the next feature.
                         break
                     else: # the window is overlapping the gene. 
-                        gene_name.append(gene[-1])
+                        gene_name.append(gene[-1][0].lstrip('gene_id "').rstrip('""'))
                         
                 if gene_name == []:
                     gene_index.append('intergenic')
+                elif len(gene_name)==1:
+                    gene_index.append(gene_name[0])
                 else:
                     gene_index.append(";".join(gene_name))
-    adata.var[key_added]
+                    
+    adata.var[key_added] = gene_index
