@@ -70,7 +70,7 @@ def make_windows(size, chromosomes=HUMAN, max_length=1000000000):
         maximum length given for every chromosome
     """
     features_chrom = {}
-    start = range(0, max_length - size, size)
+    start = range(1, max_length - size, size)
     end = range(size, max_length, size)
     for c in chromosomes:
         features_chrom[c] = [[start[i], end[i], ''.join(["chr_", c, "_", str(i)])] for i in range(len(end))]
