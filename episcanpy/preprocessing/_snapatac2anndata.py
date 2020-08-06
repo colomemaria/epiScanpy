@@ -1,5 +1,5 @@
 # enables the %%R magic
-%load_ext rpy2.ipython
+#%load_ext rpy2.ipython
 
 import rpy2
 import rpy2.robjects as robjects
