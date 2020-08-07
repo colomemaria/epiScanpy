@@ -197,7 +197,7 @@ For most tools and for some preprocessing functions, you'll find a plotting func
    pl.scatter
    pl.ranking
    pl.clustermap
-   pl.stacked_violin
+   #pl.stacked_violin
    pl.heatmap
    pl.dotplot
    pl.matrixplot
