@@ -11,6 +11,12 @@
 
 
 
+Version 0.2.0 :small:`August 7, 2020`
+--------------------------------------
+
+This release deal with the compatibility problems with the latest version of scanpy. 
+Additionally, it contains new features to build quick custom count matrices (bld_mtx_fly),
+to convert snap into h5ad files (snap2anndata) or build gene activity matrices (geneactivity).
 
 
 Version 0.1.8 :small:`November 5, 2019`

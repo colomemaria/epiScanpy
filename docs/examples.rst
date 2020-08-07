@@ -7,18 +7,11 @@ Tutorials
 Single cell ATAC-seq
 --------------------
 
-To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data for 10k PBMCs from 10x Genomics. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found `here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/beta_tutorial_10x_pbmc.html>`__. 
+To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data from Buenrostro et al. [Buenrostro18]_. , the dataset consist of ~3000cells of human PBMCs. This tutorial focuses on preprocessing, clustering, identification of cell types via known marker genes and trajectory inference. The tutorial can be found `here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/Buenrostro_PBMC_data_processing.html>`__. 
 
 
 
-NB: The current tutorial is a beta version that do not include either optimal low embedding & clustering settings or proper cell type identifications. To check out performance see other tutorials below and an updated version will be available very soon. 
-
-
-.. image:: pictures/pbmc_PCA_coverage.png
-   :width: 200px
-.. image:: pictures/pbmc_umap.png
-   :width: 190px
-.. image:: pictures/pbmc_diffmap.png
+.. image:: pictures/Buenrostro_umap.png
    :width: 200px
 
 
@@ -34,7 +27,7 @@ Soon available, there will be a tutorial providing a function to very quickly bu
 .. image:: pictures/heatmap.png
    :width: 600px
 
-An additional tutorial on processing and clustering count matrices from the Cusanovich mouse scATAC-seq atlas [Cusanovich18]. `Here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/Cusanovich2018_BoneMarrow_data_processing_diffmap.html>`__.
+An additional tutorial on processing and clustering count matrices from the Cusanovich mouse scATAC-seq atlas [Cusanovich18]_.. `Here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/Cusanovich2018_BoneMarrow_data_processing_diffmap.html>`__.
 
 ------------
 

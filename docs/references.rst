@@ -14,3 +14,6 @@ References
 .. [Wolf18] Wolf, F. A., Angerer, P. & Theis, F. J. SCANPY: large-scale
    single-cell gene expression data analysis. Genome Biol. 19, 15 (2018).
 
+.. [Buenrostro18] Buenrostro J. D. et al. Integrated Single-Cell Analysis
+	Maps the Continuous Regulatory Landscape of Human Hematopoietic
+	Differentiation. Cell 173 (2018)

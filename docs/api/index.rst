@@ -85,9 +85,15 @@ Imputing missing data (methylation), filtering lowly covered cells or variables,
 .. autosummary::
    :toctree: .
 
+   pp.snap2anndata
    pp.coverage_cells
    pp.commoness_features
+   pp.correlation_pc
+   pp.coverage_features
+   pp.density_features
    pp.select_var_feature
+   pp.cal_var
+   pp.variability_features
    pp.binarize
    pp.lazy
    pp.load_metadata
@@ -101,6 +107,8 @@ Imputing missing data (methylation), filtering lowly covered cells or variables,
    pp.subsample
    pp.downsample_counts
    pp.neighbors
+   pp.sparse
+   pp.log1p
    pp.sparse
 
 
@@ -126,18 +134,34 @@ Tools: TL
    :toctree: .
 
    tl.rank_features
-   tl.silhouette
+
    tl.lazy
+
    tl.load_markers
    tl.identify_cluster
+
    tl.top_feature_genes
-   tl.find_genes
+   tl.var_features_to_genes
+   tl.find_genes_in_features
+   tl.geneactivity
+
    tl.diffmap
    tl.draw_graph
    tl.tsne
    tl.umap
+   tl.dpt
+
    tl.louvain
    tl.leiden
+   tl.kmeans
+   tl.hc
+   tl.getNClusters
+   tl.dendogram
+
+   tl.ARI
+   tl.AMI
+   tl.homogeneity
+   tl.silhouette
 
 
 
@@ -186,6 +210,9 @@ For most tools and for some preprocessing functions, you'll find a plotting func
    pl.cluster_composition
    pl.silhouette
    pl.silhouette_tot
+
+   pl.cal_var
+   pl.variability_features
 
 
 
