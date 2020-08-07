@@ -9,9 +9,6 @@ readRDS = robjects.r['readRDS']
 import pandas as pd
 from warnings import warn
 
-
-import episcanpy.api as epi
-import scanpy as sc
 import anndata as ad
 
 import anndata2ri
