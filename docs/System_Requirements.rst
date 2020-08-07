@@ -32,7 +32,6 @@ Additionally, this package ``epiScanpy`` depends on other Python dependencies an
   scikit-learn
   seaborn
   bamnostic
-  rpy2
   
   
   
