@@ -12,8 +12,7 @@ from ..plotting._scanpy_plotting import rank_feat_groups_heatmap, rank_feat_grou
 from ..plotting._scanpy_plotting import dendrogram, correlation_matrix
 
 import scanpy as sc
-from scanpy.api.pl import scatter, violin, ranking, clustermap, #stacked_violin, 
-from scanpy.api.pl import heatmap, dotplot, matrixplot, tracksplot
+from scanpy.api.pl import scatter, violin, ranking, clustermap, stacked_violin, heatmap, dotplot, matrixplot, tracksplot
 from scanpy.api.pl import umap, pca, diffmap, tsne, draw_graph
 
 from ..preprocessing._quality_control import cal_var, variability_features
