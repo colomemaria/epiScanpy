@@ -18,7 +18,7 @@ import anndata2ri
 anndata2ri.activate()
 
 # import R's "SnapATAC" package
-snapatac = importr('SnapATAC')
+#snapatac = importr('SnapATAC')
 
 def digRS4(RS4, verbose=True):
     """
