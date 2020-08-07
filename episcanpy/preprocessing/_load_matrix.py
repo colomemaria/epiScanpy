@@ -25,7 +25,6 @@ def read_ATAC_10x(matrix, cell_names='', var_names='', path_file=''):
 
     
     mat = mmread(''.join([path_file, matrix]))
-    mat = mat.toarray()
     mat = np.matrix(mat.transpose())
     
     with open(path_file+cell_names) as f:
