@@ -81,10 +81,19 @@ def geneactivity(adata,
     gene_activity_X = np.concatenate(tuple(gene_activity_X), axis=-1)
 
     # get the variable metadata
+    gene_name = []
     if feature_type=='transcript':
-        gene_name = [x[7].lstrip(' transcript_name "').rstrip('"') for x in gene_index]
-    else:
-        gene_name = [x[4].lstrip(' gene_name "').rstrip('"') for x in gene_index]
+        for x in gene_index:
+            for y in x:
+                if 'transcript_name' in y:
+                    gene_name.append(y.lstrip(' transcript_name "').rstrip('"'))
+        #gene_name = [x[7].lstrip(' transcript_name "').rstrip('"') for x in gene_index]
+    elif feature_type=='gene':
+        for x in gene_index:
+            for y in x:
+                if 'gene_name' in y:
+                    gene_name.append(y.lstrip(' gene_name "').rstrip('"'))
+        #gene_name = [x[4].lstrip(' gene_name "').rstrip('"') for x in gene_index]
 
     metadata_genes = {'gene_id' : [],
                       'transcript_id' : [],
