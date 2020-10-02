@@ -44,8 +44,8 @@ print("Time point, parsing arguments " + str(intervaltime-start) + " sec")
 #OUTPUTPREFIX = args.output_prefix
 #WINDOWFILE = args.window_file
 #CHR = args.chr
-#manager = Manager()
-#allmtx = manager.dict()
+manager = Manager()
+allmtx = manager.dict()
 
 def chunkIt(seq, num):
     avg = len(seq) / float(num)
@@ -95,7 +95,8 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
     ------
     AnnData object (also saved as h5ad if save argument is specified)
     """
-    
+    manager = Manager()
+    allmtx = manager.dict()
     intervaltime = time.time()
     print("Time point, loading barcodess " + str(intervaltime-start) + " sec")
     
