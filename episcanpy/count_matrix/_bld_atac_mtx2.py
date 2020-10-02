@@ -31,7 +31,7 @@ def chunkIt(seq, num):
         last += avg
     return out
         
-def parallel_counting(bed_file, idx_parts, window_list, barcodes, index):
+def parallel_counting(bed_file, idx_parts, window_list, barcodes, index, allmtx):
     #intervaltime = time.time()
     #print("Time point, in parallel_counting  of ", i," and  ", window_list[i], "   " + str(intervaltime-start) + " sec")
     #print("Time point, ", window_list[i][0], " and ", window_list[i][1], " and ", window_list[i][2])
@@ -143,7 +143,7 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
     print(idx_parts)
     allmtx[0] = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
     p = Pool(thread)
-    func = partial(parallel_counting, bed_file, idx_parts, window_list, barcodes)
+    func = partial(parallel_counting, bed_file, idx_parts, window_list, barcodes, allmtx)
     p.map(func, range(len(idx_parts)))
     p.close()
     p.join()
