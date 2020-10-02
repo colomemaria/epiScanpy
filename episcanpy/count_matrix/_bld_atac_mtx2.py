@@ -77,7 +77,7 @@ def parallel_counting(idx_parts, window_list, barcodes, index):
     print("In Index: ", index, " PID: ", os.getpid(),", all value = ",ss)
                 
 # the codes are from EpiScanpy but adapt for these input files by using pybedtools
-def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, save=False):
+def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=1, save=False):
     """
     Building count matrix on the fly.
     Expected running time for 10k cells X 100k features on a personal computer ~65min
@@ -162,11 +162,11 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, save=Fa
     
     
     #Parallel(n_jobs=num_cores, prefer="threads")(delayed (parallel_counting)(i) for i in range(len(window_list)))
-    idx_parts = chunkIt(range(len(window_list)),THREAD)
+    idx_parts = chunkIt(range(len(window_list)),thread)
     print("All parts for threading")
     print(idx_parts)
     allmtx[0] = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
-    p = Pool(THREAD)
+    p = Pool(thread)
     func = partial(parallel_counting, idx_parts, window_list, barcodes)
     p.map(func, range(len(idx_parts)))
     p.close()
