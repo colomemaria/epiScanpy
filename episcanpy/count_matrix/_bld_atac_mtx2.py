@@ -1,10 +1,4 @@
 import time
-
-start = time.time()
-
-intervaltime = time.time()
-print("Time point, loading libraries " + str(intervaltime-start) + " sec")
-
 import pysam
 import argparse
 import numpy as np
@@ -16,12 +10,6 @@ import gzip
 import os
 from functools import partial
 
-intervaltime = time.time()
-print("Time point, parsing arguments " + str(intervaltime-start) + " sec")
-
-manager = Manager()
-allmtx = manager.dict()
-
 def chunkIt(seq, num):
     avg = len(seq) / float(num)
     out = []
@@ -31,7 +19,7 @@ def chunkIt(seq, num):
         last += avg
     return out
         
-def parallel_counting(bed_file, idx_parts, window_list, barcodes, index, allmtx):
+def parallel_counting(bed_file, idx_parts, window_list, barcodes, index):
     #intervaltime = time.time()
     #print("Time point, in parallel_counting  of ", i," and  ", window_list[i], "   " + str(intervaltime-start) + " sec")
     #print("Time point, ", window_list[i][0], " and ", window_list[i][1], " and ", window_list[i][2])
@@ -143,7 +131,7 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
     print(idx_parts)
     allmtx[0] = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
     p = Pool(thread)
-    func = partial(parallel_counting(index, allmtx), idx_parts, window_list, barcodes)
+    func = partial(parallel_counting, idx_parts, window_list, barcodes)
     p.map(func, range(len(idx_parts)))
     p.close()
     p.join()
@@ -196,5 +184,4 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
         allmtx[0].write(save)
 
     return(allmtx[0])
-
 
