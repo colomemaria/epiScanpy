@@ -56,14 +56,14 @@ def chunkIt(seq, num):
         last += avg
     return out
         
-def parallel_counting(idx_parts, window_list, barcodes, index):
+def parallel_counting(bedfile, idx_parts, window_list, barcodes, index):
     #intervaltime = time.time()
     #print("Time point, in parallel_counting  of ", i," and  ", window_list[i], "   " + str(intervaltime-start) + " sec")
     #print("Time point, ", window_list[i][0], " and ", window_list[i][1], " and ", window_list[i][2])
     #for row in tbx.fetch(window_list[i][0], window_list[i][1], window_list[i][2], parser=pysam.asTuple()):
     #    mtx[barcodes.index(str(row).split('\t')[3].split(':')[0]), i] += 1
     
-    tbx = pysam.TabixFile(BEDFILE)
+    tbx = pysam.TabixFile(bedfile)
     mtx = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
     print("In Index: ", index, " PID: ", os.getpid(), ", loading tbx file")
     print(idx_parts[index])
@@ -168,7 +168,7 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
     print(idx_parts)
     allmtx[0] = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
     p = Pool(thread)
-    func = partial(parallel_counting, idx_parts, window_list, barcodes)
+    func = partial(parallel_counting, bedfile, idx_parts, window_list, barcodes)
     p.map(func, range(len(idx_parts)))
     p.close()
     p.join()
