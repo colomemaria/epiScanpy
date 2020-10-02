@@ -58,6 +58,7 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
     ------
     AnnData object (also saved as h5ad if save argument is specified)
     """
+    start = time.time()
     manager = Manager()
     allmtx = manager.dict()
     intervaltime = time.time()
@@ -184,4 +185,5 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
         allmtx[0].write(save)
 
     return(allmtx[0])
+
 
