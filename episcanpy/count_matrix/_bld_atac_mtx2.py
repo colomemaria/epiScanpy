@@ -19,27 +19,6 @@ def chunkIt(seq, num):
         last += avg
     return out
         
-def parallel_counting(bed_file, idx_parts, window_list, barcodes, index):
-    #intervaltime = time.time()
-    #print("Time point, in parallel_counting  of ", i," and  ", window_list[i], "   " + str(intervaltime-start) + " sec")
-    #print("Time point, ", window_list[i][0], " and ", window_list[i][1], " and ", window_list[i][2])
-    #for row in tbx.fetch(window_list[i][0], window_list[i][1], window_list[i][2], parser=pysam.asTuple()):
-    #    mtx[barcodes.index(str(row).split('\t')[3].split(':')[0]), i] += 1
-    
-    tbx = pysam.TabixFile(bed_file)
-    mtx = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
-    print("In Index: ", index, " PID: ", os.getpid(), ", loading tbx file")
-    print(idx_parts[index])
-    
-    for i in idx_parts[index]:
-        for row in tbx.fetch(window_list[i][0], window_list[i][1], window_list[i][2], parser=pysam.asTuple()):
-            mtx[barcodes.index(str(row).split('\t')[3].split(':')[0]), i] += 1
-    
-    allmtx[0] = allmtx[0] + mtx
-    ss=mtx.sum().sum()
-    print("In Index: ", index, " PID: ", os.getpid(),", all value = ",ss)
-
-
 def parallel_counting(idx_parts, window_list, barcodes, index):
     tbx = pysam.TabixFile(BEDFILE)
     mtx = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
@@ -73,6 +52,7 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
     """
     start = time.time()
     manager = Manager()
+    global allmtx
     allmtx = manager.dict()
     intervaltime = time.time()
     print("Time point, loading barcodess " + str(intervaltime-start) + " sec")
@@ -124,12 +104,12 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
     intervaltime = time.time()
     print("Time point, after creating window_list " + str(intervaltime-start) + " sec")
     
-#    if genome:
-#        for chrom in sorted(annotation.keys()):
-#            window_list += [["".join([genome, '_chr', chrom]), int(n[0]), int(n[1])] for n in annotation[chrom]]
-#    else:
-#        for chrom in sorted(annotation.keys()):
-#            window_list += [["".join(['chr', chrom]), int(n[0]), int(n[1])] for n in annotation[chrom]]
+    if genome:
+        for chrom in sorted(annotation.keys()):
+            window_list += [["".join([genome, '_chr', chrom]), int(n[0]), int(n[1])] for n in annotation[chrom]]
+    else:
+        for chrom in sorted(annotation.keys()):
+            window_list += [["".join(['chr', chrom]), int(n[0]), int(n[1])] for n in annotation[chrom]]
 
     print('building count matrix')
     #mtx = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
@@ -198,5 +178,3 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
         allmtx[0].write(save)
 
     return(allmtx[0])
-
-
