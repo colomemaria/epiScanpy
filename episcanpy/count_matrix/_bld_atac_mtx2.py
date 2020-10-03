@@ -20,7 +20,7 @@ def chunkIt(seq, num):
     return out
         
 def parallel_counting(idx_parts, window_list, barcodes, index):
-    tbx = pysam.TabixFile(BEDFILE)
+    tbx = pysam.TabixFile(bed_file)
     mtx = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
     print("In Index: ", index, " PID: ", os.getpid(), ", loading tbx file")
     print(idx_parts[index])
