@@ -38,6 +38,19 @@ def parallel_counting(bed_file, idx_parts, window_list, barcodes, index):
     allmtx[0] = allmtx[0] + mtx
     ss=mtx.sum().sum()
     print("In Index: ", index, " PID: ", os.getpid(),", all value = ",ss)
+
+
+def parallel_counting(idx_parts, window_list, barcodes, index):
+    tbx = pysam.TabixFile(BEDFILE)
+    mtx = lil_matrix((len(barcodes), len(window_list)), dtype=np.uint16)
+    print("In Index: ", index, " PID: ", os.getpid(), ", loading tbx file")
+    print(idx_parts[index])
+    for i in idx_parts[index]:
+        for row in tbx.fetch(window_list[i][0], window_list[i][1], window_list[i][2], parser=pysam.asTuple()):
+            mtx[barcodes.index(str(row).split('\t')[3].split(':')[0]), i] += 1
+    allmtx[0] = allmtx[0] + mtx
+    ss=mtx.sum().sum()
+    print("In Index: ", index, " PID: ", os.getpid(),", all value = ",ss)
                 
 # the codes are from EpiScanpy but adapt for these input files by using pybedtools
 def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=1, save=False):
