@@ -53,6 +53,7 @@ def bld_mtx_fly(bed_file, annotation, chrom, csv_file=None, genome=None, thread=
     start = time.time()
     manager = Manager()
     global allmtx
+    global bed_file
     allmtx = manager.dict()
     intervaltime = time.time()
     print("Time point, loading barcodess " + str(intervaltime-start) + " sec")
