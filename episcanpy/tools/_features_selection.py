@@ -1,4 +1,4 @@
-#from scanpy.api.tl import rank_genes_groups
+#from scanpy.tools import rank_genes_groups
 import scanpy as sc
 import warnings
 from warnings import warn
