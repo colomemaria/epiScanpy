@@ -94,7 +94,7 @@ def stacked_violinstacked_violin(
 
     See also
     --------
-    rank_genes_groups_stacked_violin: to plot marker genes identified using the :func:`~scanpy.tl.rank_genes_groups` function.
+    rank_genes_groups_stacked_violin: to plot marker genes identified using the :func:`~scanpy.tools.rank_genes_groups` function.
     """
 
     sc.pl.stacked_violin(stacked_violin(adata, 
