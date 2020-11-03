@@ -26,7 +26,7 @@ def parallel_counting(bed_file,allmtx, idx_parts, feature_list, cell_ids, cell_i
     #print(idx_parts[index])
     for i in idx_parts[index]:
         for row in tbx.fetch(feature_list[i][0], feature_list[i][1], feature_list[i][2], parser=pysam.asTuple()):
-            print(str(row))
+            # print(str(row))
             if readname_sep:
                 mtx[cell_ids.index(str(row).split()[3].split(readname_sep)[cell_id_col]), i] += 1
             else:
