@@ -171,7 +171,7 @@ def bld_mtx_bed(bed_file, feature_region = None, cell_id_col = 0, readname_sep =
                                 readname_sep = readname_sep,
                                 thread = thread,
                                 save = False)
-        print("Chromosome " + ch)
+        # print("Chromosome " + ch)
         # print(tmp)
         if len(tmp.var) != 0:
             if adata_outter is None:
