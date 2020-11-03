@@ -9,10 +9,10 @@ from ..tools._scanpy_fct import pca, diffmap, draw_graph, tsne, umap
 #from ..tools._scanpy_fct import louvain, leiden
 from ..tools._scanpy_fct import dendogram
 from ..tools._find_genes import find_genes
-from scanpy.api.tl import dpt
+from scanpy.tools import dpt
 
 from ..tools._clustering import getNClusters
 from ..tools._clustering import kmeans, hc
 from ..tools._clustering import ARI, AMI, homogeneity
-from scanpy.api.tl import louvain, leiden
+from scanpy.tools import louvain, leiden
 from ..tools._geneactivity import geneactivity

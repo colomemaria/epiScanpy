@@ -13,4 +13,4 @@ from ..preprocessing._scanpy_fct import filter_cells, filter_features, normalize
 from ..preprocessing._scanpy_fct import pca, normalize_per_cell, regress_out, subsample, downsample_counts
 from ..preprocessing._neighbors import neighbors
 from ..preprocessing._simple import sparse
-from scanpy.api.tl import dpt
+from scanpy.tools import dpt
