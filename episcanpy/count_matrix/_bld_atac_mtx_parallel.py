@@ -9,6 +9,7 @@ from multiprocessing import Pool, Manager, Value
 import gzip
 import os
 from functools import partial
+from ..count_matrix._features import make_windows
 
 def chunkIt(seq, num):
     avg = len(seq) / float(num)
