@@ -166,7 +166,7 @@ def bld_mtx_bed(bed_file, feature_region_file, cell_id_col = 0, readname_sep = '
             if adata_outter is None:
                 adata_outter = tmp.copy()
             else:
-                adata_outter = ad.concat([adata_outter, tmp], axis=1, join="outer")
+                adata_outter = ad.concat([adata_outter, tmp], axis=1, join = "outer")
         else:
             print("Chromosome " + ch + " contains no data")
     print("All data contains:")
