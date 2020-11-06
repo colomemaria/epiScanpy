@@ -1,4 +1,5 @@
 import anndata as ad
+import pandas as pd
 
 def load_metadata(adata, metadata_file, path='', separator=';'):
     """
@@ -24,33 +25,39 @@ def load_metadata(adata, metadata_file, path='', separator=';'):
     ------
     Annotated AnnData 
     """
-    dict_annot = {}
-    with open(path+metadata_file) as f:
-        head = f.readline().split(separator)
-        file = f.readlines()
-    for key in head:
-        dict_annot[key] = []
-    data = [line.split(separator) for line in file]
-
-    for name in adata.obs_names:
-        name = name.split('.')[0]
-        found = False
-        for line in data:
-            if name == line[0]:
-                i = 0
-                for key in head:
-                    dict_annot[key].append(line[i])
-                    i += 1 
-                found = True
-                continue
-        # if we could not find annotations
-        if found == False:
-            for key in head:
-                dict_annot[key].append('NA')
-
-    for key in head:
-        adata.obs[key] = dict_annot[key]
-
+    # dict_annot = {}
+    # with open(path+metadata_file) as f:
+    #     head = f.readline().strip().split(separator)
+    #     file = f.readlines()
+    # for key in head:
+    #     dict_annot[key] = []
+    # data = [line.strip().split(separator) for line in file]
+    # for name in adata.obs_names:
+    #     # this line is not always true. It depends on how the format of the data are
+    #     name = name.split('.')[0]
+    #     found = False
+    #     for line in data:
+    #         if name == line[0]:
+    #             i = 0
+    #             for key in head:
+    #                 dict_annot[key].append(line[i])
+    #                 i += 1 
+    #             found = True
+    #             continue
+    #     # if we could not find annotations
+    #     if found == False:
+    #         for key in head:
+    #             dict_annot[key].append('NA')
+    # for key in head:
+    #     adata.obs[key] = dict_annot[key]
+    metadata = pd.read_csv(path+metadata_file, sep = "\t", header = 0)
+    df = pd.DataFrame('NA', index=adata.obs.index, columns=metadata.columns)
+    for key,value in metadata.iterrows():
+        index = next((i for i, s in enumerate(adata.obs.index) if value[0] in s), None)
+        df[value.index[0]][index] =  value[0]
+        df[value.index[1]][index] =  value[1]
+    for key in df.columns:
+        adata.obs[key] = df[key]
 
 ### function to optimize running time
 
