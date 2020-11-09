@@ -126,7 +126,8 @@ def bld_mtx_bed_per_chr(bed_file, feature_region, chrom, cell_id_col = 0, readna
 
 def bld_mtx_bed(bed_file, feature_region = None, cell_id_col = 0, readname_sep = ':', chromosomes = 'human', thread=1, save = False, bin_size = 5000):
     """
-    Building count matrix from BED file.
+    Building count matrix from BED file. This function uses sequencing barcode as cell identifier. 
+    If the barcodes are not unique, use bld_mtx_fly instead.
     Does not count pcr duplicate.
     A tbi file with the same filename as the provided bed_file must be present in the same directory as the BED file
     Parameters
