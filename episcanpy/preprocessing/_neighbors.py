@@ -66,10 +66,12 @@ def neighbors(adata,
         neighbors.
     """
     if copy:
-        return(sc.pp.neighbors(adata, n_neighbors, n_pcs, use_rep, knn, random_state, 
-            method, metric, metric_kwds, copy))
+        return(sc.pp.neighbors(adata=adata, n_neighbors=n_neighbors, n_pcs=n_pcs, 
+            use_rep=use_rep, knn=knn, random_state=random_state, method=method, 
+            metric=metric, metric_kwds=metric_kwds, copy=copy))
     else:
-        sc.pp.neighbors(adata, n_neighbors, n_pcs, use_rep, knn, random_state, 
-            method, metric, metric_kwds, copy)
+        sc.pp.neighbors(adata=adata, n_neighbors=n_neighbors, n_pcs=n_pcs, 
+            use_rep=use_rep, knn=knn, random_state=random_state, method=method, 
+            metric=metric, metric_kwds=metric_kwds, copy=copy)
 
     

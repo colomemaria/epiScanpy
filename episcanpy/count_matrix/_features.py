@@ -1,10 +1,18 @@
 # chromosomes for 2 principal species. If you work with another genome
 # the chromosomes will have to be specified
 # mitochondrial genome not included
-HUMAN = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '2',
-         '20', '21', '22', '3', '4', '5', '6', '7', '8', '9', 'X', 'Y']
-MOUSE = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '2',
-         '3', '4', '5', '6', '7', '8', '9', 'X', 'Y']
+MOUSE = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',  
+        '11', '12', '13', '14', '15', '16', '17', '18', '19','X', 'Y']
+MOUSE_SIZE = [195200000, 181800000, 159800000, 156900000, 151800000, 149650000, 145050000, 130200000, 124400000, 130600000,  
+        122000000, 120150000, 120950000, 125250000, 104150000, 98050000, 95350000, 90800000, 61500000, 169550000, 91500000]
+
+HUMAN = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 
+        '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', 
+        '21', '22','X', 'Y']        
+HUMAN_SIZE = [249000000, 242250000, 198350999, 190250000, 181600000, 170850000, 159400000, 145200000, 138450000, 133850000, 
+        135150000, 133350000, 114400000, 107100000, 102050000, 90400000, 83300000, 80400000, 58650000, 64500000,
+        46750000, 50850000, 156100000, 57300000]
+
 
 def load_features(file_features, chromosomes=HUMAN, path="", sort=False):
     """
@@ -55,7 +63,7 @@ def load_features(file_features, chromosomes=HUMAN, path="", sort=False):
             
     return(features_chrom)
 
-def make_windows(size, chromosomes=HUMAN, max_length=1000000000):
+def make_windows(size, chromosomes = 'human', chromosome_sizes = None, max_length=1000000000):
     """
     Generate windows/bins of the given size for the appropriate genome (default
     choice is human). 
@@ -65,15 +73,38 @@ def make_windows(size, chromosomes=HUMAN, max_length=1000000000):
     size:
         size of the window you want
     chromosomes:
-        Chromosomes of the species you are analysing
+        Chromosomes of the species you are analysing. Pre-defined chromosomes are 'human' and 'mouse'. Default value is 'human'.
+        For other oranisms, chromosomes should be defined as, for example, chromosomes = ['1', '2', ... , 'X', 'Y'].
+    chromosome_sizes: 
+        an array for chromosome sizes. If chromosomes is set to 'human' or 'mouse', chromosome_sizes will be ignored. 
+        For other oranisms, chromosome_sizes must have the same length as chromosomes and should be defined as, for example, 
+        chromosomes = ['1', '2', ... , 'X', 'Y'].
     max_length:
-        maximum length given for every chromosome
+        maximum length given for every chromosome. For other oranisms, when chromosomes is assigned and chromosome_sizes = None,
+        max_length will be used instead.
     """
     features_chrom = {}
-    start = range(1, max_length - size, size)
-    end = range(size, max_length, size)
-    for c in chromosomes:
-        features_chrom[c] = [[start[i], end[i], ''.join(["chr_", c, "_", str(i)])] for i in range(len(end))]
+    
+    if chromosomes == 'human':
+        chromosomes = HUMAN
+        chromosome_sizes = HUMAN_SIZE
+    elif chromosomes == 'mouse':
+        chromosomes = MOUSE
+        chromosome_sizes = MOUSE_SIZE
+    elif isinstance(chromosomes, list):
+        if isinstance(chromosome_sizes, list):
+            if len(chromosomes) != len(chromosome_sizes):
+                print("Error: the lengths of chromosomes and chromosome_sizes are not matched.")
+        else:
+            chromosome_sizes = [max_length for i in range(len(chromosomes))]
+    else:
+        print("Error: chromosomes must be assigned as 'human', 'mouse', or a list")
+        
+    for c in range(len(chromosomes)):
+        start = range(1, chromosome_sizes[c] - size, size)
+        end = range(size, chromosome_sizes[c], size)
+        features_chrom[chromosomes[c]] = [[start[i], end[i], ''.join(["chr", chromosomes[c], "_", str(start[i]), "_", str(end[i])])] for i in range(len(end))]
+        
     return(features_chrom)
 
 
@@ -93,7 +124,6 @@ def size_feature_norm(loaded_feature, size):
     Update the input features
 
     """
-
     for key in loaded_feature.keys():
         for i in range(len(loaded_feature[key])):
             length = loaded_feature[key][i][1] - loaded_feature[key][i][0]
@@ -104,7 +134,7 @@ def size_feature_norm(loaded_feature, size):
             else:
                 loaded_feature[key][i][0] = loaded_feature[key][i][0] - add_length//2
                 loaded_feature[key][i][1] = loaded_feature[key][i][1] + add_length//2
-                
+    
 def plot_size_features(loaded_feature, bins=50, return_length=False):
     """
     Plot the different feature sizes in an histogram. 
