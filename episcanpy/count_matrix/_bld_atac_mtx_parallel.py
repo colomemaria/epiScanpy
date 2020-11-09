@@ -40,7 +40,8 @@ def parallel_counting(bed_file,allmtx, idx_parts, feature_list, cell_ids, cell_i
 
 def bld_mtx_bed_per_chr(bed_file, feature_region, chrom, cell_id_col = 0, readname_sep = ':', thread=1, save=False):
     """
-    Building count matrix on the fly.
+    Building count matrix on the fly. This function uses sequencing barcode as cell identifier. 
+    If the barcodes are not unique, use bld_mtx_fly instead.
     Expected running time for 10k cells X 100k features on a personal computer ~65min
     Does not count pcr duplicate.
     A tbi file with the same filename as the provided bed_file must be present in the same directory as the tsv file
