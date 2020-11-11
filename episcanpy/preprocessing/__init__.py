@@ -14,3 +14,4 @@ from ..preprocessing._scanpy_fct import pca, normalize_per_cell, regress_out, su
 from ..preprocessing._neighbors import neighbors
 from ..preprocessing._simple import sparse
 from scanpy.tools import dpt
+from scanpy.preprocessing import log1p
