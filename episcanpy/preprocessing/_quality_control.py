@@ -44,7 +44,7 @@ def cal_var(adata, show=True, color=['b', 'r'], save=None):
         ax0.set(xlabel='cells sharing a feature', ylabel='density')
         ax1 = sns.distplot(adata.var['variability_score'], bins=40, ax=axs[1], color=color[1])
         ax1.set(xlabel='variability score', ylabel='density')
-        plt.savefig(save)
+        plt.savefig(save, bbox_inches="tight")
         show = False
         
     if show: # plotting
@@ -249,7 +249,7 @@ def coverage_cells(adata,
 
     if save!= None:
         #fig.savefig(save, dpi=save_dpi)
-        plt.savefig(save)
+        plt.savefig(save, bbox_inches="tight")
     plt.show()
     adata.obs[key_added] = sum_peaks
     
@@ -358,7 +358,7 @@ def coverage_features(adata,
 
     if save!= None:
         #fig.savefig(save, dpi=save_dpi)
-        plt.savefig(save)
+        plt.savefig(save, bbox_inches="tight")
     plt.show()
 
     adata.var[key_added] = common
@@ -456,7 +456,7 @@ def correlation_pc(adata,
         
     if save!= None:
         #fig.savefig(save, dpi=save_dpi)
-        plt.savefig(save)
+        plt.savefig(save, bbox_inches="tight")
     plt.show()
     
 
@@ -553,7 +553,7 @@ def density_features(adata,
     
     
     if save!= None:
-        fig.savefig(save, dpi=save_dpi)
+        fig.savefig(save, , bbox_inches="tight")
     plt.show()
 
     adata.var[key_added] = common
@@ -626,6 +626,6 @@ def variability_features(adata, min_score=None, nb_features=None, show=True,
     
     if save != None:
         #fig.savefig(save, dpi=save_dpi)
-        plt.savefig(save)
+        plt.savefig(save, bbox_inches="tight")
     plt.show()   
     #return(var_annot)
