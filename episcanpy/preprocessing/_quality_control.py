@@ -553,7 +553,7 @@ def density_features(adata,
     
     
     if save!= None:
-        fig.savefig(save, , bbox_inches="tight")
+        fig.savefig(save, bbox_inches="tight")
     plt.show()
 
     adata.var[key_added] = common
