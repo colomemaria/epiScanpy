@@ -18,3 +18,4 @@ from scanpy.tools import louvain, leiden
 from ..tools._geneactivity import geneactivity
 
 from ..tools._impute_gene_methylation import imputation_feature
+from ..tools._comparisons import transfer_obs, imputation
