@@ -2,7 +2,7 @@ import scanpy as sc
 import anndata as ad
 
 def lazy(adata, pp_pca=True, svd_solver='arpack', nb_pcs=50, n_neighbors=15, perplexity=30, 
-         method='umap', metric='euclidean', min_dist=0.5, spread=1.0, 
+         method='umap', metric='euclidean', min_dist=0.5, spread=1.0, use_highly_variable=False,
          n_components=2, copy=False):
     '''
     Automatically computes PCA coordinates, loadings and variance decomposition, a neighborhood graph of observations,
@@ -71,7 +71,7 @@ def lazy(adata, pp_pca=True, svd_solver='arpack', nb_pcs=50, n_neighbors=15, per
         adata
 
     if pp_pca:
-        sc.pp.pca(adata, n_comps=nb_pcs, svd_solver=svd_solver)
+        sc.pp.pca(adata, n_comps=nb_pcs, svd_solver=svd_solver, use_highly_variable=use_highly_variable)
     
     sc.pp.neighbors(adata,  n_neighbors=n_neighbors, n_pcs=nb_pcs, method=method, metric=metric)
     #sc.tl.pca(adata, n_comps=nb_pcs)
