@@ -10,26 +10,39 @@ def geneactivity(adata,
                  feature_type='gene',
                  annotation='ENSEMBL',
                  layer_name='geneactivity',
-                 raw=False):
+                 raw=False, 
+                 copy=True):
     """
     
     Build an AnnData object containing the number of open features
-    (windows, peaks, etc) overlapping genes (gene bodies +
-    5kb upstream of TSS).  
+    (windows, peaks, etc) overlapping genes (gene bodies + 5kb upstream of the TSS).  
     It is possible to extend the distance from the TSS with the upstream parameter.
-    GTF files can contain multiple annotations (HAVANA, ENSEMBL, etc.). 
-    Rather than using multiple time the same gene
-    It is possible to specify which genome annotation is desired using the parameter annotation.
-    The annotation file can contain more than... 
+    
+    Rather than using multiple time the same gene, it is possible to specify which genome annotation is desired using the parameter annotation.
+    as the GTF files can often contain multiple annotations for genes (HAVANA, ENSEMBL, etc.). 
+
+    Alternatively, if you want to obtain the gene activity at something else than genes, like transcipts. It is possible as well.
+    The feature_type can be specified.
+
+    TSS = Transcription Starting Site
     
     INPUT
     -----
+
     adata : input AnnData
     gtf_file : input gtf file name + path
-    key_added :
+    key_added : to save the geneactivity matrix as an adata.uns object if 
     upstream :
-    featyre_type
-    transcripts or genes
+    featyre_type : transcripts or genes
+    annotation :
+    layer_name : 
+    raw :
+    copy : 
+
+
+    OUTPUT
+    ------
+
     
     """
     ### extracting the genes

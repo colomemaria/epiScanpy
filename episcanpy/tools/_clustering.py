@@ -26,11 +26,16 @@ def getNClusters(adata,n_cluster,range_min=0,range_max=3,max_steps=20, method='l
         print('step ' + str(this_step))
         this_resolution = this_min + ((this_max-this_min)/2)
         
-        if method == 'louvain':
-            sc.tl.louvain(adata,resolution=this_resolution)
-        else:
+        if (method == 'louvain') and (key_added==None):
+            sc.tl.louvain(adata, resolution=this_resolution)
+        elif method == 'louvain':
+            sc.tl.louvain(adata, resolution=this_resolution, key_added=key_added)
+        elif( method == 'leiden') and (key_added==None):
             sc.tl.leiden(adata,resolution=this_resolution)
-            
+        else:
+            sc.tl.leiden(adata,resolution=this_resolution, key_added=key_added)
+    
+        
         if key_added==None:
             this_clusters = adata.obs[method].nunique()
         else:
