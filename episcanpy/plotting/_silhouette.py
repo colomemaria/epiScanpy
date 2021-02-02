@@ -29,6 +29,8 @@ def silhouette(adata_name, cluster_annot, key=None,
 
     """
 
+    cluster_labels = adata_name.obs[cluster_annot]
+    n_clusters = len(set(adata_name.obs[cluster_annot]))
     
     silhouette_avg = silhouette_score(X, cluster_labels, metric)
     sample_silhouette_values = silhouette_samples(X, cluster_labels, metric)
