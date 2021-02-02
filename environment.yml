@@ -1,5 +1,8 @@
 name: episcanpy
-
+channels:
+    - bioconda
+    - conda-forge
+    - defaults
 dependencies:
     - anndata>=0.7
     - scanpy>=1.5.1
