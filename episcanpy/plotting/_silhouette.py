@@ -28,7 +28,8 @@ def silhouette(adata_name, cluster_annot, key=None,
     Silhouette plot
 
     """
-
+    
+    X = adata_name.obsm[value]
     cluster_labels = adata_name.obs[cluster_annot]
     n_clusters = len(set(adata_name.obs[cluster_annot]))
     
