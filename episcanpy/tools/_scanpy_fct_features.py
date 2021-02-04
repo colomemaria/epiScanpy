@@ -4,7 +4,7 @@ import scanpy as sc
 # pca, diffmap, draw_graph, tsne, umap --> I also need it in tools
 # heatmap, violin and matrixplot and heatmap and rank_gene_groups version
 def stacked_violinstacked_violin(
-    adata: AnnData,
+    adata,
     var_names,
     groupby=None,
     log=False,
@@ -27,8 +27,7 @@ def stacked_violinstacked_violin(
     show: Optional[bool] = None,
     save: Union[bool, str, None] = None,
     row_palette: str = 'muted',
-    **kwds,
-):
+    **kwds):
 	"""\
     Stacked violin plots.
 
