@@ -1,4 +1,4 @@
-|GitHub release| |GitHub tag| |Docs| |PyPI| |Python package| |Python Package using Conda| |Github all releases| |GitHub commits| |GitHub stars| |GitHub forks| |GitHub watchers| |GitHub followers| |GitHub contributors| 
+|GitHub release| |GitHub tag| |Docs| |PyPI| |Python package| |Python Package using Conda| |GitHub stars| |GitHub forks| |GitHub watchers| |GitHub followers| |GitHub contributors| 
 
 
 .. |Docs| image:: https://readthedocs.com/projects/icb-scanpy/badge/?version=latest
@@ -13,10 +13,6 @@
    :target: https://GitHub.com/colomemaria/epiScanpy/releases/
 .. |GitHub tag| image:: https://img.shields.io/github/tag/colomemaria/epiScanpy.svg
    :target: https://GitHub.com/colomemaria/epiScanpy/tags/
-.. |GitHub commits| image:: https://img.shields.io/github/commits-since/colomemaria/epiScanpy/v0.1.6.svg
-   :target: https://GitHub.com/colomemaria/epiScanpy/commit/
-.. |Github all releases| image:: https://img.shields.io/github/downloads/colomemaria/epiScanpy/total.svg
-   :target: https://GitHub.com/colomemaria/epiScanpy/releases/
 .. |GitHub forks| image:: https://img.shields.io/github/forks/colomemaria/epiScanpy.svg?style=social&label=Fork&maxAge=2592000
    :target: https://GitHub.com/colomemaria/epiScanpy/network/   
 .. |GitHub stars| image:: https://img.shields.io/github/stars/colomemaria/epiScanpy.svg?style=social&label=Star&maxAge=2592000
