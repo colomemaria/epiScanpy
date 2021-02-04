@@ -388,9 +388,11 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False,
     """Call the given command(s)."""
     assert isinstance(commands, list)
     p = None
+    dispcmd = None
     for c in commands:
         try:
             # remember shell=False, so use git.cmd on windows, not just git
+            dispcmd = str([c] + args)
             p = subprocess.Popen([c] + args, cwd=cwd, env=env,
                                  stdout=subprocess.PIPE,
                                  stderr=(subprocess.PIPE if hide_stderr

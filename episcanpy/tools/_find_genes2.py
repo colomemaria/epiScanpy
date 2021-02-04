@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.axes as pltax
 import pandas as pd
 import pyranges as pr
+import time
 
 def find_genes(adata, gtf_file_name, path='', extension=5000,
     key_added='gene_name', feature_coordinates=None, copy=True):
@@ -33,6 +34,7 @@ def find_genes(adata, gtf_file_name, path='', extension=5000,
     """
 
     # load the gtf file
+    start = time.time()
     gtf_file = []
     with open(gtf_file_name) as f:
         for line in f:

@@ -1,5 +1,6 @@
 import anndata as ad
 import pandas as pd
+import pyranges as pr
 
 def load_metadata(adata, metadata_file, path='', separator=';', remove_index_str = None):
     """
