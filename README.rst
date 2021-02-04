@@ -10,8 +10,6 @@
 .. |Python Package using Conda| image:: https://github.com/colomemaria/epiScanpy/workflows/Python%20Package%20using%20Conda/badge.svg
     :target: https://github.com/colomemaria/epiScanpy/
 
-
-
 EpiScanpy – Epigenomics single cell analysis in python
 ======================================================
 
