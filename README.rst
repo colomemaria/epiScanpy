@@ -16,7 +16,7 @@
 .. |GitHub commits| image:: https://img.shields.io/github/commits-since/colomemaria/epiScanpy/v0.1.6.svg
    :target: https://GitHub.com/colomemaria/epiScanpy/commit/
 .. |Github all releases| image:: https://img.shields.io/github/downloads/colomemaria/epiScanpy/total.svg
-   :target: https://GitHub.com/colomemaria/epiScanpy/releases/)
+   :target: https://GitHub.com/colomemaria/epiScanpy/releases/
 .. |GitHub forks| image:: https://img.shields.io/github/forks/colomemaria/epiScanpy.svg?style=social&label=Fork&maxAge=2592000
    :target: https://GitHub.com/colomemaria/epiScanpy/network/   
 .. |GitHub stars| image:: https://img.shields.io/github/stars/colomemaria/epiScanpy.svg?style=social&label=Star&maxAge=2592000
