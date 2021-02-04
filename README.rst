@@ -1,4 +1,4 @@
-|Docs| |PyPI| 
+|Docs| |PyPI| |Python package| |Python Package using Conda|
 
 
 .. |Docs| image:: https://readthedocs.com/projects/icb-scanpy/badge/?version=latest
