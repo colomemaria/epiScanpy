@@ -2,8 +2,7 @@ import scanpy as sc
 # everything here is copied from scanpy and adapted
 # pca, diffmap, draw_graph, tsne, umap --> I also need it in tools
 # heatmap, violin and matrixplot and heatmap and rank_gene_groups version
-def stacked_violinstacked_violin(
-    adata,
+def stacked_violinstacked_violin(adata,
     var_names,
     groupby=None,
     log=False,
@@ -92,7 +91,7 @@ def stacked_violinstacked_violin(
     --------
     rank_genes_groups_stacked_violin: to plot marker genes identified using the :func:`~scanpy.tools.rank_genes_groups` function.
     """
-    sc.pl.stacked_violin(stacked_violin(adata,
+    sc.pl.stacked_violin(adata,
         var_names=var_names,
         groupby=groupby,
         log=log,
