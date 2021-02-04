@@ -1,4 +1,4 @@
-|GitHub release| |GitHub version| |GitHub tag| |Docs| |PyPI| |Python package| |Python Package using Conda| |Github all releases| |GitHub commits| |GitHub stars| |GitHub forks| |GitHub watchers| |HitCount| |GitHub followers| |GitHub contributors| |Average time to resolve an issue|
+|GitHub release| |GitHub tag| |Docs| |PyPI| |Python package| |Python Package using Conda| |Github all releases| |GitHub commits| |GitHub stars| |GitHub forks| |GitHub watchers| |HitCount| |GitHub followers| |GitHub contributors| |Average time to resolve an issue|
 
 
 .. |Docs| image:: https://readthedocs.com/projects/icb-scanpy/badge/?version=latest
@@ -29,10 +29,8 @@
    :target: https://GitHub.com/colomemaria/epiScanpy/graphs/contributors/
 .. |Average time to resolve an issue| image:: http://isitmaintained.com/badge/resolution/colomemaria/badges.svg
    :target: http://isitmaintained.com/project/colomemaria/badges
-.. |HitCount| image:: http://hits.dwyl.io/colomemaria/badges.svg
-   :target: http://hits.dwyl.io/colomemaria/badges
-.. |GitHub version| image:: https://badge.fury.io/gh/colomemaria%2FepiScanpy.svg
-   :target: https://github.com/colomemaria/epiScanpy
+.. |HitCount| image:: http://hits.dwyl.com/colomemaria/epiScanpy.svg
+   :target: http://hits.dwyl.com/colomemaria/epiScanpy
    
    
 EpiScanpy – Epigenomics single cell analysis in python
