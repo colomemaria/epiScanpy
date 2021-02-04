@@ -1,4 +1,4 @@
-|GitHub release| |GitHub tag| |Docs| |PyPI| |Python package| |Python Package using Conda| |GitHub stars| |GitHub forks| |GitHub watchers| |GitHub followers| |GitHub contributors| 
+|GitHub release| |GitHub tag| |PyPI| |Docs| |Python package| |Python Package using Conda| |GitHub contributors| |GitHub stars| |GitHub forks| |GitHub watchers| |GitHub followers| 
 
 
 .. |Docs| image:: https://readthedocs.com/projects/icb-scanpy/badge/?version=latest
