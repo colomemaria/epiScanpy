@@ -183,7 +183,8 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC', b
     Parameters
     ----------
 
-    initial_matrix: initial dense count matrix to load and convert into a sparse matrix 
+    initial_matrix: initial dense count matrix to load and convert into a sparse matrix. 
+    If bed = True,  initial_matrix should be the path to the bed file.
 
     output_file: name of the output file for the AnnData object.
     Default output is the name of the input file with .h5ad extension
@@ -210,7 +211,7 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC', b
 
     # choice between 2 different input count matrix formats
     if bed == True:
-        adata = read_mtx_bed(file_name, path, omic)
+        adata = read_mtx_bed(initial_matrix, path, omic)
     else:
         # reading the non sparse file
         with open(path+initial_matrix) as f:

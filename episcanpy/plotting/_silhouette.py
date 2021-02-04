@@ -5,7 +5,7 @@ from sklearn.metrics import silhouette_score, silhouette_samples
 import matplotlib.cm as cm
 import numpy as np
 
-def silhouette(adata_name, cluster_annot, key=None,
+def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean', key=None,
               xlabel=None, ylabel=None, title=None, size='large',
                name_cluster=True, name_cluster_pos='left', 
               palette=None, save=None):
@@ -18,6 +18,10 @@ def silhouette(adata_name, cluster_annot, key=None,
     adata_name: AnnData object
 
     cluster_annot: observational variable corresponding to a cell clustering
+    
+    value: measure used to build the silhouette plot (X_pca, X_tsne, X_umap)
+    
+    metric: 'euclidean'    
 
     key: specify name of precomputed silhouette scores if not standard
 

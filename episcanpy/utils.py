@@ -16,6 +16,7 @@ from pandas.api.types import CategoricalDtype
 
 from . import settings
 from . import logging as logg
+from . import plotting as pl
 
 EPS = 1e-15
 

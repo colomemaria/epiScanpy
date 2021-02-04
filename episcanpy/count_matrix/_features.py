@@ -1,3 +1,6 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 # chromosomes for 2 principal species. If you work with another genome
 # the chromosomes will have to be specified
 # mitochondrial genome not included

@@ -112,13 +112,15 @@ def extract_methylation(sample_name, feature, meth_type=None, path='', #head=HEA
     feature:
     meth_type:
         CG, CH or not specified
-    head: if there is header that you don't want to read. An annotation in the
-        file you are reading. The default value is the Methylpy/Ecker header
     path: path of the to access the file of the sample you want to read. 
     chromosome: chromosomes if the species you are considering. default value
         is the human genome (including mitochondrial and sexual chromosomes)
     cell_names is the list of cells you want to put as annotation at the beginning of your file
     """
+    #old parameter
+    #head: if there is header that you don't want to read. An annotation in the
+    #file you are reading. The default value is the Methylpy/Ecker header
+        
     # It correspond to the annotation in the methylation call for methylpy.
     # (at least for the Ecker dataset)
     # I specify it here so I can automatically skip the line when I am reading the
@@ -149,7 +151,8 @@ def extract_methylation(sample_name, feature, meth_type=None, path='', #head=HEA
     	reduced_cyt = read_meth_fileCH(sample_name, path, chromosome, pos, met, tot, status)
     else:
     	# print a warning saying that the argument is not valid. We take all cytosines
-    	reduced_cyt = read_meth_file(sample_name, head, path, chromosome)
+    	#reduced_cyt = read_meth_file(sample_name, head, path, chromosome)
+    	reduced_cyt = read_meth_file(sample_name, path, chromosome)
 
     final_output = methylation_level(reduced_cyt, feature, chromosome, threshold)
     if write:
