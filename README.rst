@@ -1,4 +1,4 @@
-|GitHub release| |GitHub version| |GitHub tag| |Docs| |PyPI| |Python package| |Python Package using Conda| |Github all releases| |GitHub commits| |GitHub stars| |GitHub forks| |GitHub watchers| |HitCount| |GitHub followers| |GitHub contributors| |Average time to resolve an issue|
+|GitHub release| |GitHub tag| |Docs| |PyPI| |Python package| |Python Package using Conda| |Github all releases| |GitHub commits| |GitHub stars| |GitHub forks| |GitHub watchers| |HitCount| |GitHub followers| |GitHub contributors| |Average time to resolve an issue|
 
 
 .. |Docs| image:: https://readthedocs.com/projects/icb-scanpy/badge/?version=latest
@@ -29,8 +29,6 @@
    :target: https://GitHub.com/Naereen/StrapDown.js/graphs/contributors/
 .. |Average time to resolve an issue| image:: http://isitmaintained.com/badge/resolution/Naereen/badges.svg
    :target: http://isitmaintained.com/project/Naereen/badges
-.. |GitHub version| image:: https://badge.fury.io/gh/Naereen%2FStrapDown.js.svg
-   :target: https://github.com/Naereen/StrapDown.js
 .. |HitCount| image:: http://hits.dwyl.io/Naereen/badges.svg
    :target: http://hits.dwyl.io/Naereen/badges
    
