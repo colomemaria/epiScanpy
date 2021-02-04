@@ -1,4 +1,5 @@
 import scanpy as sc
+from typing import Union, Optional
 # everything here is copied from scanpy and adapted
 # pca, diffmap, draw_graph, tsne, umap --> I also need it in tools
 # heatmap, violin and matrixplot and heatmap and rank_gene_groups version
