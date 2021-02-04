@@ -6,7 +6,9 @@
 .. |PyPI| image:: https://img.shields.io/pypi/v/episcanpy.svg
     :target: https://pypi.org/project/episcanpy
 .. |Python package| image:: https://github.com/colomemaria/epiScanpy/workflows/Python%20package/badge.svg
+    :target: https://github.com/colomemaria/epiScanpy/
 .. |Python Package using Conda| image:: https://github.com/colomemaria/epiScanpy/workflows/Python%20Package%20using%20Conda/badge.svg
+    :target: https://github.com/colomemaria/epiScanpy/
 
 
 
