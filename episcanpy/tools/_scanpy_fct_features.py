@@ -29,13 +29,13 @@ def stacked_violinstacked_violin(
     **kwds):
 	"""
     Stacked violin plots.
-
+    
     Makes a compact image composed of individual violin plots
     (from :func:`~seaborn.violinplot`) stacked on top of each other.
     Useful to visualize gene expression per cluster.
-
+    
     Wraps :func:`seaborn.violinplot` for :class:`~anndata.AnnData`.
-
+    
     Parameters
     ----------
     {common_plot_args}
@@ -71,23 +71,23 @@ def stacked_violinstacked_violin(
     {show_save_ax}
     **kwds
         Are passed to :func:`~seaborn.violinplot`.
-
+        
     Returns
     -------
     List of :class:`~matplotlib.axes.Axes`
-
+    
     Examples
     -------
     >>> import scanpy as sc
     >>> adata = sc.datasets.pbmc68k_reduced()
     >>> markers = ['C1QA', 'PSAP', 'CD79A', 'CD79B', 'CST3', 'LYZ']
     >>> sc.pl.stacked_violin(adata, markers, groupby='bulk_labels', dendrogram=True)
-
+    
     Using var_names as dict:
-
+    
     >>> markers = {{'T-cell': 'CD3D', 'B-cell': 'CD79A', 'myeloid': 'CST3'}}
     >>> sc.pl.stacked_violin(adata, markers, groupby='bulk_labels', dendrogram=True)
-
+    
     See also
     --------
     rank_genes_groups_stacked_violin: to plot marker genes identified using the :func:`~scanpy.tools.rank_genes_groups` function.
@@ -115,3 +115,4 @@ def stacked_violinstacked_violin(
     	show=show,
     	save=save,
     	row_palette=row_palette)
+    	
