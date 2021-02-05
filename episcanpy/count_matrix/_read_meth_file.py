@@ -1,5 +1,5 @@
-from . import extract_CG
-from . import extract_CH
+from ._extract import extract_CG
+from ._extract import extract_CH
 
 def read_methylation_file(sample_name, meth_type, head, path, chromosome):
     """
