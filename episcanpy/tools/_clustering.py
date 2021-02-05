@@ -14,7 +14,7 @@ import seaborn as sns
 def getNClusters(adata,n_cluster,range_min=0,range_max=3,max_steps=20, method='louvain', key_added=None):
     """
     Function will test different settings of louvain to obtain the target number of clusters.
-    credit to Lucas Pinello lab. See: https://github.com/pinellolab/scATAC-benchmarking
+    adapted from the function from the Pinello lab. See: https://github.com/pinellolab/scATAC-benchmarking
 
     It can get cluster for both louvain and leiden.
     You can specify the obs variable name as key_added. 
@@ -28,7 +28,7 @@ def getNClusters(adata,n_cluster,range_min=0,range_max=3,max_steps=20, method='l
         
         if (method == 'louvain') and (key_added==None):
             sc.tl.louvain(adata, resolution=this_resolution)
-        elif method == 'louvain':
+        elif method == 'louvain'and (type(key_added)==str):
             sc.tl.louvain(adata, resolution=this_resolution, key_added=key_added)
         elif( method == 'leiden') and (key_added==None):
             sc.tl.leiden(adata,resolution=this_resolution)
@@ -47,13 +47,14 @@ def getNClusters(adata,n_cluster,range_min=0,range_max=3,max_steps=20, method='l
             this_max = this_resolution
         elif this_clusters < n_cluster:
             this_min = this_resolution
-        #else:
+        elif this_clusters == n_cluster:
+            break
             #return(this_resolution, adata)
-        this_step += 1
-    
-    print('Cannot find the number of clusters')
-    print('Clustering solution from last iteration is used:' + str(this_clusters) + ' at resolution ' + str(this_resolution))
+        else:
+            print('Cannot find the number of clusters')
+            print('Clustering solution from last iteration is used:' + str(this_clusters) + ' at resolution ' + str(this_resolution))
    
+        this_step += 1
 
 def kmeans(adata, num_clusters):
     """
