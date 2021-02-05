@@ -21,4 +21,3 @@ tbb
 legacy-api-wrap
 setuptools_scm
 packaging
-pyranges
