@@ -42,7 +42,7 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean', key
         sample_silhouette_values = adata_name.obs[key]
         silhouette_avg = adata_name.uns[key]
     else:
-        adata_name.obs['silhouette_samples'] = sample_silhouette_values
+        #adata_name.obs['silhouette_samples'] = sample_silhouette_values
         sample_silhouette_values = adata_name.obs['silhouette_samples']
         silhouette_avg = adata_name.obs['silhouette_samples']
         
