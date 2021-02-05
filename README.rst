@@ -15,7 +15,7 @@ EpiScanpy – Epigenomics single cell analysis in python
     * - Build status
       - | |Package via Conda|
     * - Python vesions
-      - | |py39| |p38| |py37| |py36| |py36| 
+      - | |py39| |py38| |py37| |py36| |py36| 
     * - Document status
       - | |Docs|
     * - Github status
