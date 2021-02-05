@@ -33,7 +33,7 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean', key
 
     """
 
-    #X = adata_name.obsm[value]
+    X = adata_name.obsm[value]
     #silhouette_avg = silhouette_score(X, cluster_labels, metric)
     #sample_silhouette_values = silhouette_samples(adata_name.X, cluster_labels, metric)
 
@@ -110,7 +110,8 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean', key
         plt.savefig('_'.join(['silhouette', save])) 
     plt.show()
     
-    print(silhouette_avg)
+    
+    #print(silhouette_avg)
     
 
 def silhouette_tot(adata_name, cluster_annot, value='X_pca', metric='euclidean',
