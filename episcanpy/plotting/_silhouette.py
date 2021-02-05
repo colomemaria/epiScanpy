@@ -32,20 +32,11 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean', key
     Silhouette plot
 
     """
-<<<<<<< Updated upstream
-    
-    X = adata_name.obsm[value]
-    cluster_labels = adata_name.obs[cluster_annot]
-    n_clusters = len(set(adata_name.obs[cluster_annot]))
-    
-    silhouette_avg = silhouette_score(X, cluster_labels, metric)
-    sample_silhouette_values = silhouette_samples(X, cluster_labels, metric)
-=======
 
     #X = adata_name.obsm[value]
     #silhouette_avg = silhouette_score(X, cluster_labels, metric)
     #sample_silhouette_values = silhouette_samples(adata_name.X, cluster_labels, metric)
->>>>>>> Stashed changes
+
     
     if key!=None:
         sample_silhouette_values = adata_name.obs[key]
