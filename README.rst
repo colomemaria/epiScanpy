@@ -13,7 +13,9 @@ EpiScanpy – Epigenomics single cell analysis in python
     * - Releases
       - | |GitHub release| |GitHub tag| |PyPI|
     * - Build status
-      - | |Python package| |Python Package using Conda|
+      - | |Package via Conda|
+    * - Python vesions
+      - | |py39| |p38| |py37| |py36| |py36| 
     * - Document status
       - | |Docs|
     * - Github status
@@ -23,9 +25,17 @@ EpiScanpy – Epigenomics single cell analysis in python
    :target: https://episcanpy.readthedocs.io/en/latest/
 .. |PyPI| image:: https://img.shields.io/pypi/v/episcanpy.svg
     :target: https://pypi.org/project/episcanpy
-.. |Python package| image:: https://github.com/colomemaria/epiScanpy/workflows/Python%20package/badge.svg
+.. |py27| image:: https://github.com/colomemaria/epiScanpy/workflows/py27/badge.svg
     :target: https://github.com/colomemaria/epiScanpy/
-.. |Python Package using Conda| image:: https://github.com/colomemaria/epiScanpy/workflows/Python%20Package%20using%20Conda/badge.svg
+.. |py36| image:: https://github.com/colomemaria/epiScanpy/workflows/py36/badge.svg
+    :target: https://github.com/colomemaria/epiScanpy/
+.. |py37| image:: https://github.com/colomemaria/epiScanpy/workflows/py37/badge.svg
+    :target: https://github.com/colomemaria/epiScanpy/
+.. |py38| image:: https://github.com/colomemaria/epiScanpy/workflows/py38/badge.svg
+    :target: https://github.com/colomemaria/epiScanpy/
+.. |py39| image:: https://github.com/colomemaria/epiScanpy/workflows/py39/badge.svg
+    :target: https://github.com/colomemaria/epiScanpy/
+.. |Package via Conda| image:: https://github.com/colomemaria/epiScanpy/workflows/Package%20via%20Conda/badge.svg
     :target: https://github.com/colomemaria/epiScanpy/
 .. |GitHub release| image:: https://img.shields.io/github/release/colomemaria/epiScanpy.svg
    :target: https://GitHub.com/colomemaria/epiScanpy/releases/
