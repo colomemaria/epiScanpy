@@ -58,4 +58,4 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean',
     if copy:
         return(adata_name)
     else:
-        return()
+        print(silhouette_avg)

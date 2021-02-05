@@ -47,8 +47,8 @@ def getNClusters(adata,n_cluster,range_min=0,range_max=3,max_steps=20, method='l
             this_max = this_resolution
         elif this_clusters < n_cluster:
             this_min = this_resolution
-        else:
-            return(this_resolution, adata)
+        #else:
+            #return(this_resolution, adata)
         this_step += 1
     
     print('Cannot find the number of clusters')
