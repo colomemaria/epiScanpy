@@ -13,7 +13,7 @@ EpiScanpy – Epigenomics single cell analysis in python
     * - Releases
       - | |GitHub release| |GitHub tag| |PyPI|
     * - Build status via Conda
-      - | |Conda-Linux| |Conda-Windows|
+      - | |Conda-Linux| 
     * - Python vesions
       - | |py39| |py38| |py37| |py36| |py27| 
     * - Operating System
@@ -42,8 +42,6 @@ EpiScanpy – Epigenomics single cell analysis in python
 .. |macOS Catalina| image:: https://github.com/colomemaria/epiScanpy/workflows/macOS%20Catalina/badge.svg
     :target: https://github.com/colomemaria/epiScanpy/
 .. |windows-latest| image:: https://github.com/colomemaria/epiScanpy/workflows/windows-latest/badge.svg
-    :target: https://github.com/colomemaria/epiScanpy/
-.. |Conda-Linux| image:: https://github.com/colomemaria/epiScanpy/workflows/Conda-Linux/badge.svg
     :target: https://github.com/colomemaria/epiScanpy/
 .. |Conda-Windows| image:: https://github.com/colomemaria/epiScanpy/workflows/Conda-Windows/badge.svg
     :target: https://github.com/colomemaria/epiScanpy/
