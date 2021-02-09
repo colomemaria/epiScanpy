@@ -611,18 +611,18 @@ def update_params(old_params, new_params, check=False):
 # --------------------------------------------------------------------------------
 
 
-def read_args_tool(toolkey, example_parameters, tool_add_args=None):
-    """Read args for single tool.
-    """
-    import scanpy as sc
-    p = default_tool_argparser(help(toolkey), example_parameters)
-    if tool_add_args is None:
-        p = add_args(p)
-    else:
-        p = tool_add_args(p)
-    args = vars(p.parse_args())
-    args = settings.process_args(args)
-    return args
+#def read_args_tool(toolkey, example_parameters, tool_add_args=None):
+#    """Read args for single tool.
+#   """
+#    import scanpy as sc
+#    p = default_tool_argparser(help(toolkey), example_parameters)
+#    if tool_add_args is None:
+#        p = add_args(p)
+#    else:
+#        p = tool_add_args(p)
+#    args = vars(p.parse_args())
+#    args = settings.process_args(args)
+#    return args
 
 
 def default_tool_argparser(description, example_parameters):
