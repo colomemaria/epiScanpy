@@ -1,10 +1,10 @@
-name: Conda-Linux
+name: Conda-Windows
 
 on: [push]
 
 jobs:
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: windows-2019
     strategy:
       max-parallel: 5
 
@@ -20,7 +20,7 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
       run: |
-        conda env update --file environment.yml --name base
+        conda env update --file environment_windows.yml --name base
     - name: Lint with flake8
       run: |
         conda install flake8
