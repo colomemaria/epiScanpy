@@ -14,7 +14,6 @@ natsort
 joblib
 numba>=0.50.0
 numpy>=1.17.0
-pysam
 bamnostic>=1.0.12
 umap-learn>=0.3.10
 tqdm
@@ -22,3 +21,4 @@ tbb
 legacy-api-wrap
 setuptools_scm
 packaging
+pysam; platform_system != "Windows"

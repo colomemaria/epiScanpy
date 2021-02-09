@@ -20,7 +20,7 @@ dependencies:
     - joblib
     - numba>=0.50.0
     - numpy>=1.17.0
-    - pysam
+    - pysam; platform_system != "Windows"
     - bamnostic>=1.0.12
     - umap-learn>=0.3.10
     - tqdm
