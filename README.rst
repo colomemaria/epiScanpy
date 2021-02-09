@@ -43,7 +43,7 @@ EpiScanpy – Epigenomics single cell analysis in python
     :target: https://github.com/colomemaria/epiScanpy/
 .. |windows-latest| image:: https://github.com/colomemaria/epiScanpy/workflows/windows-latest/badge.svg
     :target: https://github.com/colomemaria/epiScanpy/
-.. |Conda-Windows| image:: https://github.com/colomemaria/epiScanpy/workflows/Conda-Windows/badge.svg
+.. |Conda-Linux| image:: https://github.com/colomemaria/epiScanpy/workflows/Conda-Linux/badge.svg
     :target: https://github.com/colomemaria/epiScanpy/
 .. |GitHub release| image:: https://img.shields.io/github/release/colomemaria/epiScanpy.svg
    :target: https://GitHub.com/colomemaria/epiScanpy/releases/
