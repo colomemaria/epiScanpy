@@ -10,7 +10,6 @@ dependencies:
     - importlib_metadata>=0.7
     - matplotlib>=3.1.2
     - pandas>=0.21
-    - numpy
     - scipy>=1.4
     - seaborn
     - h5py>=2.10.0
@@ -20,6 +19,7 @@ dependencies:
     - natsort
     - joblib
     - numba>=0.50.0
+    - numpy>=1.17.0
     - pysam
     - bamnostic>=1.0.12
     - umap-learn>=0.3.10
