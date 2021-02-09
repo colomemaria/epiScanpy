@@ -17,7 +17,7 @@ from pandas.api.types import CategoricalDtype
 from . import settings
 from . import logging as logg
 from . import plotting as pl
-#from .tools import add_args #PLEASE DO NOT UNCOMMENT THIS LINE OF CODE !Then we cannot load episcanpy anymore. add_args doesn't exist
+from .tools import add_args #PLEASE DO NOT UNCOMMENT THIS LINE OF CODE !Then we cannot load episcanpy anymore. add_args doesn't exist
 
 EPS = 1e-15
 
