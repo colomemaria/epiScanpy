@@ -10,6 +10,7 @@ dependencies:
     - importlib_metadata>=0.7
     - matplotlib>=3.1.2
     - pandas>=0.21
+    - numpy
     - scipy>=1.4
     - seaborn
     - h5py>=2.10.0
