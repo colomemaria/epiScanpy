@@ -24,7 +24,7 @@ del get_versions, sys, check_versions, annotate_doc_types
 from ._settings import settings, Verbosity
 from . import tools as tl
 from . import preprocessing as pp
-from . import count_matrix as ct
+#from . import count_matrix as ct
 from . import plotting as pl
 #from . import functions as functions
 
