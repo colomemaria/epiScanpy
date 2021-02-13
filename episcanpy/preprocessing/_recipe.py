@@ -1,6 +1,6 @@
 import scanpy as sc
 import anndata as ad
-from ..preprocessing._descomposition import nmf, fa, lsi
+from ..preprocessing._decomposition import nmf, fa, lsi
 
 def lazy(adata, decomposition_method=pca, svd_solver='arpack', nb_pcs=50, n_neighbors=15, perplexity=30, 
          method='umap', metric='euclidean', min_dist=0.5, spread=1.0, use_highly_variable=False,
