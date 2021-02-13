@@ -11,6 +11,7 @@ __author__ = ', '.join([
 __email__ = ', '.join([
     'anna.danese@helmholtz-muenchen.de',
     'chaichoompu@helmholtz-muenchen.de',
+    'maria.richter@helmholtz-muenchen.de',
     # We don’t need all, the main authors are sufficient.
 ])
 __version__ = get_versions()['version']
