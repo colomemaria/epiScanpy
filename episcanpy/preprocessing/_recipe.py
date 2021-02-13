@@ -72,13 +72,13 @@ def lazy(adata, decomposition_method=pca, svd_solver='arpack', nb_pcs=50, n_neig
     else:
         adata
 
-    if decomposition_method='pca':
+    if decomposition_method=='pca':
         sc.pp.pca(adata, n_comps=nb_components, svd_solver=svd_solver, use_highly_variable=use_highly_variable)
-    elif decomposition_method='lsi':
+    elif decomposition_method=='lsi':
         sc.pp.pca(adata, n_components=nb_components, n_iter=7, random_state=0)
-    elif decomposition_method='nmf':
+    elif decomposition_method=='nmf':
         sc.pp.pca(adata, n_components=nb_components, n_iter=7, random_state=0)
-    elif decomposition_method='fa':
+    elif decomposition_method=='fa':
         fa(adata, n_components=nb_components, n_iter=7, random_state=0)
     
     sc.pp.neighbors(adata,  n_neighbors=n_neighbors, n_pcs=nb_components,
