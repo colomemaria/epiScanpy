@@ -1,7 +1,8 @@
 import scanpy as sc
 import anndata as ad
+from ..preprocessing._descomposition import nmf, fa, lsi
 
-def lazy(adata, pp_pca=True, svd_solver='arpack', nb_pcs=50, n_neighbors=15, perplexity=30, 
+def lazy(adata, decomposition_method=pca, svd_solver='arpack', nb_pcs=50, n_neighbors=15, perplexity=30, 
          method='umap', metric='euclidean', min_dist=0.5, spread=1.0, use_highly_variable=False,
          n_components=2, copy=False):
     '''
@@ -12,8 +13,9 @@ def lazy(adata, pp_pca=True, svd_solver='arpack', nb_pcs=50, n_neighbors=15, per
     ----------
     adata : :class:`~anndata.AnnData`
         Annotated data matrix.
-    pp_pca :  `bool` (default: `True`)
-        Computes PCA coordinates before the neighborhood graph
+    decomposition_method :  `str` (default: `pca`)
+        Computes PCA coordinates before the neighborhood graph if pca specified
+        Decomposition method available : pca, nmf, lsi, fa
     svd_solver : 
     nb_pcs : `int` (default: 50)
         Number of principal component computed for PCA (and therefore neighbors, tsne and umap)
@@ -70,10 +72,19 @@ def lazy(adata, pp_pca=True, svd_solver='arpack', nb_pcs=50, n_neighbors=15, per
     else:
         adata
 
-    if pp_pca:
-        sc.pp.pca(adata, n_comps=nb_pcs, svd_solver=svd_solver, use_highly_variable=use_highly_variable)
+    if decomposition_method='pca':
+        sc.pp.pca(adata, n_comps=nb_components, svd_solver=svd_solver, use_highly_variable=use_highly_variable)
+    elif decomposition_method='lsi':
+        sc.pp.pca(adata, n_components=nb_components, n_iter=7, random_state=0)
+    elif decomposition_method='nmf':
+        sc.pp.pca(adata, n_components=nb_components, n_iter=7, random_state=0)
+    elif decomposition_method='fa':
+        fa(adata, n_components=nb_components, n_iter=7, random_state=0)
     
-    sc.pp.neighbors(adata,  n_neighbors=n_neighbors, n_pcs=nb_pcs, method=method, metric=metric)
+    sc.pp.neighbors(adata,  n_neighbors=n_neighbors, n_pcs=nb_components,
+        method=method,
+        metric=metric,
+        use_rep="X_"+decomposition_method)
     #sc.tl.pca(adata, n_comps=nb_pcs)
     sc.tl.tsne(adata, n_pcs=nb_pcs, perplexity=perplexity)
     sc.tl.umap(adata, min_dist, spread, n_components)

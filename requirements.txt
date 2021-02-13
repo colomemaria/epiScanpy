@@ -21,3 +21,5 @@ tbb
 legacy-api-wrap
 setuptools_scm
 packaging
+python-igraph
+louvain
