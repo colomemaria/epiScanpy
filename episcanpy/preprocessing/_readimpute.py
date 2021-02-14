@@ -2,7 +2,7 @@ import numpy as np
 import anndata as ad
 import pandas as pd
 
-def load_met_noimput(matrix_file, path='', save=False):
+def load_met_noimput(matrix_file, path='', filter_empty=True, save=False):
     """
     read the raw count matrix and convert it into an AnnData object.
 
@@ -22,15 +22,16 @@ def load_met_noimput(matrix_file, path='', save=False):
 
     """
     adata = ad.AnnData(pd.read_csv(path+matrix_file, sep='\t', index_col=0))
-    bool_check = []
-    for col in range(0,len(adata.var_names)):
-        if False not in set(np.isnan(adata.X[:,col].tolist())):
-            bool_check.append('remove')
-        else:
-            bool_check.append('keep')
-    adata.var['bool_check'] = bool_check
-    adata = adata[:,adata.var['bool_check']!='remove'].copy()
-    del adata.var['bool_check']
+    if filter_empty==True:    
+        bool_check = []
+        for col in range(0,len(adata.var_names)):
+            if False not in set(np.isnan(adata.X[:,col].tolist())):
+                bool_check.append('remove')
+            else:
+                bool_check.append('keep')
+        adata.var['bool_check'] = bool_check
+        adata = adata[:,adata.var['bool_check']!='remove'].copy()
+        del adata.var['bool_check']
     
     adata.uns['omic'] = 'methylation'
     adata.uns['imputation'] = 'no_imputation'
