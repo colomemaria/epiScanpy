@@ -2,44 +2,48 @@ import numpy as np
 import anndata as ad
 import pandas as pd
 
+import pandas as pd
+import annadata as ad
+import numpy as np
+
 def load_met_noimput(matrix_file, path='', save=False):
     """
     read the raw count matrix and convert it into an AnnData object.
-    write down the matrix as .h5ad (AnnData object) if save = True.
-    Return AnnData object
-    """
-    matrix = []
-    cell_names = []
-    feature_names = []
-    with open(path+matrix_file) as f:
-        line = f.readline()[:-2].split('\t')
-        if line[0] == 'sample_name':
-            feature_names = line[1:-1]
-        else:
-            matrix.append(line[1:])
-            cell_names.append(line[0])
-        if matrix == []:
-            line = f.readline()[:-2].split('\t')
-            matrix.append(line[1:])
-            cell_names.append(line[0])
-        for line in f:
-            line = line[:-2].split('\t')
-            matrix.append(line[1:])
-            cell_names.append(line[0])
 
-    matrix = np.array(matrix)
     
-    if feature_names != []:
-        adata = ad.AnnData(matrix, obs=pd.DataFrame(index=cell_names),  var=pd.DataFrame(index=feature_names))
-    else:
-        adata = ad.AnnData(matrix, obs=pd.DataFrame(index=cell_names))
+    Parameters
+    ----------
+    matrix_file : name of the input file. Required separator is '\t'. 
+
+    path : path to the input file. 
+    
+    save : if True, write down the matrix as .h5ad (AnnData object). 
+    if str specified, save the file with the specified name
+   
+    Return
+    ------
+    Return AnnData object
+
+    """
+    adata = ad.AnnData(pd.read_csv(path+matrix_file, sep='\t', index_col=0))
+    bool_check = []
+    for col in range(0,len(adata.var_names)):
+        if False not in set(np.isnan(adata.X[:,col].tolist())):
+            bool_check.append('remove')
+        else:
+            bool_check.append('keep')
+    adata.var['bool_check'] = bool_check
+    adata = adata[:,adata.var['bool_check']!='remove'].copy()
+    del adata.var['bool_check']
     
     adata.uns['omic'] = 'methylation'
     adata.uns['imputation'] = 'no_imputation'
     
-    if save:
+    if save==True:
         adata.write("".join([".".split(matrix_file)[0],'.h5ad']))
-        
+    elif save!=False:
+        adata.write("."join([save.rstrip('.h5ad'), 'h5ad']))
+
     return(adata)
 
 def imputation_met(adata, number_cell_covered=10, imputation_value='mean', save=None, copy=False):
