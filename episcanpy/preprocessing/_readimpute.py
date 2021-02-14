@@ -42,7 +42,7 @@ def load_met_noimput(matrix_file, path='', save=False):
     if save==True:
         adata.write("".join([".".split(matrix_file)[0],'.h5ad']))
     elif save!=False:
-        adata.write("."join([save.rstrip('.h5ad'), 'h5ad']))
+        adata.write(".".join([save.rstrip('.h5ad'), 'h5ad']))
 
     return(adata)
 
