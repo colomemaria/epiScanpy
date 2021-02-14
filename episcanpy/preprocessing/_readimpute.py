@@ -2,10 +2,6 @@ import numpy as np
 import anndata as ad
 import pandas as pd
 
-import pandas as pd
-import annadata as ad
-import numpy as np
-
 def load_met_noimput(matrix_file, path='', save=False):
     """
     read the raw count matrix and convert it into an AnnData object.
