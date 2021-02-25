@@ -128,29 +128,41 @@ if platform.system() != "Windows":
         
         return(allmtx[0])
     
-    def bld_mtx_bed(bed_file, feature_region = None, cell_id_col = 0, readname_sep = ':', chromosomes = 'human', thread=1, save = False, bin_size = 5000):
+    def bld_mtx_bed(fragment_file, feature_region = None, cell_id_col = 0, readname_sep = ':', chromosomes = 'human', thread=1, save = False, bin_size = 5000):
         """
-        Building count matrix from BED file. This function uses sequencing barcode as cell identifier. 
-        If the barcodes are not unique, use bld_mtx_fly instead.
-        Does not count pcr duplicate.
+        Building count matrix from a fragment file .tsv (can have the file extension .bed as it is fitting the format as well).
+        This function uses sequencing barcode as cell identifier. If the barcodes are not unique, use bld_mtx_fly instead.
+        This function does not remove pcr duplicate.
         A tbi file with the same filename as the provided bed_file must be present in the same directory as the BED file
         Note that this function is not available on the Windows operating system.
+
+
+
         Parameters
         ----------
-        bed_file : a path to the file containing the reads (.bed or .bed.gz)
+        fragment_file : a path to the fragment file containing the read coordinates and cell barcodes (.bed, .tsv, or .bed.gz, .tsv.gz)
+
         feature_region: a dictionary containing the feature regions built by the function make_windows or a path to the file containing the predefined regions for all feattures. Default value is None. 
+
         If chromosomes is set as 'human' or 'mouse', it will be unused. The file must contain 3 columns; chromosome, start position, and end position, separated by tab or space. chromosome should be in the format, as "chrom1", "chrom2", ..., "chromY", "chromM".
+        
         cell_id_col : a column index of cell identity on the read name. For example, 'AAATAA:NT500:65:EXP01', you know that the cell identity is at the first column, and it is separated by ':', you can set cell_id_col = 0. If 'AAATAA:NT500:65:EXP01' is a cell identiy, you can set cell_id_col = 0 and readname_sep = None.
+        
         readname_sep : : a separator on the read name. For example, 'AAATAA:NT500:65:EXP01', you know that the cell identity is at the first column, and it is separated by ':', you can set readname_sep = ':'. However, if 'AAATAA:NT500:65:EXP01' is a cell identiy, you can set readname_sep = None.
+        
         chromosomes : chromosomes of the species you are considering. It can be set as 'human' and 'mouse' and the default value is 'human'.
         'human' refers to ['1', '2', '3', ... , '22', 'X', 'Y']
         'mouse' refers to ['1', '2', '3', ... ', '19', 'X', 'Y']
         For the other species, chromosomes must be defined as, for example,
         chromosomes = ['1', '2', '3', ... ,'X', 'Y']
         For mitochondrial, it should be defined as 'M' or 'MT' and it must be matched with the column chromosome in feature_region.
+        
         thread : a number of parallel threads to run.
+        
         save : default is False - supply a file path as str to save generated AnnData object
+        
         bin_size : the size of non-overlapped windows. Default value is 5000. It is used when feature_region is None, or chromosomes is set as 'human' or 'mouse'.
+        
         Output
         ------
         AnnData object (also saved as h5ad if save argument is specified)
@@ -160,26 +172,30 @@ if platform.system() != "Windows":
                 '11', '12', '13', '14', '15', '16', '17', '18', '19','X', 'Y']
         HUMAN = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 
                 '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22','X', 'Y']
-        if not(isinstance(chromosomes, list)):
-            if chromosomes == 'human':
-                chromosomes = HUMAN
-                feature_region = make_windows(size=bin_size, chromosomes='human')
-            if chromosomes == 'mouse':
-                chromosomes = MOUSE
-                feature_region = make_windows(size=bin_size, chromosomes='mouse')
-        if not(feature_region):
-            print("feature_region must not be None when chromosomes is not 'human' or 'mouse'. Please set feature_region to a path of feature file or generate from the funtion make_windows.")
+
+        if feature_region == None: 
+            if not(isinstance(chromosomes, list)):
+                if chromosomes == 'human':
+                    chromosomes = HUMAN
+                    feature_region = make_windows(size=bin_size, chromosomes='human')
+                if chromosomes == 'mouse':
+                    chromosomes = MOUSE
+                    feature_region = make_windows(size=bin_size, chromosomes='mouse')
+            else:
+                feature_region = make_windows(size=bin_size, chromosomes=chromosomes)
+        #if isinstance(feature_region, str):
+            #load the feature file: 
+            #epi.ct.load_peaks("feature_region")
+
         adata_outter = None
         for ch in chromosomes:
-            tmp = bld_mtx_bed_per_chr(bed_file = bed_file, 
+            tmp = bld_mtx_bed_per_chr(bed_file = fragment_file, 
                                     feature_region = feature_region,
                                     chrom = ch,
                                     cell_id_col = cell_id_col,
                                     readname_sep = readname_sep,
                                     thread = thread,
                                     save = False)
-            # print("Chromosome " + ch)
-            # print(tmp)
             if len(tmp.var) != 0:
                 if adata_outter is None:
                     adata_outter = tmp.copy()

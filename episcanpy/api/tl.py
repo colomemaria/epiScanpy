@@ -11,13 +11,11 @@ from ..tools._scanpy_fct import dendogram
 from ..tools._find_genes import find_genes
 from scanpy.tools import dpt
 
-
 from ..tools._clustering import getNClusters
 from ..tools._clustering import kmeans, hc
 from ..tools._clustering import ARI, AMI, homogeneity
 from scanpy.tools import louvain, leiden
 from ..tools._geneactivity import geneactivity
-
 
 from ..tools._impute_gene_methylation import imputation_feature
 from ..tools._comparisons import transfer_obs, imputation
