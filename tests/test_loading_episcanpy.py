@@ -2,6 +2,12 @@
 
 import pytest
 import episcanpy
+import episcanpy.api
+import episcanpy.count_matrix
+import episcanpy.functions
+import episcanpy.plotting
+import episcanpy.preprocessing
+import episcanpy.tools
 
 testdata = [
     (1,2),
