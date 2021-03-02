@@ -186,6 +186,11 @@ if platform.system() != "Windows":
         #if isinstance(feature_region, str):
             #load the feature file: 
             #epi.ct.load_peaks("feature_region")
+        else:
+            if chromosomes == 'human':
+                chromosomes = HUMAN
+            if chromosomes == 'mouse':
+                chromosomes = MOUSE
 
         adata_outter = None
         for ch in chromosomes:
