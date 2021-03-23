@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from ..preprocessing._episcanpy_mo_fcts import load_gtf_file
 
 # chromosomes for 2 principal species. If you work with another genome
 # the chromosomes will have to be specified
@@ -30,45 +31,6 @@ def filter_df(df, column_name, filter_criteria_list):
     del df['filter']
     return(df)
 
-def load_gtf_file(input_gtf_file,
-                  gtf_column_names=['seqname',
-                                    'source',
-                                    'feature',
-                                    'start',
-                                    'end',
-                                    'score',
-                                    'strand',
-                                    'attribute',
-                                    'other'],
-                  comment='#'):
-    """
-    Load a gtf file. 
-    more information about gtf files can be found on the ensembl website
-    here: https://www.ensembl.org/info/website/upload/gff.html
-    
-    Mouse and human gtf files can be found on the gencode website.
-    here: https://www.gencodegenes.org
-    
-    Parameters:
-    -----------
-    input_gtf_file : str input of the gtf file with path
-    
-    gtf_column_names : name of the standard columns froming the gtf file
-    
-    comment: str starting comment lines to skip
-    
-    Output
-    ------
-    
-    Pandas dataframe containing the gtf file
-    """
-    gtf_file = pd.read_csv(input_gtf_file, # input gtf file
-                       sep='\t', # how to separate the columns 
-                       names=gtf_column_names, #column names
-                       comment=comment, # skip lines starting with #
-                       header=None,
-                       index_col=False)
-    return(gtf_file)
 
 def load_features_bed(file_features, chromosomes=HUMAN, path=""):
     """
@@ -282,7 +244,7 @@ def load_features(file_features, chromosomes=HUMAN, path="", input_file_format=N
             sorted(features_chrom[c], key=lambda x: x[0])
             
     return(features_chrom)
-    
+
 def make_windows(size, chromosomes = 'human', chromosome_sizes = None, max_length=1000000000):
     """
     Generate windows/bins of the given size for the appropriate genome (default
