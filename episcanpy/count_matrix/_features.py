@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+from ..preprocessing._episcanpy_mo_fcts import load_gtf_file
 
 # chromosomes for 2 principal species. If you work with another genome
 # the chromosomes will have to be specified
@@ -17,32 +19,22 @@ HUMAN_SIZE = [249000000, 242250000, 198350999, 190250000, 181600000, 170850000, 
         46750000, 50850000, 156100000, 57300000]
 
 
-def load_features(file_features, chromosomes=HUMAN, path="", sort=False):
+def filter_df(df, column_name, filter_criteria_list):
+    filter_annot = []
+    for value in df[column_name]:
+        if value in filter_criteria_list:
+            filter_annot.append('keep')
+        else:
+            filter_annot.append('discard')
+    df['filter'] = filter_annot  
+    df = df[df['filter']=='keep']
+    del df['filter']
+    return(df)
+
+
+def load_features_bed(file_features, chromosomes=HUMAN, path=""):
     """
-    The function load features is here to transform a bed file into a usable 
-    set of units to measure methylation levels. 
-    It has to be a bed-like file. You also need to specify the chromosomes you 
-    use as a list of characteres like ['1', '7', '8', '9', 'X', 'Y', 'M'].
-    The chromosome list you give as input can be not ordered.
-    If you don't specify the chromosomes, the default is the human genome
-    (including X, Y and mitochondrial DNA).
-    THE BED FILE need to be sorted !! (Maybe I should add an option to sort the
-    file).
-    
-    The output is a dictionary where the keys are chromosomes and the value is
-    a list containing [start, end, name] for every feature extracted.
-    
-    Parameters
-    ----------
-    file_features:
-        the names of the bed file you want to load.
-    chromosomes:
-        chromosomes corresponding to the bed file. 
-        If not specified, it's human by default
-    path:
-        if you want to specify the path where your bed file is. 
-    sort: 
-        if True, the bed file is sorted based on starting coordinates.
+    load features when input file is bed
     """
     features_chrom = {}
     for c in chromosomes:
@@ -55,11 +47,198 @@ def load_features(file_features, chromosomes=HUMAN, path="", sort=False):
                     features_chrom[line[0][3:]].append([int(line[1]), int(line[2]), line[3]])
                 except:
                     features_chrom[line[0][3:]].append([int(line[1]), int(line[2]) ])
+                         
+    return(features_chrom)
+
+def load_features_gff(file_features,
+                      chromosomes=None, # can be str or a list of str
+                      filter_per_source=None, # can be str or a list of str
+                      filter_per_feature_type=None, # can be str or a list of str
+                      path="",
+                     sort=False):
+    """
+    load features when input file is gff. 
+    
+    Using chromosomes, filter_per_source and/or filter_per_feature_type it is
+    possible to load only a subset of the features. 
+    
+    Parameters
+    ----------
+    file_features:
+        the names of the bed file you want to load.
+    chromosomes:
+        chromosomes corresponding to the bed file. 
+        If not specified, it's human by default
+    path:
+        if you want to specify the path where your bed file is. 
+        
+    input_file_format:
+        if None, the input format is deduced from the extension name (admitted bed, gtf, gff)
+        if str specified, it overlook the rxtension name and load the feature file as the 
+        specified input file format.
+    sort: 
+        if True, the bed file is sorted based on starting coordinates.
+    
+    """
+    # load the gff file
+    df = []
+    with open(path+file_features) as f:
+        for line in f: 
+            if line[0] != '#':
+                df.append(line.rstrip('\n').split('\t'))
                 
-#    for c in chromosomes:
-#        if features_chrom[c] ==  []:
-#            del features_chrom[c]
-#            
+
+    columns = ['sequence', 'source', 'feature', 'start', 'end',
+               'score', 'strand', 'phase', 'attribute']
+    df = pd.DataFrame(np.array(df), columns=columns)
+    
+    # filter the df
+    if chromosomes != None:
+        if type(chromosomes) == str:
+            chromosomes = [chromosomes]
+        df = filter_df(df,
+                       column_name='sequence',
+                       filter_criteria_list=chromosomes)
+        
+    if filter_per_source != None:
+        if type(filter_per_source) == str:
+            filter_per_source = [filter_per_source]
+        df = filter_df(df,
+                       column_name='source',
+                       filter_criteria_list=filter_per_source)
+        
+    if filter_per_feature_type != None:
+        if type(filter_per_feature_type) == str:
+            filter_per_feature_type = [filter_per_feature_type]
+        df = filter_df(df,
+                       column_name='feature',
+                       filter_criteria_list=filter_per_feature_type)
+        
+    # convert the df into the right format to build a count matrix from this feature set
+    feature_output = {key: [] for key in set(df['sequence'])}
+    index = 0
+    for line in df.values:
+        feature_output[line[0]].append([int(line[3]),
+                                        int(line[4]),
+                                        "_".join([line[2], line[1], str(index)])
+                                       ])
+        index += 1
+    del df
+        
+    if sort == True:
+        for c in chromosomes:
+            sorted(features_chrom[c], key=lambda x: x[0])
+            
+    return(feature_output)
+
+def load_features_gtf(file_features,
+                      chromosomes=None, # can be str or a list of str
+                      filter_per_source=None, # can be str or a list of str
+                      filter_per_feature_type=None, # can be str or a list of str
+                      path="",
+                      sort=False):
+    """
+    oad features when input file is gtf. 
+    
+    Using chromosomes, filter_per_source and/or filter_per_feature_type it is
+    possible to load only a subset of the features. 
+    
+    """
+    df = load_gtf_file(path+file_features)
+    
+    # filter the df
+    if chromosomes != None:
+        if type(chromosomes) == str:
+            chromosomes = [chromosomes]
+        df = filter_df(df,
+                       column_name='seqname',
+                       filter_criteria_list=chromosomes)
+        
+    if filter_per_source != None:
+        if type(filter_per_source) == str:
+            filter_per_source = [filter_per_source]
+        df = filter_df(df,
+                       column_name='source',
+                       filter_criteria_list=filter_per_source)
+        
+    if filter_per_feature_type != None:
+        if type(filter_per_feature_type) == str:
+            filter_per_feature_type = [filter_per_feature_type]
+        df = filter_df(df,
+                       column_name='feature',
+                       filter_criteria_list=filter_per_feature_type)
+        
+    # convert the df into the right format to build a count matrix from this feature set
+    feature_output = {key: [] for key in set(df['seqname'])}
+    index = 0
+    for line in df.values:
+        feature_output[line[0]].append([int(line[3]),
+                                        int(line[4]),
+                                        "_".join([line[2], line[1], str(index)])
+                                       ])
+        index += 1
+        
+    del df
+    
+    if sort == True:
+        for c in chromosomes:
+            sorted(features_chrom[c], key=lambda x: x[0])
+            
+    return(feature_output)
+    
+
+def load_features(file_features, chromosomes=HUMAN, path="", input_file_format=None, sort=False):
+    """
+    The function load features is here to transform a bed file into a usable 
+    set of units to measure methylation levels. 
+    It has to be a bed-like file. You also need to specify the chromosomes you 
+    use as a list of characteres like ['1', '7', '8', '9', 'X', 'Y', 'M'].
+    The chromosome list you give as input can be not ordered.
+    If you don't specify the chromosomes, the default is the human genome
+    (including X, Y and mitochondrial DNA).
+    THE BED (and gtf) FILE need to be sorted. (upcoming an option to sort the
+    file).
+    
+    The output is a dictionary where the keys are chromosomes and the value is
+    a list containing [start, end, name] for every feature extracted.
+    
+    This function will load the entire annoation file. If you want to use only parts of gtf/gff files
+    please look the functions load_features_gff and load_features_gtf.
+    
+    Parameters
+    ----------
+    file_features:
+        the names of the bed file you want to load.
+    chromosomes:
+        chromosomes corresponding to the bed file. 
+        If not specified, it's human by default
+    path:
+        if you want to specify the path where your bed file is. 
+        
+    input_file_format:
+        if None, the input format is deduced from the extension name (admitted bed, gtf, gff)
+        if str specified, it overlook the rxtension name and load the feature file as the 
+        specified input file format.
+    sort: 
+        if True, the bed file is sorted based on starting coordinates.
+    """
+    
+    if input_file_format==None:
+        input_file_format = file_features[-3:]
+             
+    if input_file_format not in ['bed', 'gtf', 'gff']:
+        # return warning that the input format isn't correct and that you need to either 
+        # provide the correct format or specify the format with the input_file_format parameter
+        print('warning')
+    elif input_file_format=='bed':
+        features_chrom = load_features_bed(file_features, chromosomes, path)
+    elif input_file_format=='gtf':
+        features_chrom = load_features_gtf(file_features, chromosomes, path)
+    elif input_file_format=='gff':
+        features_chrom = load_features_gff(file_features, chromosomes, path)
+    else:
+        print(input_file_format)
+        
     if sort == True:
         for c in chromosomes:
             sorted(features_chrom[c], key=lambda x: x[0])
