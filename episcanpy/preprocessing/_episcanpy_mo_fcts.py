@@ -1,5 +1,6 @@
 import pandas as pd
 import anndata as ad
+import numpy as np
 def load_gtf_file(input_gtf_file,
                   gtf_column_names=['seqname',
                                     'source',

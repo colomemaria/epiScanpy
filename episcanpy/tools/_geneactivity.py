@@ -8,7 +8,7 @@ def geneactivity(adata,
                  key_added='gene',
                  upstream=5000,
                  feature_type='gene',
-                 annotation='ENSEMBL',
+                 annotation='HAVANA',
                  layer_name='geneactivity',
                  raw=False, 
                  copy=True):

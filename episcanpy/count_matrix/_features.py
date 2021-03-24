@@ -127,7 +127,7 @@ def load_features_gff(file_features,
         
     if sort == True:
         for c in chromosomes:
-            sorted(features_chrom[c], key=lambda x: x[0])
+            sorted(feature_output[c], key=lambda x: x[0])
             
     return(feature_output)
 
@@ -182,7 +182,7 @@ def load_features_gtf(file_features,
     
     if sort == True:
         for c in chromosomes:
-            sorted(features_chrom[c], key=lambda x: x[0])
+            sorted(feature_output[c], key=lambda x: x[0])
             
     return(feature_output)
     
