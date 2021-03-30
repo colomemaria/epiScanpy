@@ -3,7 +3,8 @@ import bamnostic as bs
 import numpy as np
 import anndata as ad
 import pandas as pd
-from scipy.sparse  import  csc_matrix
+#from scipy.sparse  import  csc_matrix
+from scipy.sparse import csr_matrix
 
 MOUSE = ['1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', 
         '2', '3', '4', '5', '6', '7', '8', '9','X', 'Y']
@@ -218,7 +219,11 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC', b
             first_line = f.readline()
             first_line = first_line[:-3].split('\t')
             if first_line[0] == 'sample_name':
-                head = first_line[:-1]
+                new_line = []
+                for value in first_line:
+                    if value != '':
+                        new_line.append(value)
+                head =new_line.copy()
             else:
                 cell_names.append(first_line[0])
                 data = [[int(l) for l in first_line[1:-1]]]
@@ -227,14 +232,18 @@ def save_sparse_mtx(initial_matrix, output_file='.h5ad', path='', omic='ATAC', b
         for line in file:
             line = line[:-3].split('\t')
             cell_names.append(line[0])
-            data.append([int(l) for l in line[1:-1]])
+            new_line = []
+            for value in line[1:]:
+                if value != '':
+                    new_line.append(value)
+            data.append([int(l) for l in new_line])
             
 
         # convert into an AnnData object
         if head != None:
-            adata = ad.AnnData(csc_matrix(data), obs=pd.DataFrame(index=cell_names), var=pd.DataFrame(index=head[1:]))
+            adata = ad.AnnData(csr_matrix(data), obs=pd.DataFrame(index=cell_names), var=pd.DataFrame(index=head[1:]))
         else:
-            adata = ad.AnnData(csc_matrix(data), obs=pd.DataFrame(index=cell_names))
+            adata = ad.AnnData(csr_matrix(data), obs=pd.DataFrame(index=cell_names))
         
         if omic != None:
             adata.uns['omic'] = omic
