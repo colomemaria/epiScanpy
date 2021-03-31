@@ -6,17 +6,19 @@ import pandas as pd
 def find_genes(adata,
                  gtf_file,
                  key_added='gene_annotation',
-                 upstream=2000,
+                 upstream=5000,
+                 downstream=0,
                  feature_type='gene',
-                 annotation='ENSEMBL',
+                 annotation='HAVANA',
                  raw=False):
     """
     merge values of peaks/windows/features overlapping genebodies + 2kb upstream. 
-    It is possible to extend the 
-    
-    HAVANA, ENSEMBL
-    
-    you can ask for transcripts or genes
+    It is possible to extend the search for closest gene to a given number of bases downstream as well. 
+
+    There is commonly 2 set of annotations in a gtf file(HAVANA, ENSEMBL). By default, the function
+    will search annotation from HAVANA but other annotation label/source can be specifed. 
+   
+    It is possible to use other type of features than genes present in a gtf file such as transcripts or CDS.
     
     """
     ### extracting the genes
@@ -27,14 +29,14 @@ def find_genes(adata,
                 line = line.rstrip('\n').split('\t')
                 if line[6] == '-':
                     if line[0] not in gtf.keys():
-                        gtf[line[0]] = [[int(line[3]), int(line[4])+upstream,line[-1].split(';')[:-1]]]
+                        gtf[line[0]] = [[int(line[3])-downstream, int(line[4])+upstream,line[-1].split(';')[:-1]]]
                     else:
-                        gtf[line[0]].append([int(line[3]), int(line[4])+upstream,line[-1].split(';')[:-1]])
+                        gtf[line[0]].append([int(line[3])-downstream, int(line[4])+upstream,line[-1].split(';')[:-1]])
                 else:
                     if line[0] not in gtf.keys():
-                        gtf[line[0]] = [[int(line[3])-upstream, int(line[4]),line[-1].split(';')[:-1]]]
+                        gtf[line[0]] = [[int(line[3])-upstream, int(line[4])+downstream,line[-1].split(';')[:-1]]]
                     else:
-                        gtf[line[0]].append([int(line[3])-upstream, int(line[4]),line[-1].split(';')[:-1]])
+                        gtf[line[0]].append([int(line[3])-upstream, int(line[4])+downstream,line[-1].split(';')[:-1]])
 
     # extracting the feature coordinates
     raw_adata_features = {}
