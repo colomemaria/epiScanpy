@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.axes as pltax
 import numpy as np
 import anndata as ad
+import pandas as pd
 
 import warnings
 from warnings import warn
