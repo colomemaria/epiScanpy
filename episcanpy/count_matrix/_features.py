@@ -229,7 +229,7 @@ def load_features(file_features, chromosomes=HUMAN, path="", input_file_format=N
     if input_file_format not in ['bed', 'gtf', 'gff']:
         # return warning that the input format isn't correct and that you need to either 
         # provide the correct format or specify the format with the input_file_format parameter
-        print('warning')
+        print('warning: the file format should be either bed, gtf, gff. If the extension is different, specify the correct format as input_file_format')
     elif input_file_format=='bed':
         features_chrom = load_features_bed(file_features, chromosomes, path)
     elif input_file_format=='gtf':
