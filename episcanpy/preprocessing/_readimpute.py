@@ -14,7 +14,7 @@ def load_met_noimput(matrix_file, path='', save=False):
     with open(path+matrix_file) as f:
         line = f.readline()[:-2].split('\t')
         if line[0] == 'sample_name':
-            feature_names = line[1:-1]
+            feature_names = line[1:]
         else:
             matrix.append(line[1:])
             cell_names.append(line[0])
