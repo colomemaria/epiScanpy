@@ -100,7 +100,7 @@ def write_not_sparse_meth(meth_to_write, name_file, writing_option='a', feature_
 
 
 def extract_methylation(sample_name, feature, meth_type=None, path='', #head=HEAD_Ecker,
-	chromosome=HUMAN, threshold=1, col=None, write=False, writing_option='a', cell_names=None):
+    chromosome=HUMAN, threshold=1, col=None, write=False, writing_option='a', cell_names=None):
     """
     This function read the sample to produce a reduced representation of the
     sample (including only cytosines in a certain context) and then get
@@ -131,34 +131,34 @@ def extract_methylation(sample_name, feature, meth_type=None, path='', #head=HEA
     #If there is a missing column (either met_reads, unmer_reads, tot_reads) put 'NA'
     # also weird header ??
     if col != None:
-    	chrom=col[0]
-    	pos=col[1]
-    	tot = col[3]
-    	status=col[4]
+        chrom=col[0]
+        pos=col[1]
+        tot = col[3]
+        status=col[4]
     else:
-    	chrom=0
-    	pos=1
-    	met=4
-    	tot=5
-    	status=3
+        chrom=0
+        pos=1
+        met=4
+        tot=5
+        status=3
 
 
     if meth_type == None:
-    	reduced_cyt = read_meth_file(sample_name, path, chromosome, pos, met, tot, status)
+        reduced_cyt = read_meth_file(sample_name, path, chromosome, pos, met, tot, status)
     elif meth_type == 'CG':
-    	reduced_cyt = read_meth_fileCG(sample_name, path, chromosome, pos, met, tot, status)
+        reduced_cyt = read_meth_fileCG(sample_name, path, chromosome, pos, met, tot, status)
     elif meth_type == 'CH':
-    	reduced_cyt = read_meth_fileCH(sample_name, path, chromosome, pos, met, tot, status)
+        reduced_cyt = read_meth_fileCH(sample_name, path, chromosome, pos, met, tot, status)
     else:
-    	# print a warning saying that the argument is not valid. We take all cytosines
-    	#reduced_cyt = read_meth_file(sample_name, head, path, chromosome)
-    	reduced_cyt = read_meth_file(sample_name, path, chromosome)
+        # print a warning saying that the argument is not valid. We take all cytosines
+        #reduced_cyt = read_meth_file(sample_name, head, path, chromosome)
+        reduced_cyt = read_meth_file(sample_name, path, chromosome)
 
     final_output = methylation_level(reduced_cyt, feature, chromosome, threshold)
     if write:
-    	# I need to extract feature_names:
-    	feature_names = extract_feature_names(feature)
-    	write_not_sparse_meth(final_output, sample_name, writing_option, feature_names, cell_names)
+        # I need to extract feature_names:
+        feature_names = extract_feature_names(feature)
+        write_not_sparse_meth(final_output, sample_name, writing_option, feature_names, cell_names)
     return(final_output)
 
 ## When I am making the feature names while generating features I should add the chromosome info.
@@ -186,13 +186,15 @@ def read_meth_fileCG(sample_name, path, chromosome, chrom=0, pos=1, met=4, tot=5
     path: path of the to access the file of the sample you want to read. 
     chromosome: chromosomes if the species you are considering. default value
         is the human genome (including mitochondrial and sexual chromosomes)
+    chrom=0 --> position in the file where the chromosome is specified
     """
     reduced_cyt = {key: [] for key in chromosome} # to store cyt for each chrom (intermed output)
     with open(path+sample_name) as sample:
         for line in sample:
             line = line.split('\t')
-            if (line[status] in ['CGG', 'CGC', 'CGA', 'CGT']):
-                reduced_cyt[line[chrom]].append((int(line[pos]), int(line[met]), int(line[tot])))
+            if (line[status] in ['CGG', 'CGC', 'CGA', 'CGT', 'CGN']):
+                if line[chrom] in chromosome:
+                    reduced_cyt[line[chrom]].append((int(line[pos]), int(line[met]), int(line[tot])))
     return(reduced_cyt)
 
 def read_meth_fileCH(sample_name, path, chromosome, chrom=0, pos=1, met=4, unmet=5, status=3):
@@ -212,13 +214,15 @@ def read_meth_fileCH(sample_name, path, chromosome, chrom=0, pos=1, met=4, unmet
     path: path of the to access the file of the sample you want to read. 
     chromosome: chromosomes if the species you are considering. default value
         is the human genome (including mitochondrial and sexual chromosomes)
+    chrom=0 --> position in the file where the chromosome is specified
     """
     reduced_cyt = {key: [] for key in chromosome} # to store cyt for each chrom (intermed output)
     with open(path+sample_name) as sample:
         for line in sample:
             line = line.split('\t')
-            if (line[status] not in ['CGG', 'CGC', 'CGA', 'CGT', 'mc_class']):
-                reduced_cyt[line[chrom]].append((int(line[pos]), int(line[met]), int(line[unmet])))
+            if (line[status] not in ['CGG', 'CGC', 'CGA', 'CGT', 'CGN','mc_class']):
+                if line[chrom] in chromosome:
+                    reduced_cyt[line[chrom]].append((int(line[pos]), int(line[met]), int(line[unmet])))
     return(reduced_cyt)
 
 def read_meth_file(sample_name, path, chromosome, chrom=0, pos=1, met=4, unmet=5, status=3):
@@ -332,9 +336,9 @@ def filter_and_average_features_chrm(methylation_feature, feature, cell_name = '
     for chrm in methylation_feature.keys():
         list_methylation = [x for x in methylation_feature[chrm]]
         if split==True:
-        	list_feature = [x[-1] for x in make_list(feature)] 
+            list_feature = [x[-1] for x in make_list(feature)] 
         else:
-        	list_feature = ['standard_name' for x in range(len(list_methylation))]
+            list_feature = ['standard_name' for x in range(len(list_methylation))]
         name_feature = list(set(list_feature))
         output_average = {}
         if average == 'general':
@@ -424,9 +428,9 @@ def make_list(dico):
         final_list += dico[c]
     return final_list
 
-def build_count_mtx(cells, annotation, path="", output_file=None, writing_option="a",
-                    meth_context="CG", chromosome=HUMAN, feature_names=None,
-                   threshold=1, ct_mtx=None, sparse=False):
+def build_count_mtx(cells, annotation, path="", output_file=None, writing_option="w",
+                    meth_context="CG", chromosome=None, feature_names=None,
+                   threshold=1, ct_mtx=None, sparse=False, copy=False):
     """
     Build methylation count matrix for a given annotation.
     It either write the count matrix (if given an output file) or return it as a variable (numpy matrix). 
@@ -460,18 +464,18 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         read methylation in 'CG' of 'CH' context
     chromosome:
         'MOUSE' and 'HUMAN' (without mitochondrial genome) or list with chromosomes.
+        If None, chromosomes are deduced from the chromosomes containing features.
     feature_names:
         If you want to write down the name of the annotation features. 
         'Int' (or 'list' if you have multiple annotations)
-    thereshold:
+    threshold:
         the minimum of cytosines covered per annotation to calculate a methylation level.
         default=1 'Int' (or 'list' if you have multiple annotations with different thresholds)
-    ct_mtx:
-        numpy matrix containing the same set of annotations and for which you want to append.
-        default: None
     sparse:
         Boolean, writing option as a normal or sparse matrix.
         default: False
+    copy:
+        if True, return count matrix
     
     """
     #verbosity
@@ -493,9 +497,51 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
     if (output_file != None):
         if (type(output_file) != list):
             output_file = [output_file]
+            
+    if copy==True:
+        ct_mtx=[0]*nb_annotation
         
+    if chromosome == "HUMAN":
+        chromosome = HUMAN
+    elif chromosome == "MOUSE":
+        chromosome = MOUSE
+    elif chromosome == None:
+        chromosome = annotation[0].keys()
     #################################
-    for cell in cells:
+    # First cells
+    
+    cell = cells[0]
+    #verbosity
+    print(i, cell)
+    i += 1
+    # read the file to extract cytosines in the right context
+    if meth_context == 'CG':
+        tmp_file = read_meth_fileCG(cell, path, chromosome)
+    elif meth_context == 'CH':
+        tmp_file = read_meth_fileCH(cell, path, chromosome)
+        
+    # build the cell vector for the count matrix at every set of annotations
+    for index_annot in range(nb_annotation):
+        meth_level_annot = methylation_level(tmp_file, annotation[index_annot], chromosome, threshold[index_annot])
+        # to save the output
+        if (type(output_file) == list) and len(output_file)==1:
+            write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names[index_annot])
+        
+        writing_option[index_annot] = 'a'
+        
+        if copy==True:
+            ct_mtx[index_annot] = np.matrix(meth_level_annot)
+            
+    
+    
+    #################################
+    # other cells
+    if len(cells)==1:
+        if copy == True: 
+            return(ct_mtx)
+        else:
+            return()
+    for cell in cells[1:]:
         #verbosity
         print(i, cell)
         i += 1
@@ -511,18 +557,13 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         # build the cell vector for the count matrix at every set of annotations
         for index_annot in range(nb_annotation):
             meth_level_annot = methylation_level(tmp_file, annotation[index_annot], chromosome, threshold[index_annot])
-            if type(output_file) == list:
-                write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names[index_annot])
-            else:
-                if ct_mtx == None:
-                    ct_mtx = [np.matrix(meth_level_annot)]
-                    #ct_mtx[index_annot] = np.matrix(meth_level_annot)
-                elif index_annot>=len(ct_mtx):
-                    ct_mtx.append(np.matrix(meth_level_annot))
-                else:
-                    ct_mtx[index_annot] = np.vstack([ct_mtx[index_annot], meth_level_annot])
+            #return(meth_level_annot)
+            if (type(output_file) == list) and len(output_file)==1:
+                write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names=None)
+            
+            if copy== True:
+                ct_mtx[index_annot] = np.vstack([ct_mtx[index_annot], meth_level_annot])
                 
-    if ct_mtx != None:
+    if copy == True: 
         return(ct_mtx)
-    else:
-        return()
+

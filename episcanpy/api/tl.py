@@ -19,3 +19,5 @@ from ..tools._geneactivity import geneactivity
 
 from ..tools._impute_gene_methylation import imputation_feature
 from ..tools._comparisons import transfer_obs, imputation
+
+from ..tools._lsi import tfidf, lsi
