@@ -24,8 +24,7 @@ def read_ATAC_10x(matrix, cell_names='', var_names='', path_file=''):
     """
 
     
-    mat = mmread(''.join([path_file, matrix]))
-    mat = np.matrix(mat.transpose())
+    mat = mmread(''.join([path_file, matrix])).tocsr().transpose()
     
     with open(path_file+cell_names) as f:
         barcodes = f.readlines() 
