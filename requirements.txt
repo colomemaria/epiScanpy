@@ -22,3 +22,4 @@ legacy-api-wrap
 setuptools_scm
 packaging
 pysam; platform_system != "Windows"
+h5py

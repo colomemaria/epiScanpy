@@ -38,7 +38,7 @@ Here you can find a tutorial for the preprocessing, clustering and identificatio
 
 The first tutorial shows how to build the count matrices for the different feature spaces (windows, promoters) in different cytosine contexts. Here is the  `tutorial  <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/bld_count_matrix_methylation_tutorial.html>`__.
 
-Then, there is a second tutorial on how to use them and compare the results. The data used comes from mouse brain (frontal cortex). It will be available very soon.
+To see how process single cell DNA methylation data suing epiScanpy. Here is a `tutorial <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/processing_enhancers_mCG.html>`__ processing The data Luo et al. [Luo17]_ mouse frontal cortex dna methylation data. 
 
 .. image:: pictures/umap_markers_hodology_ecker.png
    :width: 600px
