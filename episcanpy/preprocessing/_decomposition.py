@@ -4,6 +4,8 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.decomposition import NMF
+from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.datasets import make_multilabel_classification
 
 import warnings
 from warnings import warn
@@ -106,5 +108,18 @@ def fa(adata, n_components=50, random_state=0):
     adata.varm['fa_components'] = transformer.components_.transpose()
     #end = time()
     #print(end-start)
+
+
+def lda():
+	"""
+	"""
+	#start = time()
+	lda = LatentDirichletAllocation(n_components=20, random_state=0)
+	adata.obsm['X_lda'] = lda.fit_transform(adata.X)
+	#end = time()
+	#print(end-start)
+
+
+
 
 
