@@ -71,7 +71,7 @@ def read_h5(filename, omic='ATAC'):
     
     # extract and re-construct the csr_matrix
     keys = [k for k in f['matrix'].keys()]
-    X = f['matrix'][key][()]
+    X = f['matrix']["data"][()]
     # try to find row and column names
     rows_cols = [{}, {}]
     for iname, name in enumerate(["indptr", "indices"]):
