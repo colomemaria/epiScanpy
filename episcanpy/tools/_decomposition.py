@@ -84,9 +84,10 @@ def lsi(adata,
 
 
 
+
 def nmf(adata, n_components=50, init='random', random_state=0):
-	"""
-	"""
+    """
+    """
     #start = time()
     model = NMF(n_components=n_components, init=init, random_state=random_state)
     adata.obsm['X_nmf'] = model.fit_transform(adata.X)
@@ -97,8 +98,8 @@ def nmf(adata, n_components=50, init='random', random_state=0):
 
     
 def fa(adata, n_components=50, random_state=0):
-	"""
-	"""
+    """
+    """
     #start = time()
     transformer = FactorAnalysis(n_components=n_components, random_state=random_state)
     print('dense array... ', time()-start)
@@ -107,4 +108,13 @@ def fa(adata, n_components=50, random_state=0):
     #end = time()
     #print(end-start)
 
+
+def lda():
+    """
+    """
+    #start = time()
+    lda = LatentDirichletAllocation(n_components=20, random_state=0)
+    adata.obsm['X_lda'] = lda.fit_transform(adata.X)
+    #end = time()
+    #print(end-start)
 
