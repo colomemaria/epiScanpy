@@ -65,8 +65,8 @@ def lsi(adata,
     ## part 1 - TF-IDF
     if tf_idf_layer=='tf-idf' and (tf_idf_layer not in adata.layers.keys()):
         #add warning that 'tf-idf' was not computer and is getting computed with norm='L1' now
-		warnings.warn("'tf-idf' layer doesn't exist and is now computed with norm='l1'")
-		tf_idf_layer=None
+        warnings.warn("'tf-idf' layer doesn't exist and is now computed with norm='l1'")
+        tf_idf_layer=None
         
     elif tf_idf_layer==None:
         adata.layers['tf-idf'] = tfidf(adata, norm='l1', layer_tfidf_key='tf-idf')
@@ -75,10 +75,8 @@ def lsi(adata,
         svd_model = adata.layers[tf_idf_layer]
         
     ## part 2 - decomposition
-    svd_model = TruncatedSVD(n_components=n_components, 
-                         algorithm=algorithm,
-                         n_iter=n_iter, random_state=random_state)
-
+    svd_model = TruncatedSVD(n_components=n_components,
+        algorithm=algorithm, n_iter=n_iter, random_state=random_state)
     adata.obsm['X_lsi'] = svd_model.fit_transform(adata.layers[tf_idf_layer])
 
 
