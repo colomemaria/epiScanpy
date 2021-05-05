@@ -5,6 +5,7 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.decomposition import NMF
 from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.decomposition import FactorAnalysis
 from sklearn.datasets import make_multilabel_classification
 
 import warnings
