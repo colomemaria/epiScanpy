@@ -31,7 +31,7 @@ def tfidf(adata, norm='l1', layer_tfidf_key='tf-idf'):
     layer_tfidf_key : name of the tf-idf layer of the AnnData.
     
     """
-	tfidf = TfidfTransformer(norm=norm)
+    tfidf = TfidfTransformer(norm=norm)
 	tfidf.fit(adata.X)
 	tf_idf_matrix = tfidf.transform(adata.X)
 	adata.layers[layer_tfidf_key] = tf_idf_matrix
