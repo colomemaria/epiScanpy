@@ -32,9 +32,9 @@ def tfidf(adata, norm='l1', layer_tfidf_key='tf-idf'):
     
     """
     tfidf = TfidfTransformer(norm=norm)
-	tfidf.fit(adata.X)
-	tf_idf_matrix = tfidf.transform(adata.X)
-	adata.layers[layer_tfidf_key] = tf_idf_matrix
+    tfidf.fit(adata.X)
+    tf_idf_matrix = tfidf.transform(adata.X)
+    adata.layers[layer_tfidf_key] = tf_idf_matrix
     
 def lsi(adata,
         n_components=50,
