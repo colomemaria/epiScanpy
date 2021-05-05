@@ -32,10 +32,10 @@ def tfidf(adata, norm='l1', layer_tfidf_key='tf-idf'):
     
     """
     
-    tfidf = TfidfTransformer(norm=norm)
-    tfidf.fit(adata.X)
-    tf_idf_matrix = tfidf.transform(adata.X)
-    adata.layers[layer_tfidf_key] = tf_idf_matrix
+	tfidf = TfidfTransformer(norm=norm)
+	tfidf.fit(adata.X)
+	tf_idf_matrix = tfidf.transform(adata.X)
+	adata.layers[layer_tfidf_key] = tf_idf_matrix
     
 def lsi(adata,
         n_components=50,
@@ -66,8 +66,8 @@ def lsi(adata,
     ## part 1 - TF-IDF
     if tf_idf_layer=='tf-idf' and (tf_idf_layer not in adata.layers.keys()):
         #add warning that 'tf-idf' was not computer and is getting computed with norm='L1' now
-        warnings.warn("'tf-idf' layer doesn't exist and is now computed with norm='l1'")
-        tf_idf_layer=None
+		warnings.warn("'tf-idf' layer doesn't exist and is now computed with norm='l1'")
+		tf_idf_layer=None
         
     elif tf_idf_layer==None:
         adata.layers['tf-idf'] = tfidf(adata, norm='l1', layer_tfidf_key='tf-idf')
@@ -100,10 +100,10 @@ def fa(adata, n_components=50, random_state=0):
 	"""
 	"""
     #start = time()
-    transformer = FactorAnalysis(n_components=n_components, random_state=random_state)
-    print('dense array... ', time()-start)
-    adata.obsm['X_fa'] = transformer.fit_transform(adata.X.toarray())
-    adata.varm['fa_components'] = transformer.components_.transpose()
+	transformer = FactorAnalysis(n_components=n_components, random_state=random_state)
+	print('dense array... ', time()-start)
+	adata.obsm['X_fa'] = transformer.fit_transform(adata.X.toarray())
+	adata.varm['fa_components'] = transformer.components_.transpose()
     #end = time()
     #print(end-start)
 
