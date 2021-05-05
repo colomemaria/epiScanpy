@@ -60,8 +60,6 @@ def lsi(adata,
     
     n_iter :
     
-    n_iter :
-    
     random_state :
     
     """
@@ -89,12 +87,12 @@ def lsi(adata,
 def nmf(adata, n_components=50, init='random', random_state=0):
 	"""
 	"""
-    #start = time()
-    model = NMF(n_components=n_components, init=init, random_state=random_state)
-    adata.obsm['X_nmf'] = model.fit_transform(adata.X)
-    adata.varm['NMF_components'] = model.components_.transpose()
-    #end = time()
-    #print(end-start)
+	#start = time()
+	model = NMF(n_components=n_components, init=init, random_state=random_state)
+	adata.obsm['X_nmf'] = model.fit_transform(adata.X)
+	adata.varm['NMF_components'] = model.components_.transpose()
+	#end = time()
+	#print(end-start)
 
 
     
