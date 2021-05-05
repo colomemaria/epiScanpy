@@ -17,5 +17,5 @@ from ..preprocessing._simple import sparse
 from scanpy.tools import dpt
 from scanpy.preprocessing import log1p
 
-from ..tools._decomposition import tfidf, lsi
-from ..tools._decomposition import nmf, fa
+from ..preprocessing._decomposition import tfidf, lsi
+from ..preprocessing._decomposition import nmf, fa
