@@ -106,11 +106,11 @@ def fa(adata, n_components=50, random_state=0):
     end = time()
     
 
-def lda():
+def lda(adata, n_components=50, random_state=0):
     """
     """
     #start = time()
-    lda = LatentDirichletAllocation(n_components=20, random_state=0)
+    lda = LatentDirichletAllocation(n_components=n_components, random_state=random_state)
     adata.obsm['X_lda'] = lda.fit_transform(adata.X)
     #end = time()
     #print(end-start)
