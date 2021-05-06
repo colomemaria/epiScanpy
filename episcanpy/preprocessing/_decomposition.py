@@ -1,6 +1,7 @@
 import anndata as ad
 import numpy as np
 import pandas as pd
+import time
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.decomposition import NMF
@@ -97,13 +98,13 @@ def nmf(adata, n_components=50, init='random', random_state=0):
 def fa(adata, n_components=50, random_state=0):
 	"""
 	"""
-    #start = time()
+    start = time()
 	transformer = FactorAnalysis(n_components=n_components, random_state=random_state)
 	print('dense array... ', time()-start)
 	adata.obsm['X_fa'] = transformer.fit_transform(adata.X.toarray())
 	adata.varm['fa_components'] = transformer.components_.transpose()
-    #end = time()
-    #print(end-start)
+    end = time()
+    print("total run time:\t", end-start)
 
 
 def lda():
