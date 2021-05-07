@@ -16,3 +16,7 @@ from ..preprocessing._neighbors import neighbors
 from ..preprocessing._simple import sparse
 from scanpy.tools import dpt
 from scanpy.preprocessing import log1p
+
+
+from ..preprocessing._decomposition import tfidf, lsi
+from ..preprocessing._decomposition import nmf, fa

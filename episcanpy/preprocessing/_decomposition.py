@@ -1,10 +1,12 @@
 import anndata as ad
 import numpy as np
 import pandas as pd
+import time
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.decomposition import NMF
 from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.decomposition import FactorAnalysis
 from sklearn.datasets import make_multilabel_classification
 
 import warnings
@@ -31,7 +33,6 @@ def tfidf(adata, norm='l1', layer_tfidf_key='tf-idf'):
     layer_tfidf_key : name of the tf-idf layer of the AnnData.
     
     """
-    
     tfidf = TfidfTransformer(norm=norm)
     tfidf.fit(adata.X)
     tf_idf_matrix = tfidf.transform(adata.X)
@@ -60,8 +61,6 @@ def lsi(adata,
     
     n_iter :
     
-    n_iter :
-    
     random_state :
     
     """
@@ -76,19 +75,17 @@ def lsi(adata,
         tf_idf_layer='tf-idf'
     else:
         svd_model = adata.layers[tf_idf_layer]
-        
-    ## part 2 - decomposition
-    svd_model = TruncatedSVD(n_components=n_components, 
-                         algorithm=algorithm,
-                         n_iter=n_iter, random_state=random_state)
 
+    ## part 2 - decomposition
+    svd_model = TruncatedSVD(n_components=n_components,
+        algorithm=algorithm, n_iter=n_iter, random_state=random_state)
     adata.obsm['X_lsi'] = svd_model.fit_transform(adata.layers[tf_idf_layer])
 
 
 
 def nmf(adata, n_components=50, init='random', random_state=0):
-	"""
-	"""
+    """
+    """
     #start = time()
     model = NMF(n_components=n_components, init=init, random_state=random_state)
     adata.obsm['X_nmf'] = model.fit_transform(adata.X)
@@ -99,25 +96,24 @@ def nmf(adata, n_components=50, init='random', random_state=0):
 
     
 def fa(adata, n_components=50, random_state=0):
-	"""
-	"""
-    #start = time()
+    """
+    """
+    start = time()
     transformer = FactorAnalysis(n_components=n_components, random_state=random_state)
     print('dense array... ', time()-start)
     adata.obsm['X_fa'] = transformer.fit_transform(adata.X.toarray())
     adata.varm['fa_components'] = transformer.components_.transpose()
+    end = time()
+    
+
+def lda(adata, n_components=50, random_state=0):
+    """
+    """
+    #start = time()
+    lda = LatentDirichletAllocation(n_components=n_components, random_state=random_state)
+    adata.obsm['X_lda'] = lda.fit_transform(adata.X)
     #end = time()
     #print(end-start)
-
-
-def lda():
-	"""
-	"""
-	#start = time()
-	lda = LatentDirichletAllocation(n_components=20, random_state=0)
-	adata.obsm['X_lda'] = lda.fit_transform(adata.X)
-	#end = time()
-	#print(end-start)
 
 
 
