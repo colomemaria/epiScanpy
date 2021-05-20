@@ -482,7 +482,7 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
     i = 0
     
     #################################
-    if type(annotation) != list:
+    if isinstance(annotation, list) is False:
         annotation = [annotation]
         output_file = [output_file]
         ct_mtx = [ct_mtx]
@@ -490,12 +490,12 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         
     nb_annotation = len(annotation)
     
-    if type(writing_option) != list:
+    if isinstance(writing_option, list) is False:
         writing_option = [writing_option for x in range(nb_annotation)]
-    if type(threshold) != list:
+    if isinstance(threshold, list) is False:
         threshold = [threshold for x in range(nb_annotation)]
     if (output_file != None):
-        if (type(output_file) != list):
+        if (isinstance(output_file, list) is False:
             output_file = [output_file]
             
     if copy==True:
@@ -524,7 +524,7 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
     for index_annot in range(nb_annotation):
         meth_level_annot = methylation_level(tmp_file, annotation[index_annot], chromosome, threshold[index_annot])
         # to save the output
-        if (type(output_file) == list) and len(output_file)==1:
+        if isinstance(output_file, list) and len(output_file)==1:
             write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names[index_annot])
         
         writing_option[index_annot] = 'a'
@@ -558,7 +558,7 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         for index_annot in range(nb_annotation):
             meth_level_annot = methylation_level(tmp_file, annotation[index_annot], chromosome, threshold[index_annot])
             #return(meth_level_annot)
-            if (type(output_file) == list) and len(output_file)==1:
+            if isinstance(output_file, list) and len(output_file)==1:
                 write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names=None)
             
             if copy== True:

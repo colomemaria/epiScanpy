@@ -28,7 +28,7 @@ def getNClusters(adata,n_cluster,range_min=0,range_max=3,max_steps=20, method='l
         
         if (method == 'louvain') and (key_added==None):
             sc.tl.louvain(adata, resolution=this_resolution)
-        elif method == 'louvain'and (type(key_added)==str):
+        elif method == 'louvain'and (isinstance(key_added, str):
             sc.tl.louvain(adata, resolution=this_resolution, key_added=key_added)
         elif( method == 'leiden') and (key_added==None):
             sc.tl.leiden(adata,resolution=this_resolution)
