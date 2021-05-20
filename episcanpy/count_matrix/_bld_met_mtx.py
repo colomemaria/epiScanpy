@@ -495,7 +495,7 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
     if isinstance(threshold, list) is False:
         threshold = [threshold for x in range(nb_annotation)]
     if (output_file != None):
-        if (isinstance(output_file, list) is False:
+        if isinstance(output_file, list) is False:
             output_file = [output_file]
             
     if copy==True:
