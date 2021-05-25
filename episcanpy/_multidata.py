@@ -77,7 +77,7 @@ class MultiData():
         """
         for attr in ['omic', 'paired', 'omic_label']:
             
-            data = getattr(multi, attr) # extract the data in the attribute
+            data = getattr(self, attr) # extract the data in the attribute
             output_file_name = folder_name+"/"+folder_name.split('/')[-1]+"_"+attr
             
             if attr == 'omic': # save the multiple anndata
