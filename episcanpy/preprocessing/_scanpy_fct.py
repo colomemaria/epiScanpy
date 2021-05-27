@@ -81,14 +81,16 @@ def filter_cells(
     if copy:
         adata_copy = sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts,
             max_genes=max_features, inplace=inplace, copy=copy)
-        adata_copy.obs['nb_features'] = adata_copy.obs['n_genes'] 
-        del adata_copy.obs['n_genes']
+        if 'n_genes' in adata_copy.obs.columns:
+            adata_copy.obs['nb_features'] = adata_copy.obs['n_genes'] 
+            del adata_copy.obs['n_genes']
         return(adata_copy)
     else:
         sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts, 
             max_genes=max_features, inplace=inplace, copy=copy)
-        adata.obs['nb_features'] = adata.obs['n_genes'] 
-        del adata.obs['n_genes']
+        if 'n_genes' in adata_copy.obs.columns:
+            adata_copy.obs['nb_features'] = adata_copy.obs['n_genes'] 
+            del adata_copy.obs['n_genes']
 
 
 
