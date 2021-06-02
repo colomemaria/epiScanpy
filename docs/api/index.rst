@@ -18,6 +18,8 @@ Building count matrices
 
 Quickly build a count matrix from tsv/tbi file.
 
+.. currentmodule:: episcanpy.api
+
 .. autosummary::
    :toctree: .
 
@@ -41,8 +43,8 @@ Reading methylation file
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Functions to read methylation files, extract methylation and buildthe count matrices:
- 
- 
+
+
 .. autosummary::
    :toctree: .
 
@@ -50,20 +52,20 @@ Functions to read methylation files, extract methylation and buildthe count matr
    ct.read_cyt_summary
    ct.load_met_noimput
 
-   
+
 Reading open chromatin(ATAC) file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ATAC-seq specific functions to build count matrices and load data:
- 
- 
+
+
 .. autosummary::
    :toctree: .
-   
+
    ct.bld_atac_mtx
    ct.save_sparse_mtx
 
-   
+
 General functions
 ~~~~~~~~~~~~~~~~~
 
@@ -77,17 +79,16 @@ Functions non -omic specific:
 
 
 Preprocessing: PP
-------------------
+-----------------
 
 Imputing missing data (methylation), filtering lowly covered cells or variables, correction for batch effect.
-
 
 .. autosummary::
    :toctree: .
 
-   pp.snap2anndata
+   ; pp.snap2anndata
    pp.coverage_cells
-   pp.commoness_features
+   pp.commonness_features
    pp.correlation_pc
    pp.coverage_features
    pp.density_features
@@ -116,7 +117,7 @@ Imputing missing data (methylation), filtering lowly covered cells or variables,
 Methylation matrices
 ~~~~~~~~~~~~~~~~~~~~
 
-Methylation specific count matrices. 
+Methylation specific count matrices.
 
 .. autosummary::
    :toctree: .
@@ -126,7 +127,7 @@ Methylation specific count matrices.
    pp.readandimputematrix
 
 
-   
+
 Tools: TL
 ---------
 
@@ -142,7 +143,7 @@ Tools: TL
 
    tl.top_feature_genes
    tl.var_features_to_genes
-   tl.find_genes_in_features
+   ; tl.find_genes_in_features
    tl.geneactivity
 
    tl.diffmap
@@ -173,16 +174,17 @@ For most tools and for some preprocessing functions, you'll find a plotting func
 
 .. autosummary::
    :toctree: .
-   
+
 
    pl.pca
-   pl.pca_floadings
+   pl.pca_loadings
    pl.pca_overview
    pl.pca_variance_ratio
 
    pl.tsne
    pl.umap
-   pl.diffmappl.draw_graph
+   pl.diffmap
+   pl.draw_graph
 
    pl.rank_feat_groups
    pl.rank_feat_groups_violin
