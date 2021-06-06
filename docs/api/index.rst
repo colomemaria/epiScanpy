@@ -62,7 +62,7 @@ ATAC-seq specific functions to build count matrices and load data:
 .. autosummary::
    :toctree: .
 
-   ct.bld_atac_mtx
+   ct.bld_mtx_fly
    ct.save_sparse_mtx
 
 
