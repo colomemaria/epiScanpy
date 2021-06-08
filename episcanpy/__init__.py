@@ -35,12 +35,10 @@ from anndata import read
 from anndata import read_h5ad, read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
 
 
-
-
 # import multidata information
 from ._multidata import MultiData, read_multidata
 
 # import settings for plots 
 import scanpy as sc
-from sc import set_figure_params
+from scanpy import set_figure_params
 
