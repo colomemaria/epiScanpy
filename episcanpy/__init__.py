@@ -20,23 +20,28 @@ annotate_doc_types(sys.modules[__name__], 'episcanpy')
 del get_versions, sys, check_versions, annotate_doc_types
 
 # the actual API
-# the actual API
 from ._settings import settings, Verbosity
 from . import tools as tl
 from . import preprocessing as pp
 from . import count_matrix as ct
 from . import plotting as pl
-#from . import functions as functions
+# import read functions 
+from preprocessing._load_matrix import read_ATAC_10x, read_h5
+from preprocessing._load_matrix import read_h5 as read_h5_atac
 
-#from . import datasets
+# read functions from AnnData
+from anndata import AnnData
+from anndata import read
+from anndata import read_h5ad, read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
+
+
+# import 
 from ._multidata import MultiData, read_multidata
 
-from anndata import AnnData
-from anndata import read_h5ad, read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
 #from .readwrite import read, read_10x_h5, read_10x_mtx
 #from .neighbors import Neighbors
 from .settings import set_figure_params
-
 import scanpy as sc
+
 
 #from settings import set_figure_params
