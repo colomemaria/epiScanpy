@@ -26,8 +26,8 @@ from . import preprocessing as pp
 from . import count_matrix as ct
 from . import plotting as pl
 # import read functions 
-from preprocessing._load_matrix import read_ATAC_10x, read_h5
-from preprocessing._load_matrix import read_h5 as read_h5_atac
+from .preprocessing._load_matrix import read_ATAC_10x, read_h5
+from .preprocessing._load_matrix import read_h5 as read_h5_atac
 
 # read functions from AnnData
 from anndata import AnnData
