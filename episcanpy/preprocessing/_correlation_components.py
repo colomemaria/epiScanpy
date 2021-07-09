@@ -84,7 +84,7 @@ def correlation_component(adata,
     elif component == 'all':
         component = list(range(1, adata.obsm[use_rep].shape[1]+1,1))
         
-    if np.max(component)-1>len(adata.varm['PCs'][0]):
+    if use_rep=='X_pca' and (np.max(component)-1>len(adata.varm['PCs'][0])):
         warnings.warn("".join(["""You requested a component that is not currently available.
                             If you used X_pca decomposition, please run epi.pp.pca(adata, n_comps=""", int(np.max(component)+1), ') ']))
         
