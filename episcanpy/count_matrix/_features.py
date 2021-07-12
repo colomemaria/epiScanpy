@@ -94,21 +94,21 @@ def load_features_gff(file_features,
     
     # filter the df
     if chromosomes != None:
-        if type(chromosomes) == str:
+        if isinstance(chromosomes, str):
             chromosomes = [chromosomes]
         df = filter_df(df,
                        column_name='sequence',
                        filter_criteria_list=chromosomes)
         
     if filter_per_source != None:
-        if type(filter_per_source) == str:
+        if isinstance(filter_per_source, str):
             filter_per_source = [filter_per_source]
         df = filter_df(df,
                        column_name='source',
                        filter_criteria_list=filter_per_source)
         
     if filter_per_feature_type != None:
-        if type(filter_per_feature_type) == str:
+        if isinstance(filter_per_feature_type, str):
             filter_per_feature_type = [filter_per_feature_type]
         df = filter_df(df,
                        column_name='feature',
@@ -148,21 +148,21 @@ def load_features_gtf(file_features,
     
     # filter the df
     if chromosomes != None:
-        if type(chromosomes) == str:
+        if isinstance(chromosomes, str):
             chromosomes = [chromosomes]
         df = filter_df(df,
                        column_name='seqname',
                        filter_criteria_list=chromosomes)
         
     if filter_per_source != None:
-        if type(filter_per_source) == str:
+        if isinstance(filter_per_source, str):
             filter_per_source = [filter_per_source]
         df = filter_df(df,
                        column_name='source',
                        filter_criteria_list=filter_per_source)
         
     if filter_per_feature_type != None:
-        if type(filter_per_feature_type) == str:
+        if isinstance(filter_per_feature_type, str):
             filter_per_feature_type = [filter_per_feature_type]
         df = filter_df(df,
                        column_name='feature',

@@ -79,12 +79,12 @@ def correlation_component(adata,
     
     """
     all_correlation={'correlation':[], 'pval':[]}
-    if type(component) == int:
+    if isinstance(component, int):
         component = [component]
     elif component == 'all':
         component = list(range(1, adata.obsm[use_rep].shape[1]+1,1))
         
-    if np.max(component)-1>len(adata.varm['PCs'][0]):
+    if use_rep=='X_pca' and (np.max(component)-1>len(adata.varm['PCs'][0])):
         warnings.warn("".join(["""You requested a component that is not currently available.
                             If you used X_pca decomposition, please run epi.pp.pca(adata, n_comps=""", int(np.max(component)+1), ') ']))
         
@@ -192,7 +192,7 @@ def filtering_components(adata, components, use_rep='X_pca', new_rep=None):
     
     new_rep : if None, overwrite use_rep key. Else, use new_rep as a new obsm key. 
     """
-    if type(components)==int:
+    if isinstance(components, int):
         components=[components]
     if new_rep == None:
         new_rep = use_rep

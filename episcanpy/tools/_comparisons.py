@@ -10,7 +10,7 @@ def transfer_obs(adata1, adata2, obs_key, copy=False):
     copy : if True, return a new Anndata otherwise, overwrite adata1
     """
     #extract the data I want to copy
-    if type(obs_key) == str:
+    if isinstance(obs_key, str):
         obs_key = [obs_key]
     markers = adata2.obs[obs_key]
     

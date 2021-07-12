@@ -2,6 +2,7 @@ import scanpy as sc
 import anndata as ad
 import numpy as np
 import pandas as pd
+from scipy.sparse import csr_matrix
 
 def geneactivity(adata,
                  gtf_file,
@@ -81,6 +82,10 @@ def geneactivity(adata,
     gene_index = []
     gene_activity_X = []
  
+    # if raw_adata.X is a dense array, make it sparse
+    if isinstance(raw_adata.X, np.ndarray):
+        raw_adata.X = csr_matrix(raw_adata.X)
+
     for chrom in gtf.keys():
         if chrom in raw_adata_features.keys():
             #print(chrom)
@@ -97,6 +102,7 @@ def geneactivity(adata,
                     elif (gene_end <= feature[0]): # the window is after the gene. we need totest the next gene.
                         break
                     else: # the window is overlapping the gene. 
+                        # what if 
                         gene_values.append(raw_adata.X[:,feature[2]].todense())
                 if gene_values != []:
                     gene_activity_X.append(np.sum(gene_values, axis=0))
