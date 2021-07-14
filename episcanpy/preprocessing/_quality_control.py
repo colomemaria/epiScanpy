@@ -149,7 +149,8 @@ def coverage_cells(adata,
                    #save_dpi=250,
                    color=None, edgecolor=None,
                    ## sving
-                   save=None):
+                   save=None,
+                   show=None):
     """
     Histogram of the number of open features (in the case of ATAC-seq data) per cell.
 
@@ -173,6 +174,7 @@ def coverage_cells(adata,
     color
     edgecolor
     save
+    show
 
     """
     if key_added == None:
@@ -250,7 +252,8 @@ def coverage_cells(adata,
     if save!= None:
         #fig.savefig(save, dpi=save_dpi)
         plt.savefig(save, bbox_inches="tight")
-    plt.show()
+    if show!=None:
+        plt.show()
     adata.obs[key_added] = sum_peaks
     
 def coverage_features(adata,
@@ -264,7 +267,8 @@ def coverage_features(adata,
                         #figsize=(15,10),
                         #save_dpi=250,
                         color=None, edgecolor=None,
-                        save=None):
+                        save=None,
+                        show=None):
     
     """
     Display how often a feature is measured as open (for ATAC-seq).
@@ -282,6 +286,7 @@ def coverage_features(adata,
     title
     color
     edgecolor
+    show
     
     """
     
@@ -359,8 +364,8 @@ def coverage_features(adata,
     if save!= None:
         #fig.savefig(save, dpi=save_dpi)
         plt.savefig(save, bbox_inches="tight")
-    plt.show()
-
+    if show!=None:
+        plt.show()
     adata.var[key_added] = common
 
 
