@@ -75,5 +75,7 @@ def find_genes(adata,
                     gene_index.append(gene_name[0])
                 else:
                     gene_index.append(";".join(list(set(gene_name))))
-                    
+        else:
+            undetermined = [gene_index.append(i) for i in np.full(len(raw_adata_features[chrom]), 'undetermined')]
+            
     adata.var[key_added] = gene_index
