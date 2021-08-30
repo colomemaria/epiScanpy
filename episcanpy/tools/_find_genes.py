@@ -12,14 +12,14 @@ def find_genes(adata,
                  annotation='HAVANA',
                  raw=False):
     """
-    merge values of peaks/windows/features overlapping genebodies + 2kb upstream. 
-    It is possible to extend the search for closest gene to a given number of bases downstream as well. 
+    merge values of peaks/windows/features overlapping genebodies + 2kb upstream.
+    It is possible to extend the search for closest gene to a given number of bases downstream as well.
 
     There is commonly 2 set of annotations in a gtf file(HAVANA, ENSEMBL). By default, the function
-    will search annotation from HAVANA but other annotation label/source can be specifed. 
-   
+    will search annotation from HAVANA but other annotation label/source can be specifed.
+
     It is possible to use other type of features than genes present in a gtf file such as transcripts or CDS.
-    
+
     """
     ### extracting the genes
     gtf = {}
@@ -48,7 +48,7 @@ def find_genes(adata,
         else:
             raw_adata_features[line[0]].append([int(line[1]),int(line[2]), feature_index])
         feature_index += 1
-    
+
     ## find the genes overlaping the features.
     gene_index = []
     for chrom in raw_adata_features.keys():
@@ -64,16 +64,20 @@ def find_genes(adata,
                         continue
                     elif (feature_end <= gene[0]): # the gene is after the feature. we need to test the next feature.
                         break
-                    else: # the window is overlapping the gene. 
+                    else: # the window is overlapping the gene.
                         for n in gene[-1]:
                             if 'gene_name' in n:
                                 gene_name.append(n.lstrip('gene_name "').rstrip('""'))
-                        
+
                 if gene_name == []:
                     gene_index.append('intergenic')
                 elif len(gene_name)==1:
                     gene_index.append(gene_name[0])
                 else:
                     gene_index.append(";".join(list(set(gene_name))))
-                    
+
+        else:
+            for feature in raw_adata_features[chrom]:
+                gene_index.append("unassigned")
+
     adata.var[key_added] = gene_index
