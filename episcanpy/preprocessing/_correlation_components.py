@@ -178,9 +178,9 @@ def _plot_correlations(all_correlation, absolute=True, color_palette=None, save=
         plt.savefig(save)
     plt.show()
 
-def filtering_components(adata, components, use_rep='X_pca', new_rep=None):
+def filter_component(adata, components, use_rep='X_pca', new_rep=None):
     """
-    Filter out components.
+    Filter out selected components.
     
     Parameters
     ----------
