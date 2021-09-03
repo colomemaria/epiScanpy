@@ -9,6 +9,13 @@
 
 .. role:: smaller
 
+Version 0.3.2 :small:`September 3, 2021`
+--------------------------------------
+
+Major additions to this new release: 
+- TSS enrichment QC with epi.pp.tss_enrichment and epi.pl.tss_enrichment
+- Latent Semantic Indexing available with epi.pp.tfidf, epi.pp.lsi
+- In combination with the LSI we added epi.pp.correlation_component and epi.pp.filter_component to correct coverage discrepancy between cell barcodes. 
 
 
 Version 0.2.0 :small:`August 7, 2020`
@@ -23,8 +30,6 @@ Version 0.1.8 :small:`November 5, 2019`
 --------------------------------------
 
 Release new processing function & quality controls. 
-
-
 
 
 Version 0.1.7 :small:`November 5, 2019`

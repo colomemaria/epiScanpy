@@ -4,7 +4,7 @@ Usage Principles
 
 Import the epiScanpy API as::
 
-    import episcanpy.api as epi
+    import episcanpy as epi
     import anndata as ad
 
 Workflow

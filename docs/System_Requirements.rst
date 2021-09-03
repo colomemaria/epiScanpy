@@ -10,14 +10,13 @@ Software requirements
 ~~~~~~~~~~~~~~~~~~~~~
 
 ### OS Requirements
-This package is supported for *macOS* and *Linux*. The package has been tested on the following systems:
-+ macOS: Mojave & Catalina (10.14 to 10.15.4)
-
+This package is supported for *macOS* and *Linux*. 
+The pysam dependency is not supported on *windows*, however it is still possible to install episcanpy. However not all functions will be available. We are working to solve this issue in the future.
 
 
 Python Dependencies
 ~~~~~~~~~~~~~~~~~~~
-EpiScanpy require a working version of ``Python`` (>= 3.6)
+EpiScanpy require a working version of ``Python`` (>= 3.7)
 
 Additionally, this package ``epiScanpy`` depends on other Python dependencies and packages.::
 
@@ -32,6 +31,12 @@ Additionally, this package ``epiScanpy`` depends on other Python dependencies an
   scikit-learn
   seaborn
   bamnostic
+
+Some dependencies are not automatically installed with epiScanpy. Consider also installing separately.::
+  python-igraph
+  louvain
+  Multicore-TSNE
+
   
   
   

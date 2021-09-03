@@ -9,7 +9,7 @@ installing Miniconda (see `Installing Miniconda <http://conda.pydata.org/minicon
 
     conda install seaborn scikit-learn statsmodels numba
     conda install -c conda-forge python-igraph louvain
-    conda create -n scanpy python=3.6 scanpy
+    conda create -n episcanpy python=3.8 
     
 Finally, run::  
 
