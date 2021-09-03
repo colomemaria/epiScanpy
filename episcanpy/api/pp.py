@@ -20,5 +20,4 @@ from scanpy.preprocessing import log1p
 from ..preprocessing._decomposition import tfidf, lsi
 from ..preprocessing._decomposition import nmf, fa
 
-
-from ..preprocessing._quality_control import tss_enrichment
+from ..preprocessing._tss_enrichment import tss_enrichment
