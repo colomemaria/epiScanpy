@@ -10,6 +10,14 @@ from warnings import warn
 from scipy.sparse import issparse
 from scipy.stats.stats import pearsonr, spearmanr
 
+import multiprocessing
+import pandas as pd
+
+
+import platform
+if platform.system() != "Windows":
+    import pysam
+
 def cal_var(adata, show=True, color=['b', 'r'], save=None):
     """
     Show distribution plots of cells sharing features and variability score.
@@ -631,6 +639,99 @@ def variability_features(adata, min_score=None, nb_features=None, show=True,
     #return(var_annot)
 
 
+def get_tss(gtf, source=None, feature=None, protein_coding_only=False):
+
+    gtf_column_names = ['seqname', 'source', 'feature', 'start', 'end', 'score', 'strand', 'attribute', 'other']
+
+    gtf = pd.read_csv(gtf,
+        sep='\t',
+        names=gtf_column_names,
+        comment="#",
+        header=None,
+        index_col=False)
+
+    if source is not None:
+        gtf = gtf[gtf.source == source]
+
+    if feature is not None:
+        gtf = gtf[gtf.feature == feature]
+
+    if protein_coding_only:
+        gtf = gtf[gtf.other.str.contains("protein_coding")]
+
+    tss_info = {"chromosome": [], "TSS_pos": [], "strand": []}
+
+    for row in gtf.values:
+        tss_info["chromosome"].append(row[0])
+        tss_info["strand"].append(row[6])
+        tss_info["TSS_pos"].append(row[3] if row[6] == "+" else row[4])
+
+    return pd.DataFrame(data=tss_info)
+
+# function that is executed by the processes (calculates coverage profiles for a subset of TSS)
+def calc_coverage(preprocessed_input_chunk, mtx, bc_mapping, fragments_file, distance_to_tss, method, queue):
+
+    # open fragments file
+    tbx = pysam.TabixFile(fragments_file)
+
+    # iterate over TSS subset
+    for chromosome, tss_pos, strand in preprocessed_input_chunk:
+
+        # calculate region boundaries
+        region_start = tss_pos - distance_to_tss
+        region_end = tss_pos + distance_to_tss + 1
+
+        # iterate over reads overlapping the region
+        for read in tbx.fetch(reference=chromosome, start=region_start, end=region_end, parser=pysam.asTuple()):
+
+            barcode = read[3]
+
+            # check if barcode is valid
+            if barcode in bc_mapping:
+
+                read_start = int(read[1])
+                read_end = int(read[2])
+
+                index_start = read_start - tss_pos + distance_to_tss
+                index_end = read_end - tss_pos + distance_to_tss
+
+                # check if index is in bounds
+                if index_start < 0:
+                    if method == "standard":
+                        continue
+                    elif method == "complete_coverage":
+                        index_start = 0
+
+                # check if index is in bounds
+                if index_end >= mtx.shape[1]:
+                    if method == "standard":
+                        continue
+                    elif method == "complete_coverage":
+                        index_end = mtx.shape[1]
+
+                # handle strand location
+                if strand == "-":
+                    tmp = mtx[bc_mapping[barcode]]
+                    tmp = np.flip(tmp)
+
+                    if method == "standard":
+                        tmp[[index_start, index_end]] = tmp[[index_start, index_end]] + 1
+
+                    elif method == "complete_coverage":
+                        tmp[index_start:index_end] = tmp[index_start:index_end] + 1
+
+                    mtx[bc_mapping[barcode]] = np.flip(tmp)
+
+                else:
+                    if method == "standard":
+                        mtx[bc_mapping[barcode]][[index_start, index_end]] = mtx[bc_mapping[barcode]][[index_start, index_end]] + 1
+
+                    elif method == "complete_coverage":
+                        mtx[bc_mapping[barcode]][index_start:index_end] = mtx[bc_mapping[barcode]][index_start:index_end] + 1
+
+    # put partial result in the queue
+    queue.put(mtx)
+
 def tss_enrichment(adata,
                    gtf,
                    fragments,
@@ -662,39 +763,6 @@ def tss_enrichment(adata,
     if score not in {"avg_score_of_center_region", "score_at_zero"}:
         raise ValueError("value for score argument must be 'avg_score_of_center_region' or 'score_at_zero'")
 
-    import multiprocessing
-    import numpy as np
-    import pandas as pd
-    import pysam
-
-    def get_tss(gtf, source=None, feature=None, protein_coding_only=False):
-
-        gtf_column_names = ['seqname', 'source', 'feature', 'start', 'end', 'score', 'strand', 'attribute', 'other']
-
-        gtf = pd.read_csv(gtf,
-                          sep='\t',
-                          names=gtf_column_names,
-                          comment="#",
-                          header=None,
-                          index_col=False)
-
-        if source is not None:
-            gtf = gtf[gtf.source == source]
-
-        if feature is not None:
-            gtf = gtf[gtf.feature == feature]
-
-        if protein_coding_only:
-            gtf = gtf[gtf.other.str.contains("protein_coding")]
-
-        tss_info = {"chromosome": [], "TSS_pos": [], "strand": []}
-
-        for row in gtf.values:
-            tss_info["chromosome"].append(row[0])
-            tss_info["strand"].append(row[6])
-            tss_info["TSS_pos"].append(row[3] if row[6] == "+" else row[4])
-
-        return pd.DataFrame(data=tss_info)
 
     tss = get_tss(gtf, source="HAVANA", feature="gene", protein_coding_only=True)
 
@@ -744,69 +812,6 @@ def tss_enrichment(adata,
         # add current chunk to the list of chunks
         chunks.append(chunk)
 
-    # function that is executed by the processes (calculates coverage profiles for a subset of TSS)
-    def calc_coverage(preprocessed_input_chunk, mtx, bc_mapping, fragments_file, distance_to_tss, method, queue):
-
-        # open fragments file
-        tbx = pysam.TabixFile(fragments_file)
-
-        # iterate over TSS subset
-        for chromosome, tss_pos, strand in preprocessed_input_chunk:
-
-            # calculate region boundaries
-            region_start = tss_pos - distance_to_tss
-            region_end = tss_pos + distance_to_tss + 1
-
-            # iterate over reads overlapping the region
-            for read in tbx.fetch(reference=chromosome, start=region_start, end=region_end, parser=pysam.asTuple()):
-
-                barcode = read[3]
-
-                # check if barcode is valid
-                if barcode in bc_mapping:
-
-                    read_start = int(read[1])
-                    read_end = int(read[2])
-
-                    index_start = read_start - tss_pos + distance_to_tss
-                    index_end = read_end - tss_pos + distance_to_tss
-
-                    # check if index is in bounds
-                    if index_start < 0:
-                        if method == "standard":
-                            continue
-                        elif method == "complete_coverage":
-                            index_start = 0
-
-                    # check if index is in bounds
-                    if index_end >= mtx.shape[1]:
-                        if method == "standard":
-                            continue
-                        elif method == "complete_coverage":
-                            index_end = mtx.shape[1]
-
-                    # handle strand location
-                    if strand == "-":
-                        tmp = mtx[bc_mapping[barcode]]
-                        tmp = np.flip(tmp)
-
-                        if method == "standard":
-                            tmp[[index_start, index_end]] = tmp[[index_start, index_end]] + 1
-
-                        elif method == "complete_coverage":
-                            tmp[index_start:index_end] = tmp[index_start:index_end] + 1
-
-                        mtx[bc_mapping[barcode]] = np.flip(tmp)
-
-                    else:
-                        if method == "standard":
-                            mtx[bc_mapping[barcode]][[index_start, index_end]] = mtx[bc_mapping[barcode]][[index_start, index_end]] + 1
-
-                        elif method == "complete_coverage":
-                            mtx[bc_mapping[barcode]][index_start:index_end] = mtx[bc_mapping[barcode]][index_start:index_end] + 1
-
-        # put partial result in the queue
-        queue.put(mtx)
 
     # create queue
     q = multiprocessing.Queue()
@@ -893,9 +898,6 @@ def tss_enrichment_plot(adata,
     Returns:
         None
     """
-
-    import matplotlib.pyplot as plt
-    import numpy as np
 
     if group_by is None:
 
@@ -992,9 +994,6 @@ def tss_enrichment_score_plot(adata, figsize=(4, 6), save=None):
         None
     """
 
-    import seaborn as sns
-    import matplotlib.pyplot as plt
-
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111)
 
@@ -1026,3 +1025,4 @@ def tss_enrichment_score_plot(adata, figsize=(4, 6), save=None):
             filename = default_filename + ".png"
 
         plt.savefig(filename)
+

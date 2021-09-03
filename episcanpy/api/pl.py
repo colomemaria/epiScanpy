@@ -16,4 +16,6 @@ from scanpy.plotting import scatter, violin, ranking, clustermap, stacked_violin
 from scanpy.plotting import umap, pca, diffmap, tsne, draw_graph
 
 from ..preprocessing._quality_control import cal_var, variability_features
+from ..preprocessing._quality_control import tss_enrichment_plot, tss_enrichment_score_plot
+
 
