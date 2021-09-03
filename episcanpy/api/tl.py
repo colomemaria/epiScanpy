@@ -23,3 +23,6 @@ from ..tools._comparisons import transfer_obs, imputation
 
 from ..preprocessing._decomposition import tfidf, lsi
 from ..preprocessing._decomposition import nmf, fa
+
+
+from ..preprocessing._tss_enrichment import filter_enrichment_score
