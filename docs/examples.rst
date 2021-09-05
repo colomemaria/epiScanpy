@@ -18,7 +18,9 @@ To get started, we recommend epiScanpy's analysis pipeline for scATAC-seq data f
 If you want to see how to build count matrices from ATAC-seq bam files for different set of annotations (like enhancers).
 The tutorial can be found `here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/ATAC_bld_ct_mtx_tutorial.html>`__. 
 
-Soon available, there will be a tutorial providing a function to very quickly build custom count matrices using standard 10x single cell ATAC output. 
+Very soon, there will be new tutorials showing how quickly build custom count matrices (`here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/Tutorial_building_custom_count_matrices_from_tsv_or_cellranger_outputs.ipynb>`__)using standard 10x single cell ATAC output and the corresponding data processing. 
+
+Additionally, we will shortly release a new tutorial dedicated to PAGA and differential pseudotime analysis, available `here <https://nbviewer.jupyter.org/github/colomemaria/epiScanpy/blob/master/docs/tutorials/tutorial_satpathy_et_al.ipynb>`__. 
 
 .. image:: pictures/umap.png
    :width: 350px
