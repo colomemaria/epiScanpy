@@ -82,14 +82,14 @@ def filter_cells(
         adata_copy = sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts,
             max_genes=max_features, inplace=inplace, copy=copy)
         if 'n_genes' in adata_copy.obs.columns:
-            adata_copy.obs['nb_features'] = adata_copy.obs['n_genes'] 
+            adata_copy.obs['nb_features'] = adata_copy.obs['n_genes']
             del adata_copy.obs['n_genes']
         return(adata_copy)
     else:
-        sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts, 
+        sc.pp.filter_cells(adata, min_counts, min_genes=min_features, max_counts=max_counts,
             max_genes=max_features, inplace=inplace, copy=copy)
         if 'n_genes' in adata.obs.columns:
-            adata.obs['nb_features'] = adata.obs['n_genes'] 
+            adata.obs['nb_features'] = adata.obs['n_genes']
             del adata.obs['n_genes']
 
 
@@ -143,7 +143,7 @@ def filter_features(data,
             max_cells, inplace, copy))
     else:
         sc.pp.filter_genes(data, min_counts, min_cells, max_counts, max_cells, inplace, copy)
-    
+
 
 
 def pca(adata,
@@ -235,7 +235,7 @@ def pca(adata,
         return(sc.pp.pca(adata, n_comps, zero_center, svd_solver, random_state, return_info,
             use_highly_variable, dtype, copy, chunked, chunk_size))
     else:
-        sc.pp.pca(adata, n_comps, zero_center, svd_solver, random_state, return_info, 
+        sc.pp.pca(adata, n_comps, zero_center, svd_solver, random_state, return_info,
             use_highly_variable, dtype, copy, chunked, chunk_size)
 
 
@@ -322,14 +322,14 @@ def normalize_per_cell(
         adata2 = sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell,
             key_n_counts,copy, layers, use_rep, min_counts)
         if None in adata2.obs_names.tolist():
-            adata2.obs[key_n_counts] = adata2.obs[None] 
+            adata2.obs[key_n_counts] = adata2.obs[None]
             del adata2.obs[None]
         return(adata2)
     else:
         sc.pp.normalize_per_cell(adata, counts_per_cell_after, counts_per_cell,
             key_n_counts,copy, layers, use_rep, min_counts)
         if None in adata.obs_names.tolist():
-            adata.obs[key_n_counts] = adata.obs[None] 
+            adata.obs[key_n_counts] = adata.obs[None]
             del adata.obs[None]
 
 def normalize_total(adata,
@@ -425,9 +425,10 @@ def normalize_total(adata,
            [ 0.5, 11. ,  0.5,  1. ,  1. ]], dtype=float32)
     """
 
-    sc.pp.normalize_total(adata, target_sum, exclude_highly_expressed, 
-        max_fraction, key_added, layers, layer_norm, inplace)
-    
+    sc.pp.normalize_total(adata=adata, target_sum=target_sum, exclude_highly_expressed=exclude_highly_expressed,
+                          max_fraction=max_fraction, key_added=key_added, layers=layers, layer_norm=layer_norm,
+                          inplace=inplace)
+
 
 def regress_out(adata, keys, n_jobs=None, copy=False):
     """Regress out unwanted sources of variation.
@@ -455,7 +456,7 @@ def regress_out(adata, keys, n_jobs=None, copy=False):
         return(sc.pp.regress_out(adata, keys, n_jobs, copy))
     else:
         sc.pp.regress_out(adata, keys, n_jobs, copy)
-    
+
 
 def subsample(data, fraction=None, n_obs=None, random_state=0, copy=False):
     """Subsample to a fraction of the number of observations.
@@ -485,7 +486,7 @@ def subsample(data, fraction=None, n_obs=None, random_state=0, copy=False):
         return(sc.pp.subsample(data, fraction, n_obs, random_state, copy))
     else:
         sc.pp.subsample(data, fraction, n_obs, random_state, copy)
-    
+
 def downsample_counts(adata, counts_per_cell = None, total_counts = None,
     random_state = 0, replace = False, copy = False):
     """Downsample counts from count matrix.
@@ -525,8 +526,8 @@ def downsample_counts(adata, counts_per_cell = None, total_counts = None,
     else:
         sc.pp.downsample_counts(adata, counts_per_cell, total_counts,
             random_state, replace, copy)
-    
-    
+
+
 
 
 
