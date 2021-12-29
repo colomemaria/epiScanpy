@@ -1,9 +1,6 @@
 import anndata as ad
 import matplotlib.pyplot as plt
 import pandas as pd
-
-# importing package
-import matplotlib.pyplot as plt
 import numpy as np
 import random
 
@@ -72,27 +69,27 @@ def cell_composition(adata, obs_1,  obs_2,
     save : if not None, str corresponding to the output file name
     """
     
-    
-    #colors for the plot
-    if obs_2+"_colors" in adata.uns.keys():
-        colors=adata.uns[obs_2+"_colors"]
-    else:
-        # select random colors
-        no_of_colors=len(df.index.tolist())
-        colors=["#"+''.join([random.choice('0123456789ABCDEF') for i in range(6)])
-           for j in range(no_of_colors)]
-
-
     # create dataframe
     df = pd.crosstab(adata.obs[obs_1], adata.obs[obs_2])
     array = np.array(df)
-  
+    x = df.columns.tolist()
+    y = df.index.tolist()
+    
+    #colors for the plot
+    if obs_1+"_colors" in adata.uns.keys():
+        colors=adata.uns[obs_1+"_colors"]
+    else:
+        # select random colors
+        no_of_colors=len(y)
+        colors=["#"+''.join([random.choice('0123456789ABCDEF') for i in range(6)])
+           for j in range(no_of_colors)]
+
     # plot bars in stack manner
     previous_value = 0
     index = 0
-    for n in range(len(df.index.tolist())):
+    for n in range(len(y)):
         plt.bar(x, array[index], bottom=previous_value, color=colors[index])
-        previous_value +=array[index]
+        previous_value += array[index]
         index += 1
 
     #    The strings
@@ -103,7 +100,7 @@ def cell_composition(adata, obs_1,  obs_2,
     #    place the legend at the center of the corresponding edge of the
     #    axes/figure.
     plt.xticks(x, rotation=90)
-    plt.legend(df.index.tolist(), loc=loc_legend, bbox_to_anchor=location_bbox)
+    plt.legend(y, loc=loc_legend, bbox_to_anchor=location_bbox)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
