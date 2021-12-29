@@ -1,7 +1,7 @@
 from ..plotting._heatmap import overlap_heatmap, prct_overlap
 #from ..plotting._features import plot_rank_features
 from ..plotting._silhouette import silhouette, silhouette_tot
-from ..plotting._histograms import cluster_composition
+from ..plotting._histograms import cluster_composition, cell_composition
 
 #from ..plotting._scanpy_plotting import pca, tsne, umap, diffmap, draw_graph
 from ..plotting._scanpy_plotting import pca_loadings, pca_overview, pca_variance_ratio
