@@ -1,4 +1,3 @@
-import scanpy as sc
 import anndata as ad
 import numpy as np
 import pandas as pd
