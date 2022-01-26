@@ -110,7 +110,7 @@ def geneactivity(adata,
     copy : unused
 
 
-    OUTPUT
+    OUTPUT anndata object with csc_sparse gene_activity
     ------
 
 
@@ -184,4 +184,5 @@ def geneactivity(adata,
     gene_adata.uns = adata.uns.copy()
     gene_adata.obsm = adata.obsm.copy()
     gene_adata.obsp = adata.obsp.copy()
+
     return(gene_adata)
