@@ -180,8 +180,6 @@ def geneactivity(adata,
         dataframe_genes.index = pd.Index(dataframe_genes[index_col[0]])
         dataframe_genes = dataframe_genes.drop(index_col, axis=1)
 
-    print(dataframe_genes)
-
     gene_adata = ad.AnnData(gene_activity, var=dataframe_genes, obs=adata.obs)
     gene_adata.uns = adata.uns.copy()
     gene_adata.obsm = adata.obsm.copy()
