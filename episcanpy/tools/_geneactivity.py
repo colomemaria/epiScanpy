@@ -2,7 +2,77 @@ import scanpy as sc
 import anndata as ad
 import numpy as np
 import pandas as pd
-from scipy.sparse import csr_matrix
+from scipy.sparse import csr_matrix, csc_matrix
+from intervaltree import Interval, IntervalTree
+from collections import defaultdict
+
+
+def _peaks_to_IntervalTree(adata):
+    """
+    Return a dict chr => Interval Tree
+    Because the IntervalTree Lib is start inclusive end exclusive, I added +1 to end value.
+    :return:dict[str] => IntervalTree
+    """
+
+    d_peaks = defaultdict(dict)
+    for i, v in enumerate(adata.var_names.tolist()):
+
+        spt = v.split("_")
+        chrom, start, end = spt[0], int(spt[1]), int(spt[2])
+
+        if chrom not in d_peaks:
+            d_peaks[chrom] = IntervalTree()
+        d_peaks[chrom].addi(start, end + 1, i)
+
+    return d_peaks
+
+
+def _test_genes_against_peaks(genes, peaks_intertree, matrix):
+
+    ps = peaks_intertree[genes[0]: genes[1]]
+    if ps :
+        ps = list(ps)
+        indice = [p[2] for p in ps]  # way faster to pull everything at once
+        return (np.sum(matrix[:, indice].todense(), axis=1), genes[2])
+
+
+def _read_gtf(gtf_file,
+             upstream,
+             feature_type,
+             annotation):
+    """
+    Read a .gtf file return  dico[chromosome] => IntervalTree
+    gtf_file: str || pathlib.Path
+    upstream: int
+    feature_type: str
+    annotation: str
+
+    """
+
+    gtf = defaultdict(list)
+    with open(gtf_file) as f:
+        for line in f:
+            if not line.startswith("#"):  # comment
+                line = line.rstrip('\n').split('\t')
+
+                if len(line) >= 8 and line[1] == annotation and line[2] == feature_type:
+
+                    # negative strand
+                    if line[6] == '-':
+                        start, end = int(line[3]), int(line[4]) + upstream + 1
+                    else:
+                        start, end = int(line[3]) - upstream, int(line[4]) + 1
+
+                    features = line[-1].rstrip(";").split(';')
+                    feat_dict = {}
+                    for y in features:
+                        y = y.strip().split()
+                        feat_dict[y[0].replace("'", "").replace('"', "")] = y[1].replace("'", "").replace('"', "")
+
+                    gtf[line[0]].append([start, end, feat_dict])
+
+    return gtf
+
 
 def geneactivity(adata,
                  gtf_file,
@@ -11,146 +81,120 @@ def geneactivity(adata,
                  feature_type='gene',
                  annotation='HAVANA',
                  layer_name='geneactivity',
-                 raw=False, 
+                 raw=False,
                  copy=True):
     """
-    
+
     Build an AnnData object containing the number of open features
-    (windows, peaks, etc) overlapping genes (gene bodies + 5kb upstream of the TSS).  
+    (windows, peaks, etc) overlapping genes (gene bodies + 5kb upstream of the TSS).
     It is possible to extend the distance from the TSS with the upstream parameter.
-    
+
     Rather than using multiple time the same gene, it is possible to specify which genome annotation is desired using the parameter annotation.
-    as the GTF files can often contain multiple annotations for genes (HAVANA, ENSEMBL, etc.). 
+    as the GTF files can often contain multiple annotations for genes (HAVANA, ENSEMBL, etc.).
 
     Alternatively, if you want to obtain the gene activity at something else than genes, like transcipts. It is possible as well.
     The feature_type can be specified.
 
     TSS = Transcription Starting Site
-    
+
     INPUT
     -----
 
     adata : input AnnData
     gtf_file : input gtf file name + path
-    key_added : to save the geneactivity matrix as an adata.uns object if 
+    key_added : unused / to save the geneactivity matrix as an adata.uns object if
     upstream :
     featyre_type : transcripts or genes
     annotation :
-    layer_name : 
+    layer_name : unused
     raw :
-    copy : 
+    copy : unused
 
 
     OUTPUT
     ------
 
-    
+
     """
-    ### extracting the genes
-    gtf = {}
-    with open(gtf_file) as f:
-        for line in f:
-            if line[0:2] != '##' and '\t'+feature_type+'\t' in line and '\t'+annotation+'\t' in line:
-                line = line.rstrip('\n').split('\t')
-                if line[6] == '-':
-                    if line[0] not in gtf.keys():
-                        gtf[line[0]] = [[int(line[3]), int(line[4])+upstream,line[-1].split(';')[:-1]]]
-                    else:
-                        gtf[line[0]].append([int(line[3]), int(line[4])+upstream,line[-1].split(';')[:-1]])
-                else:
-                    if line[0] not in gtf.keys():
-                        gtf[line[0]] = [[int(line[3])-upstream, int(line[4]),line[-1].split(';')[:-1]]]
-                    else:
-                        gtf[line[0]].append([int(line[3])-upstream, int(line[4]),line[-1].split(';')[:-1]])
+    gtf = _read_gtf(gtf_file=gtf_file,
+                    upstream=upstream,
+                    feature_type=feature_type,
+                    annotation=annotation)
 
-    # extracting the feature coordinates
-    if raw==True:
-        raw_adata = adata.raw.to_adata()
+    dico_peaks = _peaks_to_IntervalTree(adata=adata)
+    if raw:
+        adata_raw = adata.raw.X.copy()
     else:
-        raw_adata = adata.copy()
-    raw_adata_features = {}
-    feature_index = 0
-    for line in raw_adata.var_names.tolist():
-        line = line.split('_')
-        if line[0] not in raw_adata_features.keys():
-            raw_adata_features[line[0]] = [[int(line[1]),int(line[2]), feature_index]]
-        else:
-            raw_adata_features[line[0]].append([int(line[1]),int(line[2]), feature_index])
-        feature_index += 1
-    
-    ## find the features overlaping the genes. and build the count matrix
-    gene_index = []
-    gene_activity_X = []
- 
-    # if raw_adata.X is a dense array, make it sparse
-    if isinstance(raw_adata.X, np.ndarray):
-        raw_adata.X = csr_matrix(raw_adata.X)
+        adata_raw = adata.X.copy()
 
-    for chrom in gtf.keys():
-        if chrom in raw_adata_features.keys():
-            #print(chrom)
-            chrom_index = 0
-            previous_features_index = 0
-            for gene in gtf[chrom]:
-                gene_values = []
-                gene_start = gene[0]
-                gene_end = gene[1]
-                for feature in raw_adata_features[chrom]:
-                    feature_index = 0
-                    if (feature[1]<= gene_start): # the window is before the gene. we need to test the next window.
-                        continue
-                    elif (gene_end <= feature[0]): # the window is after the gene. we need totest the next gene.
-                        break
-                    else: # the window is overlapping the gene. 
-                        # what if 
-                        gene_values.append(raw_adata.X[:,feature[2]].todense())
-                if gene_values != []:
-                    gene_activity_X.append(np.sum(gene_values, axis=0))
-                    gene_index.append(gene[-1])
-                
+    m = csc_matrix(adata_raw)
+    # could be easily adapt to multiple core. eg. st of cells of by chromosome or set of peaks
+    genes_index = []
+    genes = []
+    for chrom in gtf:
 
-    gene_activity_X = np.concatenate(tuple(gene_activity_X), axis=-1)
+        if chrom in dico_peaks:
 
-    # get the variable metadata
-    gene_name = []
-    if feature_type=='transcript':
-        for x in gene_index:
-            for y in x:
-                if 'transcript_name' in y:
-                    gene_name.append(y.lstrip(' transcript_name "').rstrip('"'))
-        #gene_name = [x[7].lstrip(' transcript_name "').rstrip('"') for x in gene_index]
-    elif feature_type=='gene':
-        for x in gene_index:
-            for y in x:
-                if 'gene_name' in y:
-                    gene_name.append(y.lstrip(' gene_name "').rstrip('"'))
-        #gene_name = [x[4].lstrip(' gene_name "').rstrip('"') for x in gene_index]
+            peaks_IT = dico_peaks[chrom]
 
-    metadata_genes = {'gene_id' : [],
-                      'transcript_id' : [],
-                      'gene_type' : [],
-                      'gene_name' : [],
-                      'transcript_type' : [],
-                      'transcript_name' : [],
-                      'protein_id' : []}
+            for gene_current in gtf[chrom]:
 
-    for line in gene_index:
-        dico_line = {}
-        for element in line:
-            if ' "' in element:
-                dico_line[element.rstrip('"').lstrip(" ").split(' "')[0]] = element.rstrip('"').lstrip(" ").split(' "')[1]
-    
+                r = _test_genes_against_peaks(gene_current,
+                                                   peaks_IT,
+                                                   m)
+                if r :
+                    genes_index.append(r[1])
+                    genes.append(r[0])
+
+    gene_activity = np.concatenate(genes, axis=-1)
+
+    meta_data = set()
+
+    for gene_annotation in genes_index:
+
+        for annotation in gene_annotation.keys():
+            meta_data.add(annotation)
+
+    metadata_genes = {}
+    for annot in meta_data:
+        metadata_genes[annot] = []
+
+    for gene_annotation in genes_index:
         for key in metadata_genes.keys():
-            if key in dico_line.keys():
-                metadata_genes[key].append(dico_line[key])
-            else:
-                metadata_genes[key].append('NA')  
-            
-    dataframe_genes = pd.DataFrame.from_dict(metadata_genes)
-    dataframe_genes.index = gene_name
+            metadata_genes[key].append(gene_annotation.get(key, "NA"))
 
-    #adata.layers[layer_name] = ad.AnnData(gene_activity_X, var=dataframe_genes, obs=raw_adata.obs)
-    gene_adata = ad.AnnData(gene_activity_X, var=dataframe_genes, obs=raw_adata.obs)
+
+    for line in genes_index:
+            dico_line = {}
+            for element in line:
+                if ' "' in element:
+                    dico_line[element.rstrip('"').lstrip(" ").split(' "')[0]] = element.rstrip('"').lstrip(" ").split(' "')[1]
+
+            for key in metadata_genes.keys():
+                if key in dico_line.keys():
+                    metadata_genes[key].append(dico_line[key])
+                else:
+                    metadata_genes[key].append('NA')
+
+    # manage index
+    dataframe_genes = pd.DataFrame.from_dict(metadata_genes)
+    index_col = []
+    if feature_type == 'transcript':
+        if "transcript_name" in dataframe_genes.columns:
+            index_col = ["transcript_name"]
+        elif "transcript_id" in dataframe_genes.columns:
+            index_col = ["transcript_id"]
+    else:
+        if "gene_name" in dataframe_genes.columns:
+            index_col = ["gene_name"]
+        elif "gene_id" in dataframe_genes.columns:
+            index_col = ["gene_id"]
+
+    if index_col:
+        dataframe_genes.index = pd.Index(dataframe_genes[index_col[0]])
+        dataframe_genes = dataframe_genes.drop(index_col, axis=1)
+
+    gene_adata = ad.AnnData(gene_activity, var=dataframe_genes, obs=adata_raw.obs)
     gene_adata.uns = adata.uns.copy()
     gene_adata.obsm = adata.obsm.copy()
     gene_adata.obsp = adata.obsp.copy()
