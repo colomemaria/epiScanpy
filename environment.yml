@@ -5,7 +5,6 @@ channels:
     - defaults
 dependencies:
     - python<3.8
-    - intervaltree
     - anndata>=0.7
     - scanpy>=1.5.1
     - importlib_metadata>=0.7
@@ -29,3 +28,5 @@ dependencies:
     - legacy-api-wrap
     - setuptools_scm
     - packaging
+    - pip:
+        - intervaltree
