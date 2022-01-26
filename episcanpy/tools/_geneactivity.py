@@ -162,19 +162,6 @@ def geneactivity(adata,
         for key in metadata_genes.keys():
             metadata_genes[key].append(gene_annotation.get(key, "NA"))
 
-
-    for line in genes_index:
-            dico_line = {}
-            for element in line:
-                if ' "' in element:
-                    dico_line[element.rstrip('"').lstrip(" ").split(' "')[0]] = element.rstrip('"').lstrip(" ").split(' "')[1]
-
-            for key in metadata_genes.keys():
-                if key in dico_line.keys():
-                    metadata_genes[key].append(dico_line[key])
-                else:
-                    metadata_genes[key].append('NA')
-
     # manage index
     dataframe_genes = pd.DataFrame.from_dict(metadata_genes)
     index_col = []
@@ -193,7 +180,9 @@ def geneactivity(adata,
         dataframe_genes.index = pd.Index(dataframe_genes[index_col[0]])
         dataframe_genes = dataframe_genes.drop(index_col, axis=1)
 
-    gene_adata = ad.AnnData(gene_activity, var=dataframe_genes, obs=adata_raw.obs)
+    print(dataframe_genes)
+
+    gene_adata = ad.AnnData(gene_activity, var=dataframe_genes, obs=adata.obs)
     gene_adata.uns = adata.uns.copy()
     gene_adata.obsm = adata.obsm.copy()
     gene_adata.obsp = adata.obsp.copy()
