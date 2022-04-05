@@ -28,3 +28,5 @@ dependencies:
     - legacy-api-wrap
     - setuptools_scm
     - packaging
+    - pip:
+        - intervaltree
