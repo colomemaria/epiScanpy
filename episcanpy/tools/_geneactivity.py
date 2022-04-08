@@ -16,7 +16,13 @@ def _peaks_to_IntervalTree(adata):
     d_peaks = defaultdict(dict)
     for i, v in enumerate(adata.var_names.tolist()):
 
+        # if peak coordinates stored as chr_start_end 
         spt = v.split("_")
+        # if peak coordinates stored as chr:start-end 
+        if len(spt)==1:
+            spt = v.split(':')
+            spt = [spt[0]]+spt[1].split('-')
+
         chrom, start, end = spt[0], int(spt[1]), int(spt[2])
 
         if chrom not in d_peaks:
@@ -50,25 +56,51 @@ def _read_gtf(gtf_file,
 
     gtf = defaultdict(list)
     with open(gtf_file) as f:
-        for line in f:
-            if not line.startswith("#"):  # comment
-                line = line.rstrip('\n').split('\t')
 
-                if len(line) >= 8 and line[1] == annotation and line[2] == feature_type:
+        if annotation == None: 
 
-                    # negative strand
-                    if line[6] == '-':
-                        start, end = int(line[3]), int(line[4]) + upstream + 1
-                    else:
-                        start, end = int(line[3]) - upstream, int(line[4]) + 1
+            for line in f:
+                if not line.startswith("#"):  # comment
+                    line = line.rstrip('\n').split('\t')
 
-                    features = line[-1].rstrip(";").split(';')
-                    feat_dict = {}
-                    for y in features:
-                        y = y.strip().split()
-                        feat_dict[y[0].replace("'", "").replace('"', "")] = y[1].replace("'", "").replace('"', "")
+                    if len(line) >= 8 and line[2] == feature_type:
 
-                    gtf[line[0]].append([start, end, feat_dict])
+                        # negative strand
+                        if line[6] == '-':
+                            start, end = int(line[3]), int(line[4]) + upstream + 1
+                        else:
+                            start, end = int(line[3]) - upstream, int(line[4]) + 1
+
+                        features = line[-1].rstrip(";").split(';')
+                        feat_dict = {}
+                        feat_dict['annotation']=line[1]
+                        for y in features:
+                            y = y.strip().split()
+                            feat_dict[y[0].replace("'", "").replace('"', "")] = y[1].replace("'", "").replace('"', "")
+
+                        gtf[line[0]].append([start, end, feat_dict])
+        
+        else:
+            for line in f:
+                if not line.startswith("#"):  # comment
+                    line = line.rstrip('\n').split('\t')
+
+                    if len(line) >= 8 and line[1] == annotation and line[2] == feature_type:
+
+                        # negative strand
+                        if line[6] == '-':
+                            start, end = int(line[3]), int(line[4]) + upstream + 1
+                        else:
+                            start, end = int(line[3]) - upstream, int(line[4]) + 1
+
+                        features = line[-1].rstrip(";").split(';')
+                        feat_dict = {}
+                        feat_dict['annotation']=annotation
+                        for y in features:
+                            y = y.strip().split()
+                            feat_dict[y[0].replace("'", "").replace('"', "")] = y[1].replace("'", "").replace('"', "")
+
+                        gtf[line[0]].append([start, end, feat_dict])
 
     return gtf
 
@@ -104,9 +136,10 @@ def geneactivity(adata,
     key_added : unused / to save the geneactivity matrix as an adata.uns object if
     upstream :
     featyre_type : transcripts or genes
-    annotation :
+    annotation : str or None. Usual annotations are ENSEMBL and HAVANA. If None 
+    if will consider all genes present in the gtf file
     layer_name : unused
-    raw :
+    raw : ununsed
     copy : unused
 
 
