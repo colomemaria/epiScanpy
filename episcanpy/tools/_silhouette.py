@@ -45,8 +45,8 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean',
     n_clusters = len(set(adata_name.obs[cluster_annot]))
 
     ## also, return sample_silhouette_values as adata.obs['silhouette_samples']
-    silhouette_avg = silhouette_score(X, cluster_labels, metric)
-    sample_silhouette_values = silhouette_samples(X, cluster_labels, metric)
+    silhouette_avg = silhouette_score(X=X, label=cluster_labels, metric=metric)
+    sample_silhouette_values = silhouette_samples(X=X, label=cluster_labels, metric=metric)
     
     if key_added:
         adata_name.obs[key_added] = sample_silhouette_values
