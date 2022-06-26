@@ -407,9 +407,9 @@ def write_methlevel(meth_to_write, name_file, cell, writing_option='a', feature_
     """
     file_to_write = open(name_file, writing_option)
 
-    if feature_names != None:
-        feature_to_write = ["sample_name"]
-        feature_to_write += feature_names
+    if (feature_names != None) and (writing_option=='w'):
+        feature_to_write = ["sample_name"]+feature_names
+        #print(["sample_name"]+feature_names)
         write_list(feature_to_write, file_to_write) # should add an condition
                                             # to be sure features is a dictionary
     meth_to_write = [cell] + meth_to_write
@@ -430,7 +430,7 @@ def make_list(dico):
 
 def build_count_mtx(cells, annotation, path="", output_file=None, writing_option="w",
                     meth_context="CG", chromosome=None, feature_names=None,
-                   threshold=1, ct_mtx=None, sparse=False, copy=False):
+                   threshold=1, ct_mtx=None, sparse=False, copy=False, verbosity=True):
     """
     Build methylation count matrix for a given annotation.
     It either write the count matrix (if given an output file) or return it as a variable (numpy matrix). 
@@ -476,10 +476,13 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         default: False
     copy:
         if True, return count matrix
+    verobity:
+        if True, print cell and index running
     
     """
     #verbosity
-    i = 0
+    if verbosity == True:
+        i = 0
     
     #################################
     # Going through the parameters
@@ -499,6 +502,7 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         if isinstance(output_file, list) is False:
             output_file = [output_file]
             
+    #print("output_file", len(output_file))
     if copy==True:
         ct_mtx=[0]*nb_annotation
         
@@ -523,8 +527,9 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
     
     cell = cells[0]
     #verbosity
-    print(i, cell)
-    i += 1
+    if verbosity == True:
+        print(i, cell)
+        i += 1
     # read the file to extract cytosines in the right context
     if meth_context == 'CG':
         tmp_file = read_meth_fileCG(cell, path, chromosome)
@@ -533,12 +538,13 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         
     # build the cell vector for the count matrix at every set of annotations
     for index_annot in range(nb_annotation):
-        print(index_annot)
+        #print(index_annot)
         meth_level_annot = methylation_level(tmp_file, annotation[index_annot], annotation[index_annot].keys(), threshold[index_annot])
         # to save the output
-        if isinstance(output_file, list) and len(output_file)==1:
+        if (isinstance(output_file, list) and feature_names[index_annot]==None) or (isinstance(output_file, list) and len(output_file)==1):
+            write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], None)
+        else:
             write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names[index_annot])
-        
         writing_option[index_annot] = 'a'
         
         if copy==True:
@@ -565,20 +571,19 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
             tmp_file = read_meth_fileCH(cell, path, chromosome)
         else:
             break
+            
         
         # build the cell vector for the count matrix at every set of annotations
         for index_annot in range(nb_annotation):
-            print(index_annot)
+            #print(index_annot)
             meth_level_annot = methylation_level(tmp_file, annotation[index_annot], annotation[index_annot].keys(), threshold[index_annot])
             #return(meth_level_annot)
             if isinstance(output_file, list) and len(output_file)==nb_annotation:
-                write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names=None)
+                write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names=feature_names[index_annot])
             
             if copy== True:
                 ct_mtx[index_annot] = np.vstack([ct_mtx[index_annot], meth_level_annot])
                 
+              
     if copy == True: 
         return(ct_mtx)
-
-
-
