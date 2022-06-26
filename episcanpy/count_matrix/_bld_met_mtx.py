@@ -543,8 +543,9 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
         # to save the output
         if (isinstance(output_file, list) and feature_names[index_annot]==None) or (isinstance(output_file, list) and len(output_file)==1):
             write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], None)
-        else:
+        elif isinstance(output_file, list):
             write_methlevel(meth_level_annot, output_file[index_annot], cell, writing_option[index_annot], feature_names[index_annot])
+    
         writing_option[index_annot] = 'a'
         
         if copy==True:
@@ -587,3 +588,7 @@ def build_count_mtx(cells, annotation, path="", output_file=None, writing_option
               
     if copy == True: 
         return(ct_mtx)
+
+
+
+
