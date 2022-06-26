@@ -55,7 +55,7 @@ def load_metadata(adata, metadata_file, path='', separator=';', remove_index_str
     #             dict_annot[key].append('NA')
     # for key in head:
     #     adata.obs[key] = dict_annot[key]
-    metadata = pd.read_csv(path+metadata_file, sep = "\t", header = 0)
+    metadata = pd.read_csv(path+metadata_file, sep = separator, header = 0)
     str_index = adata.obs.index
     if remove_index_str:
         for value in remove_index_str:
