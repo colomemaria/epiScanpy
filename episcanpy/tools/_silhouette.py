@@ -1,4 +1,4 @@
-import anndata as ad 
+import anndata as ad
 import scanpy as sc
 from sklearn.metrics import silhouette_score, silhouette_samples
 
@@ -8,8 +8,8 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean',
 
     Compute silhouette scores.
 
-    It computes the general silhouette score as well as a silhouette score for every cell according 
-    to the cell cluster assigned to it. 
+    It computes the general silhouette score as well as a silhouette score for every cell according
+    to the cell cluster assigned to it.
 
     Parameters
     ----------
@@ -31,23 +31,23 @@ def silhouette(adata_name, cluster_annot, value='X_pca', metric='euclidean',
 
 
 
-    Credit to sklearn script : 
+    Credit to sklearn script :
     https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html#sphx-glr-auto-examples-cluster-plot-kmeans-silhouette-analysis-py
     return score and silhouette plot. Still some work to do to finish the function.
     size=None but you can put 'large' if you want a bigger default figure size
     """
-    
+
     if copy:
       adata_name = adata_name.copy()
-      
+
     X = adata_name.obsm[value]
     cluster_labels = adata_name.obs[cluster_annot]
     n_clusters = len(set(adata_name.obs[cluster_annot]))
 
     ## also, return sample_silhouette_values as adata.obs['silhouette_samples']
-    silhouette_avg = silhouette_score(X=X, label=cluster_labels, metric=metric)
-    sample_silhouette_values = silhouette_samples(X=X, label=cluster_labels, metric=metric)
-    
+    silhouette_avg = silhouette_score(X=X, labels=cluster_labels, metric=metric)
+    sample_silhouette_values = silhouette_samples(X=X, labels=cluster_labels, metric=metric)
+
     if key_added:
         adata_name.obs[key_added] = sample_silhouette_values
         adata_name.uns[key_added] = silhouette_avg
