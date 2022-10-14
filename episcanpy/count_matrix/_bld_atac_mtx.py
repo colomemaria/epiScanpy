@@ -8,6 +8,9 @@ if platform.system() != "Windows":
     from scipy.sparse import lil_matrix
     from tqdm import tqdm
 
+    import scipy
+    from ..count_matrix._count_patrick import count
+
 
     def bld_mtx_fly(tsv_file, annotation, csv_file=None, genome=None, save=False):
         """
