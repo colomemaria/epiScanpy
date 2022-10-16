@@ -9,7 +9,7 @@ if platform.system() != "Windows":
     from tqdm import tqdm
 
     import scipy
-    from ..count_matrix.count import count
+    from .count import count
 
 
     def bld_mtx_fly(tsv_file, annotation, csv_file=None, genome=None, save=False):
@@ -93,7 +93,8 @@ if platform.system() != "Windows":
 def peak_mtx(fragments_file, peak_file, valid_bcs, normalized_peak_size=None, fast=False):
 
     names = ["chr", "start", "stop"]
-    features = pd.read_csv(peak_file, sep="\t", header=None, usecols=[0, 1, 2], names=names)
+    # cellranger peak files contain comments. So added comment parameter to skip them.
+    features = pd.read_csv(peak_file, sep="\t", header=None, usecols=[0, 1, 2], names=names, comment='#')
     features.index = features.apply(lambda row: "_".join([str(val) for val in row]), axis=1)
 
     if normalized_peak_size:
@@ -106,7 +107,7 @@ def peak_mtx(fragments_file, peak_file, valid_bcs, normalized_peak_size=None, fa
 
     features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
 
-    ct_mtx = count.count(fragments_file, features.values.tolist(), valid_bcs, fast)
+    ct_mtx = count(fragments_file, features.values.tolist(), valid_bcs, fast)
 
     if fast:
         X = scipy.sparse.csr_matrix(ct_mtx)
@@ -145,7 +146,7 @@ def gene_activity_mtx(fragments_file, gtf_file, valid_bcs, upstream=2000, downst
 
     features = features[["gene_name", "gene_id", "gene_type", "chr", "start", "stop", "strand", "source"]]
 
-    ct_mtx = count.count(fragments_file, features[["chr", "start", "stop"]].values.tolist(), valid_bcs, fast)
+    ct_mtx = count(fragments_file, features[["chr", "start", "stop"]].values.tolist(), valid_bcs, fast)
 
     if fast:
         X = scipy.sparse.csr_matrix(ct_mtx)
@@ -168,7 +169,7 @@ def window_mtx(fragments_file, valid_bcs, window_size=5000, species="human", fas
 
     features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
 
-    ct_mtx = count.count(fragments_file, features.values.tolist(), valid_bcs, fast)
+    ct_mtx = count(fragments_file, features.values.tolist(), valid_bcs, fast)
 
     if fast:
         X = scipy.sparse.csr_matrix(ct_mtx)
