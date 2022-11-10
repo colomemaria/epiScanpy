@@ -1,5 +1,6 @@
 import numpy as np
 import gzip
+import matplotlib.pyplot as plt
 
 def nucleosome_signal(adata, fragments):
 
@@ -70,3 +71,21 @@ def nucleosome_signal(adata, fragments):
 
     adata.obs["nucleosome_signal"] = [nucleosome_signal[bc][0] for bc in adata.obs.index]
     adata.uns["fragment_lengths"] = {bc: nucleosome_signal[bc][1] for bc in adata.obs.index}
+
+
+def fragment_length(adata, n=5000):
+
+    ncols = 1
+    nrows = 1
+
+    fig, ax = plt.subplots(figsize=(ncols*5, nrows*5), nrows=nrows, ncols=ncols, squeeze=True)
+
+    ax.hist([[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata.obs.index],
+             bins=200,
+             linewidth=0)
+
+    ax.set_xlim((0, 800))
+
+    sns.despine()
+    plt.tight_layout()
+    plt.show()
