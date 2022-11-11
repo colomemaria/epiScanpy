@@ -632,3 +632,85 @@ def variability_features(adata, min_score=None, nb_features=None, show=True,
     #return(var_annot)
 
 
+def highly_variable(adata, min_score=None, n_features=None, save=None):
+
+    if not min_score and not n_features:
+        raise ValueError("Either min_score or n_features must not be None")
+    elif min_score and n_features:
+        raise ValueError("Use either min_score OR n_features")
+
+    adata.var["prop_shared_cells"] = adata.var.n_cells / adata.n_obs
+    adata.var["variability_score"] = 1 - np.abs(adata.var.prop_shared_cells - 0.5)
+
+    n_bins = 500
+    min_score = min_score
+    n_features_selected = n_features
+
+    if min_score is None:
+        tmp = adata.var.nlargest(n_features_selected, columns="variability_score")
+    else:
+        tmp = adata.var[adata.var.variability_score >= min_score]
+        n_features_selected = tmp.shape[0]
+
+    min_var_score = tmp.variability_score.min()
+    max_var_score = tmp.variability_score.max()
+
+    min_prop_shared = tmp.prop_shared_cells.min()
+    max_prop_shared = tmp.prop_shared_cells.max()
+
+    adata.var["highly_variable"] = adata.var.variability_score >= min_var_score
+
+    nrows = 3
+    ncols = 1
+
+    fig, axs = plt.subplots(figsize=(ncols * 10, nrows * 5), nrows=nrows, ncols=ncols, squeeze=False, sharey=False)
+    axs = axs.flatten()
+
+    fig.suptitle("Feature Selection")
+
+    axs[0].plot(np.arange(1, adata.n_vars + 1), adata.var.variability_score.sort_values(ascending=False))
+    if min_score is None:
+        axs[0].axvline(x=n_features_selected, color="red", linestyle="--", linewidth=1, alpha=0.75)
+        lims = axs[0].get_xlim()
+        axs[0].hlines(y=min_var_score, xmin=lims[0], xmax=n_features_selected, color="black", linestyle="--", linewidth=1, alpha=0.75)
+        axs[0].set_xlim(lims)
+    else:
+        axs[0].axhline(y=min_score, color="red", linestyle="--", linewidth=1, alpha=0.75)
+        lims = axs[0].get_ylim()
+        axs[0].vlines(x=n_features_selected, ymin=lims[0], ymax=min_var_score, color="black", linestyle="--", linewidth=1, alpha=0.75)
+        axs[0].set_ylim(lims)
+    axs[0].set_xlabel("Rank")
+    axs[0].set_ylabel("Variability Score")
+
+    axs[1].hist(adata.var.variability_score, bins=n_bins, linewidth=0)
+    if min_score is None:
+        axs[1].axvline(x=min_var_score, color="black", linestyle="--", linewidth=1, alpha=0.75)
+    else:
+        axs[1].axvline(x=min_var_score, color="red", linestyle="--", linewidth=1, alpha=0.75)
+    axs[1].set_xlabel("Variability Score")
+    axs[1].set_ylabel("Counts")
+    axs[1].set_xlim((0.5, 1))
+
+    axs[2].hist(adata.var.prop_shared_cells, bins=n_bins, linewidth=0)
+    if min_score is None:
+        axs[2].axvline(x=min_prop_shared, color="black", linestyle="--", linewidth=1, alpha=0.75)
+        axs[2].axvline(x=max_prop_shared, color="black", linestyle="--", linewidth=1, alpha=0.75)
+    else:
+        axs[2].axvline(x=min_score - 0.5, color="red", linestyle="--", linewidth=1, alpha=0.75)
+        axs[2].axvline(x=1 - (min_score - 0.5), color="red", linestyle="--", linewidth=1, alpha=0.75)
+    axs[2].set_xlabel("Proportion Share Cells")
+    axs[2].set_ylabel("Counts")
+    axs[2].set_xlim((0, 1))
+
+    plt.tight_layout()
+
+    if not save:
+        plt.show()
+
+    else:
+        if isinstance(save, str):
+            filename = save
+        else:
+            filename = "feature_selection.png"
+
+        plt.savefig(filename, dpi=300)
