@@ -16,6 +16,6 @@ from scanpy.plotting import scatter, violin, ranking, clustermap, stacked_violin
 from scanpy.plotting import umap, pca, diffmap, tsne, draw_graph
 
 from ..preprocessing._quality_control import cal_var, variability_features
-from ..preprocessing._tss_enrichment import tss_enrichment
+from ..preprocessing._tss_enrichment import tss_enrichment_plot as tss_enrichment
 from ..preprocessing._tss_enrichment import tss_enrichment_score
 from ..preprocessing._nucleosome_signal import fragment_length
