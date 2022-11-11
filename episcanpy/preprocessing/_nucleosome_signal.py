@@ -74,21 +74,37 @@ def nucleosome_signal(adata, fragments):
     adata.uns["fragment_lengths"] = {bc: nucleosome_signal[bc][1] for bc in adata.obs.index}
 
 
-def fragment_length(adata, n=5000, save=None):
+def fragment_length(adata, n=5000, threshold=4, save=None):
 
-    ncols = 1
+    ncols = 1 if not threshold else 2
     nrows = 1
 
-    fig, ax = plt.subplots(figsize=(ncols*5, nrows*5), nrows=nrows, ncols=ncols, squeeze=True)
+    fig, axs = plt.subplots(figsize=(ncols*5, nrows*5), nrows=nrows, ncols=ncols, squeeze=False)
+    axs = axs.flatten()
 
-    vals = [[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata.obs.index]
-    vals = [y for x in vals for y in x[:n]]
+    for i, ax in enumerate(axs):
 
-    ax.hist(vals,
-            bins=200,
-            linewidth=0)
+        if not threshold:
+            vals = [[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata.obs.index]
+            vals = [y for x in vals for y in x[:n]]
+            color = "tab:blue"
 
-    ax.set_xlim((0, 800))
+        else:
+            if i == 0:
+                vals = [[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata[adata.obs.nucleosome_signal <= threshold].obs.index]
+                color = "tab:blue"
+            if i == 1:
+                vals = [[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata[adata.obs.nucleosome_signal > threshold].obs.index]
+                color = "tab:orange"
+
+            vals = [y for x in vals for y in x[:n]]
+
+        ax.hist(vals,
+                bins=200,
+                linewidth=0,
+                color=color)
+
+        ax.set_xlim((0, 800))
 
     sns.despine()
     plt.tight_layout()
