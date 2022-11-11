@@ -1,6 +1,7 @@
 import numpy as np
 import gzip
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def nucleosome_signal(adata, fragments):
 
@@ -73,19 +74,32 @@ def nucleosome_signal(adata, fragments):
     adata.uns["fragment_lengths"] = {bc: nucleosome_signal[bc][1] for bc in adata.obs.index}
 
 
-def fragment_length(adata, n=5000):
+def fragment_length(adata, n=5000, save=None):
 
     ncols = 1
     nrows = 1
 
     fig, ax = plt.subplots(figsize=(ncols*5, nrows*5), nrows=nrows, ncols=ncols, squeeze=True)
 
-    ax.hist([[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata.obs.index],
-             bins=200,
-             linewidth=0)
+    vals = [[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata.obs.index]
+    vals = [y for x in vals for y in x[:n]]
+
+    ax.hist(vals,
+            bins=200,
+            linewidth=0)
 
     ax.set_xlim((0, 800))
 
     sns.despine()
     plt.tight_layout()
-    plt.show()
+
+    if not save:
+        plt.show()
+
+    else:
+        if isinstance(save, str):
+            filename = save
+        else:
+            filename = "fragment_length.png"
+
+        plt.savefig(filename, dpi=300)

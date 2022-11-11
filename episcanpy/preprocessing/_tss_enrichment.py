@@ -255,12 +255,12 @@ def tss_enrichment(adata,
     adata.uns["tss_enrichment"]["mean_tss_score"] = mean_tss_score
 
 
-def tss_enrichment_plot(adata,
-                        group_by=None,
-                        show_n=False,
-                        max_cols=5,
-                        figsize=None,
-                        save=None):
+def tss_enrichment(adata,
+                    group_by=None,
+                    show_n=False,
+                    max_cols=5,
+                    figsize=None,
+                    save=None):
     """
     Plots the mean TSS enrichment profile
 
@@ -342,23 +342,15 @@ def tss_enrichment_plot(adata,
         plt.show()
 
     else:
-        default_filename = "tss_enrichment_score"
-
         if isinstance(save, str):
-
-            if save[-4:] in {".pdf", ".png", ".svg"}:
-                filename = default_filename + save
-
-            else:
-                filename = default_filename + save + ".png"
-
+            filename = save
         else:
-            filename = default_filename + ".png"
+            filename = "tss_enrichment.png"
 
-        plt.savefig(filename)
+        plt.savefig(filename, dpi=300)
 
 
-def tss_enrichment_score_plot(adata, figsize=(4, 6), save=None):
+def tss_enrichment_score(adata, figsize=(4, 6), save=None):
     """
     Plots a violin plot of the individual TSS enrichment scores
 
@@ -388,20 +380,12 @@ def tss_enrichment_score_plot(adata, figsize=(4, 6), save=None):
         plt.show()
 
     else:
-        default_filename = "tss_enrichment_score"
-
         if isinstance(save, str):
-
-            if save[-4:] in {".pdf", ".png", ".svg"}:
-                filename = default_filename + save
-
-            else:
-                filename = default_filename + save + ".png"
-
+            filename = save
         else:
-            filename = default_filename + ".png"
+            filename = "tss_enrichment_score.png"
 
-        plt.savefig(filename)
+        plt.savefig(filename, dpi=300)
 
 
 
@@ -410,7 +394,7 @@ def filter_enrichment_score(adata, score_threshold):
     """
     Cluster the cells in 2 categories (low and high tss enrichment) based on the mean tss enrichment score
     obtained with epi.pp.tss_enrichment()
-    
+
     score <= score_threshold: --> low enrichment
     score > score thrshold --> high enrichment
     """
