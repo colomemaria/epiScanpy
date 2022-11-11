@@ -3,9 +3,9 @@ import gzip
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def nucleosome_signal(adata, fragments):
+def nucleosome_signal(adata, fragments, n=10000):
 
-    n = adata.n_obs * 10000
+    n = adata.n_obs * n
 
     valid_bcs = set(adata.obs.index)
 
@@ -74,7 +74,7 @@ def nucleosome_signal(adata, fragments):
     adata.uns["fragment_lengths"] = {bc: nucleosome_signal[bc][1] for bc in adata.obs.index}
 
 
-def fragment_length(adata, n=5000, threshold=4, save=None):
+def fragment_length(adata, n=5000, threshold=4, show_n=True, save=None):
 
     ncols = 1 if not threshold else 2
     nrows = 1
@@ -86,15 +86,18 @@ def fragment_length(adata, n=5000, threshold=4, save=None):
 
         if not threshold:
             vals = [[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata.obs.index]
-            vals = [y for x in vals for y in x[:n]]
+            n_obs = adata.n_obs
             color = "tab:blue"
+            vals = [y for x in vals for y in x[:n]]
 
         else:
             if i == 0:
                 vals = [[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata[adata.obs.nucleosome_signal <= threshold].obs.index]
+                n_obs = adata[adata.obs.nucleosome_signal <= threshold].n_obs
                 color = "tab:blue"
             if i == 1:
                 vals = [[length for length in adata.uns["fragment_lengths"][bc] if length <= 800][:n] for bc in adata[adata.obs.nucleosome_signal > threshold].obs.index]
+                n_obs = adata[adata.obs.nucleosome_signal > threshold].n_obs
                 color = "tab:orange"
 
             vals = [y for x in vals for y in x[:n]]
@@ -105,6 +108,16 @@ def fragment_length(adata, n=5000, threshold=4, save=None):
                 color=color)
 
         ax.set_xlim((0, 800))
+
+        if show_n:
+            ax.annotate(text="n = {}".format(n_obs),
+                        xy=(0.8, 0.8),
+                        xycoords="axes fraction",
+                        xytext=(0, 0),
+                        textcoords="offset points",
+                        fontsize=12,
+                        ha="right",
+                        va="bottom")
 
     sns.despine()
     plt.tight_layout()
