@@ -44,6 +44,7 @@ def get_tss(gtf, source=None, feature=None, protein_coding_only=False):
 def tss_enrichment(adata,
                    fragments,
                    gtf,
+                   n=5000,
                    score="avg_score_of_center_region",
                    distance_to_tss=1000,
                    bp_per_flank=100,
@@ -71,9 +72,8 @@ def tss_enrichment(adata,
 
     features = features[["chr", "start", "stop", "tss_pos", "strand"]].values.tolist()
 
-
-
-
+    if n:
+        features = features[:n]
 
     check_for_comments = True
     use_strip = None
