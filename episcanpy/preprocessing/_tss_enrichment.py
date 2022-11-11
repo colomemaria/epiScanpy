@@ -70,6 +70,8 @@ def tss_enrichment(adata,
     features["start"] = features.tss_pos - distance_to_tss
     features["stop"] = features.tss_pos + distance_to_tss
 
+    features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
+
     features = features[["chr", "start", "stop", "tss_pos", "strand"]].values.tolist()
 
     if n:
