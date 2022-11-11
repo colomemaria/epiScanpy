@@ -22,3 +22,4 @@ from ..preprocessing._decomposition import nmf, fa
 
 from ..preprocessing._tss_enrichment import tss_enrichment
 from ..preprocessing._nucleosome_signal import nucleosome_signal
+from ..preprocessing._kneedle import find_elbow
