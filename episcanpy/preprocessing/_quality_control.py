@@ -726,3 +726,40 @@ def calc_qc_stats(adata):
 
     adata.obs["n_features"] = np.ravel(adata.X.sum(axis=1))
     adata.obs["log_n_features"] = np.log10(adata.obs.n_features)
+
+
+def set_filter(adata, key, min_treshold=None, max_threshold=None):
+    in_obs = key in adata.obs
+    in_var = key in adata.var
+
+    if not in_obs and not in_var:
+        raise ValueError("key not found in AnnData object")
+
+    df = adata.obs if in_obs else adata.var
+
+    if "passes_filter" in df:
+        if min_threshold and max_threshold:
+            tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
+            tmp = [not val for val in tmp]
+            df["passes_filter"][tmp] = False
+        elif min_threshold:
+            tmp = df[key] >= min_threshold
+            tmp = [not val for val in tmp]
+            df["passes_filter"][tmp] = False
+        elif max_threshold:
+            tmp = df[key] <= max_threshold
+            tmp = [not val for val in tmp]
+            df["passes_filter"][tmp] = False
+
+    else:
+        if min_threshold and max_threshold:
+            df["passes_filter"] = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
+        elif min_threshold:
+            df["passes_filter"] = df[key] >= min_threshold
+        elif max_threshold:
+            df["passes_filter"] = df[key] <= max_threshold
+
+    if in_obs:
+        adata.obs = df
+    else:
+        adata.var = df
