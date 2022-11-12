@@ -739,6 +739,16 @@ def qc_stats(adata, verbose=True):
         print("added keys n_features, log_n_features to .obs")
 
 
+def lazy_qc(adata, fragments, gtf, verbose=True):
+    qc_stats(adata, verbose=False)
+    nucleosome_signal(adata, fragments)
+    tss_enrichment(adata, fragments=fragments, gtf=gtf)
+
+    if verbose:
+        print("added keys n_cells, log_n_cells to .var")
+        print("added keys n_features, log_n_features, nucleosome_signal, tss_enrichment_score to .obs")
+
+
 def set_filter(adata, key, min_threshold=None, max_threshold=None, verbose=True):
     in_obs = key in adata.obs
     in_var = key in adata.var
