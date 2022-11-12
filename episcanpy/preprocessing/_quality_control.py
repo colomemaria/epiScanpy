@@ -789,6 +789,30 @@ def set_filter(adata, key, min_threshold=None, max_threshold=None, verbose=True)
         if verbose:
             print("{} of {} features remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
 
+
+def show_filters(adata, x="n_features", y="tss_enrichment_score", size=None, save=None):
+    fig, ax = plt.subplots(figsize=(6, 6), nrows=1, ncols=1, squeeze=True)
+
+    if size is None:
+        size = 120000 / adata.n_obs
+
+    ax.scatter(x=adata[adata.obs.passes_filter].obs[x], y=adata[adata.obs.passes_filter].obs[y], linewidth=0, s=size, color="tab:blue")
+    ax.scatter(x=adata[~adata.obs.passes_filter].obs[x], y=adata[~adata.obs.passes_filter].obs[y], linewidth=0, s=size, color="tab:red")
+
+    plt.tight_layout()
+
+    if not save:
+        plt.show()
+
+    else:
+        if isinstance(save, str):
+            filename = save
+        else:
+            filename = "qc_filters.png"
+
+        plt.savefig(filename, dpi=300)
+
+
 def apply_filters(adata, verbose=True):
     obs_prev = adata.n_obs
     vars_prev = adata.n_vars
