@@ -3,10 +3,10 @@ import seaborn as sns
 import numpy as np
 
 
-def violin(adata, key, max_threshold=None, min_threshold=None, log=True, show_mean=True, show_median=True, print_statistics=True, save=None):
+def violin(adata, key, min_threshold=None, max_threshold=None, show_log=True, show_mean=True, show_median=True, print_statistics=True, save=None):
 
-    figsize = (6, 6) if not log else (12, 6)
-    ncols = 1 if not log else 2
+    figsize = (6, 6) if not show_log else (12, 6)
+    ncols = 1 if not show_log else 2
 
     fig, axs = plt.subplots(figsize=figsize, nrows=1, ncols=ncols, squeeze=False)
     axs = axs.flatten()
@@ -16,10 +16,10 @@ def violin(adata, key, max_threshold=None, min_threshold=None, log=True, show_me
     sns.violinplot(y=df[key], inner=None, cut=0, ax=axs[0])
 
     if show_mean:
-        axs[0].axhline(y=df[key].mean(), color="black", linestyle="--", linewidth=0.75, alpha=0.75)
+        axs[0].axhline(y=df[key].mean(), color="white", linestyle="--", linewidth=2, alpha=0.75)
 
     if show_median:
-        axs[0].axhline(y=df[key].median(), color="black", linestyle="-", linewidth=0.75, alpha=0.75)
+        axs[0].axhline(y=df[key].median(), color="white", linestyle="-", linewidth=2, alpha=0.75)
 
     if max_threshold and min_threshold:
         sns.stripplot(y=df[key][np.logical_and(df[key] <= max_threshold, df[key] >= min_threshold)], size=1, jitter=0.4, color="black", ax=axs[0])
@@ -32,20 +32,20 @@ def violin(adata, key, max_threshold=None, min_threshold=None, log=True, show_me
 
     if max_threshold:
         sns.stripplot(y=df[key][df[key] > max_threshold], size=1, jitter=0.4, color="red", ax=axs[0])
-        axs[0].axhline(y=max_threshold, color="red", linestyle="--", linewidth=0.75, alpha=0.75)
+        axs[0].axhline(y=max_threshold, color="red", linestyle="--", linewidth=1, alpha=0.75)
     if min_threshold:
         sns.stripplot(y=df[key][df[key] < min_threshold], size=1, jitter=0.4, color="red", ax=axs[0])
-        axs[0].axhline(y=min_threshold, color="red", linestyle="--", linewidth=0.75, alpha=0.75)
+        axs[0].axhline(y=min_threshold, color="red", linestyle="--", linewidth=1, alpha=0.75)
 
 
-    if log:
+    if show_log:
         sns.violinplot(y=np.log10(df[key]), inner=None, cut=0, ax=axs[1])
 
         if show_mean:
-            axs[1].axhline(y=np.log10(df[key].mean()), color="black", linestyle="--", linewidth=0.75, alpha=0.75)
+            axs[1].axhline(y=np.log10(df[key].mean()), color="white", linestyle="--", linewidth=2, alpha=0.75)
 
         if show_median:
-            axs[1].axhline(y=np.log10(df[key].median()), color="black", linestyle="-", linewidth=0.75, alpha=0.75)
+            axs[1].axhline(y=np.log10(df[key].median()), color="white", linestyle="-", linewidth=2, alpha=0.75)
 
         if max_threshold and min_threshold:
             sns.stripplot(y=np.log10(df[key][np.logical_and(df[key] <= max_threshold, df[key] >= min_threshold)]), size=1, jitter=0.4, color="black", ax=axs[1])
@@ -58,10 +58,10 @@ def violin(adata, key, max_threshold=None, min_threshold=None, log=True, show_me
 
         if max_threshold:
             sns.stripplot(y=np.log10(df[key][df[key] > max_threshold]), size=1, jitter=0.4, color="red", ax=axs[1])
-            axs[1].axhline(y=np.log10(max_threshold), color="red", linestyle="--", linewidth=0.75, alpha=0.75)
+            axs[1].axhline(y=np.log10(max_threshold), color="red", linestyle="--", linewidth=1, alpha=0.75)
         if min_threshold:
             sns.stripplot(y=np.log10(df[key][df[key] < min_threshold]), size=1, jitter=0.4, color="red", ax=axs[1])
-            axs[1].axhline(y=np.log10(min_threshold), color="red", linestyle="--", linewidth=0.75, alpha=0.75)
+            axs[1].axhline(y=np.log10(min_threshold), color="red", linestyle="--", linewidth=1, alpha=0.75)
 
         axs[1].set_ylabel("log10({})".format(key))
 

@@ -35,16 +35,16 @@ def cluster_composition(adata, cluster, condition, xlabel='cell cluster',
     plt.xlabel(xlabel, )
     plt.ylabel(ylabel)
     plt.title(title)
-    
-    
+
+
     if save!=False:
-        
+
         if (save==True) or (save.split('.')[-1] not in ['png', 'pdf']):
             plt.savefig('cluster_composition.png', dpi=300, bbox_inches="tight")
         else:
             plt.savefig('_'.join(['cluster_composition',save]), #format=save.split('.')[-1],
                         dpi=300, bbox_inches="tight")
-            
+
     plt.show()
 
 
@@ -55,12 +55,12 @@ def cell_composition(adata, obs_1,  obs_2,
                     loc_legend = 'best',
                     location_bbox=(1, 0, 0, 1),
                     save=None):
-    
+
     """
-    Bar plots displaying the cell composition division between two Anndata obs categories. 
-    
+    Bar plots displaying the cell composition division between two Anndata obs categories.
+
     adata : AnnData objct
-    obs_1 : adata.obs key 1 
+    obs_1 : adata.obs key 1
     obs_2 : adata.obs key 2
     title : [optional] title of the plot
     loc_legend : location of the legend. Available are ``'upper left', 'upper right', 'lower left', 'lower right'``
@@ -68,13 +68,13 @@ def cell_composition(adata, obs_1,  obs_2,
     bbox_to_anchor : tuple containing the location of the figure. Default (1, 0, 0, 1)
     save : if not None, str corresponding to the output file name
     """
-    
+
     # create dataframe
     df = pd.crosstab(adata.obs[obs_1], adata.obs[obs_2])
     array = np.array(df)
     x = df.columns.tolist()
     y = df.index.tolist()
-    
+
     #colors for the plot
     if obs_1+"_colors" in adata.uns.keys():
         colors=adata.uns[obs_1+"_colors"]
@@ -104,7 +104,66 @@ def cell_composition(adata, obs_1,  obs_2,
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
-    
+
     if save != None :
         plt.savefig(save, bbox_inches='tight')
     plt.show()
+
+
+def histogram(adata, key, bins=40, min_threshold=None, max_threshold=None, show_log=True, show_mean=True, show_median=True, print_statistics=True, save=None):
+
+    figsize = (9, 6) if not show_log else (18, 6)
+    ncols = 1 if not show_log else 2
+
+    fig, axs = plt.subplots(figsize=figsize, nrows=1, ncols=ncols, squeeze=False)
+    axs = axs.flatten()
+
+    df = adata.obs if key in adata.obs else adata.var
+
+    axs[0].hist(df[key], bins=bins, linewidth=0.5, edgecolor="black")
+
+    if min_threshold:
+        axs[0].axvline(x=min_threshold, color="red", linestyle="--", linewidth=1, alpha=0.75)
+    if max_threshold:
+        axs[0].axvline(x=max_threshold, color="red", linestyle="--", linewidth=1, alpha=0.75)
+
+    if show_mean:
+        axs[0].axvline(x=df[key].mean(), color="white", linestyle="--", linewidth=2, alpha=0.75)
+    if show_median:
+        axs[0].axvline(x=df[key].median(), color="white", linestyle="-", linewidth=2, alpha=0.75)
+
+    axs[0].set_xlabel("{}".format(key))
+
+    if show_log:
+        axs[1].hist(np.log10(df[key]), bins=bins, linewidth=0.5, edgecolor="black")
+
+        if min_threshold:
+            axs[1].axvline(x=np.log10(min_threshold), color="red", linestyle="--", linewidth=1, alpha=0.75)
+        if max_threshold:
+            axs[1].axvline(x=np.log10(max_threshold), color="red", linestyle="--", linewidth=1, alpha=0.75)
+
+        if show_mean:
+            axs[1].axvline(x=np.log10(df[key].mean()), color="white", linestyle="--", linewidth=2, alpha=0.75)
+        if show_median:
+            axs[1].axvline(x=np.log10(df[key].median()), color="white", linestyle="-", linewidth=2, alpha=0.75)
+
+        axs[1].set_xlabel("log10({})".format(key))
+
+    plt.tight_layout()
+
+    if not save:
+        plt.show()
+
+    else:
+        if isinstance(save, str):
+            filename = save
+        else:
+            filename = "qc_histogram_{}.png".format(key)
+
+        plt.savefig(filename, dpi=300)
+
+    if print_statistics:
+        print("Max:\t{}".format(df[key].max()))
+        print("Median:\t{}".format(df[key].median()))
+        print("Mean:\t{}".format(df[key].mean()))
+        print("Min:\t{}".format(df[key].min()))
