@@ -407,44 +407,6 @@ def tss_enrichment_plot(adata,
         plt.savefig(filename, dpi=300)
 
 
-def tss_enrichment_score(adata, figsize=(4, 6), save=None):
-    """
-    Plots a violin plot of the individual TSS enrichment scores
-
-    Args:
-        adata: AnnData
-        figsize: size of the figure
-        save: if True or str, save the figure. str is appended to the default filename. infer filetype if ending on {'.pdf', '.png', '.svg'}
-
-    Returns:
-        None
-    """
-
-    fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(111)
-
-    sns.violinplot(y=adata.obs.tss_enrichment_score, inner=None, cut=0, ax=ax)
-    sns.stripplot(y=adata.obs.tss_enrichment_score, size=1, jitter=0.3, color="black", ax=ax)
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.grid(False)
-    ax.set_ylabel("TSS enrichment score")
-    ax.set_title("TSS enrichment", loc="center")
-
-    sns.despine()
-
-    if not save:
-        plt.show()
-
-    else:
-        if isinstance(save, str):
-            filename = save
-        else:
-            filename = "tss_enrichment_score.png"
-
-        plt.savefig(filename, dpi=300)
-
-
 # splitting the cells by high and low enrichment score
 def filter_enrichment_score(adata, score_threshold):
     """

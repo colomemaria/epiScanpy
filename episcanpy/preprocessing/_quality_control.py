@@ -10,6 +10,9 @@ from warnings import warn
 from scipy.sparse import issparse
 from scipy.stats.stats import pearsonr, spearmanr
 
+from ._nucleosome_signal import nucleosome_signal
+from ._tss_enrichment import tss_enrichment
+
 
 def cal_var(adata, show=True, color=['b', 'r'], save=None):
     """
@@ -716,19 +719,27 @@ def highly_variable(adata, min_score=None, n_features=None, save=None):
         plt.savefig(filename, dpi=300)
 
 
-def select_highly_variable(adata):
+def select_highly_variable(adata, verbose=True):
+    vars_prev = adata.n_vars
     adata = adata[adata.obs.highly_variable].copy()
 
+    if verbose:
+        print("{} of {} features remain ({})".format(adata.n_vars, vars_prev, adata.n_vars - vars_prev))
 
-def calc_qc_stats(adata):
+
+def qc_stats(adata, verbose=True):
     adata.var["n_cells"] = np.ravel(adata.X.sum(axis=0))
     adata.var["log_n_cells"] = np.log10(adata.var.n_cells)
 
     adata.obs["n_features"] = np.ravel(adata.X.sum(axis=1))
     adata.obs["log_n_features"] = np.log10(adata.obs.n_features)
 
+    if verbose:
+        print("added keys n_cells, log_n_cells to .var")
+        print("added keys n_features, log_n_features to .obs")
 
-def set_filter(adata, key, min_treshold=None, max_threshold=None):
+
+def set_filter(adata, key, min_threshold=None, max_threshold=None, verbose=True):
     in_obs = key in adata.obs
     in_var = key in adata.var
 
@@ -740,35 +751,48 @@ def set_filter(adata, key, min_treshold=None, max_threshold=None):
     if "passes_filter" in df:
         if min_threshold and max_threshold:
             tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
-            tmp = [not val for val in tmp]
-            df["passes_filter"][tmp] = False
+            df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
         elif min_threshold:
             tmp = df[key] >= min_threshold
-            tmp = [not val for val in tmp]
-            df["passes_filter"][tmp] = False
+            df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
         elif max_threshold:
             tmp = df[key] <= max_threshold
-            tmp = [not val for val in tmp]
-            df["passes_filter"][tmp] = False
+            df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
 
     else:
         if min_threshold and max_threshold:
-            df["passes_filter"] = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
+            tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
+            df["passes_filter"] = tmp
         elif min_threshold:
-            df["passes_filter"] = df[key] >= min_threshold
+            tmp = df[key] >= min_threshold
+            df["passes_filter"] = tmp
         elif max_threshold:
-            df["passes_filter"] = df[key] <= max_threshold
+            tmp = df[key] <= max_threshold
+            df["passes_filter"] = tmp
 
     if in_obs:
         adata.obs = df
+        if verbose:
+            print("{} of {} observations remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
     else:
         adata.var = df
-
+        if verbose:
+            print("{} of {} features remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
 
 def apply_filters(adata, verbose=True):
+    obs_prev = adata.n_obs
+    vars_prev = adata.n_vars
 
     if "passes_filter" in adata.obs:
         adata = adata[adata.obs.passes_filter, :].copy()
 
+    if verbose:
+        print("{} of {} observations remain ({})".format(adata.n_obs, obs_prev, adata.n_obs - obs_prev))
+
     if "passes_filter" in adata.var:
         adata = adata[:, adata.var.passes_filter].copy()
+
+    if verbose:
+        print("{} of {} features remain ({})".format(adata.n_vars, vars_prev, adata.n_vars - vars_prev))
+
+    return adata
