@@ -718,3 +718,11 @@ def highly_variable(adata, min_score=None, n_features=None, save=None):
 
 def select_highly_variable(adata):
     adata = adata[adata.obs.highly_variable].copy()
+
+
+def calc_qc_stats(adata):
+    adata.var["n_cells"] = np.ravel(adata.X.sum(axis=0))
+    adata.var["log_n_cells"] = np.log10(adata.var.n_cells)
+
+    adata.obs["n_features"] = np.ravel(adata.X.sum(axis=1))
+    adata.obs["log_n_features"] = np.log10(adata.obs.n_features)
