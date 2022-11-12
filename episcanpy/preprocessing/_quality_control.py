@@ -794,7 +794,7 @@ def show_filters(adata, x="n_features", y="tss_enrichment_score", size=None, sav
     fig, ax = plt.subplots(figsize=(6, 6), nrows=1, ncols=1, squeeze=True)
 
     if size is None:
-        size = 120000 / adata.n_obs
+        size = 100000 / adata.n_obs
 
     ax.scatter(x=adata[adata.obs.passes_filter].obs[x], y=adata[adata.obs.passes_filter].obs[y], linewidth=0, s=size, color="tab:blue")
     ax.scatter(x=adata[~adata.obs.passes_filter].obs[x], y=adata[~adata.obs.passes_filter].obs[y], linewidth=0, s=size, color="tab:red")
