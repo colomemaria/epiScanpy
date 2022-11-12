@@ -721,10 +721,12 @@ def highly_variable(adata, min_score=None, n_features=None, save=None):
 
 def select_highly_variable(adata, verbose=True):
     vars_prev = adata.n_vars
-    adata = adata[adata.obs.highly_variable].copy()
+    adata = adata[:, adata.var.highly_variable].copy()
 
     if verbose:
         print("{} of {} features remain ({})".format(adata.n_vars, vars_prev, adata.n_vars - vars_prev))
+
+    return adata
 
 
 def qc_stats(adata, verbose=True):
