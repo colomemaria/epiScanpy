@@ -39,7 +39,7 @@ def violin(adata, key, min_threshold=None, max_threshold=None, show_log=True, sh
 
 
     if show_log:
-        sns.violinplot(y=np.log10(df[key]), inner=None, cut=0, ax=axs[1])
+        sns.violinplot(y=[np.log10(val) if val != 0 else 0 for val in df[key].values], inner=None, cut=0, ax=axs[1])
 
         if show_mean:
             axs[1].axhline(y=np.log10(df[key].mean()), color="white", linestyle="--", linewidth=2, alpha=0.75)

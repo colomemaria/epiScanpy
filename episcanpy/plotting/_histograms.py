@@ -135,7 +135,7 @@ def histogram(adata, key, bins=40, min_threshold=None, max_threshold=None, show_
     axs[0].set_xlabel("{}".format(key))
 
     if show_log:
-        axs[1].hist(np.log10(df[key]), bins=bins, linewidth=0.5, edgecolor="black")
+        axs[1].hist([np.log10(val) if val != 0 else 0 for val in df[key].values], bins=bins, linewidth=0.5, edgecolor="black")
 
         if min_threshold:
             axs[1].axvline(x=np.log10(min_threshold), color="red", linestyle="--", linewidth=1, alpha=0.75)

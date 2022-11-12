@@ -731,10 +731,10 @@ def select_highly_variable(adata, verbose=True):
 
 def qc_stats(adata, verbose=True):
     adata.var["n_cells"] = np.ravel(adata.X.sum(axis=0))
-    adata.var["log_n_cells"] = np.log10(adata.var.n_cells)
+    adata.var["log_n_cells"] = [np.log10(val) if val != 0 else 0 for val in adata.var.n_cells.values]
 
     adata.obs["n_features"] = np.ravel(adata.X.sum(axis=1))
-    adata.obs["log_n_features"] = np.log10(adata.obs.n_features)
+    adata.obs["log_n_features"] = [np.log10(val) if val != 0 else 0 for val in adata.obs.n_features]
 
     if verbose:
         print("added keys n_cells, log_n_cells to .var")
