@@ -763,3 +763,12 @@ def set_filter(adata, key, min_treshold=None, max_threshold=None):
         adata.obs = df
     else:
         adata.var = df
+
+
+def apply_filters(adata, verbose=True):
+
+    if "passes_filter" in adata.obs:
+        adata = adata[adata.obs.passes_filter, :].copy()
+
+    if "passes_filter" in adata.var:
+        adata = adata[:, adata.var.passes_filter].copy()
