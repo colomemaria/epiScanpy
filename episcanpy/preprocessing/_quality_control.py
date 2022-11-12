@@ -714,3 +714,7 @@ def highly_variable(adata, min_score=None, n_features=None, save=None):
             filename = "feature_selection.png"
 
         plt.savefig(filename, dpi=300)
+
+
+def select_highly_variable(adata):
+    adata = adata[adata.obs.highly_variable].copy()
