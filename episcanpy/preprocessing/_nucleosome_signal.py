@@ -74,12 +74,15 @@ def nucleosome_signal(adata, fragments, n=10000):
     adata.uns["fragment_lengths"] = {bc: nucleosome_signal[bc][1] for bc in adata.obs.index}
 
 
-def fragment_length(adata, n=5000, threshold=4, show_n=True, save=None):
+def fragment_length(adata, n=5000, threshold=4, show_n=True, figsize=None, save=None):
 
     ncols = 1 if not threshold else 2
     nrows = 1
 
-    fig, axs = plt.subplots(figsize=(ncols*5, nrows*5), nrows=nrows, ncols=ncols, squeeze=False)
+    if figsize is None:
+        figsize = (ncols*4, nrows*4)
+
+    fig, axs = plt.subplots(figsize=figsize, nrows=nrows, ncols=ncols, squeeze=False)
     axs = axs.flatten()
 
     for i, ax in enumerate(axs):

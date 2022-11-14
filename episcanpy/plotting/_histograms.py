@@ -110,9 +110,11 @@ def cell_composition(adata, obs_1,  obs_2,
     plt.show()
 
 
-def histogram(adata, key, bins=40, min_threshold=None, max_threshold=None, show_log=True, show_mean=True, show_median=True, print_statistics=True, save=None):
+def histogram(adata, key, bins=40, min_threshold=None, max_threshold=None, show_log=True, show_mean=True, show_median=True, print_statistics=True, figsize=None, save=None):
 
-    figsize = (9, 6) if not show_log else (18, 6)
+    if figsize is None:
+        figsize = (6, 4) if not show_log else (12, 4)
+
     ncols = 1 if not show_log else 2
 
     fig, axs = plt.subplots(figsize=figsize, nrows=1, ncols=ncols, squeeze=False)

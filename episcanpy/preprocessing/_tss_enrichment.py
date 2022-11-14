@@ -336,7 +336,7 @@ def tss_enrichment_plot(adata,
     if group_by is None:
 
         if figsize is None:
-            figsize = (6, 5)
+            figsize = (4, 4)
 
         fig = plt.figure(figsize=figsize)
         ax = fig.add_subplot(111)
@@ -357,7 +357,7 @@ def tss_enrichment_plot(adata,
         ncols = int(np.ceil(n_groups if n_groups <= max_cols else max_cols))
 
         if figsize is None:
-            figsize = (ncols * 5 * 1.2, nrows * 5)
+            figsize = (ncols * 4 * 1.2, nrows * 4)
 
         fig, axs = plt.subplots(figsize=figsize, nrows=nrows, ncols=ncols, sharey=True, squeeze=False)
         axs = axs.flatten()

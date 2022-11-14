@@ -3,9 +3,11 @@ import seaborn as sns
 import numpy as np
 
 
-def violin(adata, key, min_threshold=None, max_threshold=None, show_log=True, show_mean=True, show_median=True, print_statistics=True, save=None):
+def violin(adata, key, min_threshold=None, max_threshold=None, show_log=True, show_mean=True, show_median=True, print_statistics=True, figsize=None, save=None):
 
-    figsize = (6, 6) if not show_log else (12, 6)
+    if figsize is None:
+        figsize = (4, 4) if not show_log else (8, 4)
+
     ncols = 1 if not show_log else 2
 
     fig, axs = plt.subplots(figsize=figsize, nrows=1, ncols=ncols, squeeze=False)

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def find_elbow(adata, use_log=False, save=None):
+def find_elbow(adata, use_log=False, show_anno=False, figsize=None, save=None):
     y = adata.uns["pca"]["variance_ratio"]
     y_log = np.log10(y)
 
@@ -16,7 +16,10 @@ def find_elbow(adata, use_log=False, save=None):
 
     elbow_point = kneedle.elbow
 
-    fig, axs = plt.subplots(figsize=(20,8), nrows=1, ncols=2)
+    if figsize is None:
+        figsize = (10, 4)
+
+    fig, axs = plt.subplots(figsize=figsize, nrows=1, ncols=2)
     axs = axs.flatten()
 
     lwidth = 1.25
@@ -26,14 +29,15 @@ def find_elbow(adata, use_log=False, save=None):
     axs[0].plot(elbow_point, y[elbow_point-1], marker="o", c="tab:green", markersize=12)
     axs[0].plot(x, y, marker=".", c="black", markersize=6, linewidth=0)
 
-    axs[0].annotate(
-        "Elbow point = {}".format(elbow_point),
-        xy=(elbow_point, y[elbow_point-1]),
-        xytext=(15, 50), textcoords="offset points",
-        arrowprops=dict(arrowstyle="-|>", mutation_scale=20, linewidth=2, color="black"),
-        ha="left", va="center",
-        fontsize=14, fontweight="bold"
-    )
+    if show_anno:
+        axs[0].annotate(
+            "Elbow point = {}".format(elbow_point),
+            xy=(elbow_point, y[elbow_point-1]),
+            xytext=(15, 50), textcoords="offset points",
+            arrowprops=dict(arrowstyle="-|>", mutation_scale=20, linewidth=2, color="black"),
+            ha="left", va="center",
+            fontsize=14, fontweight="bold"
+        )
 
     axs[0].set_title("Raw")
 
@@ -42,14 +46,15 @@ def find_elbow(adata, use_log=False, save=None):
     axs[1].plot(elbow_point, y_log[elbow_point-1], marker="o", c="tab:green", markersize=12)
     axs[1].plot(x, y_log, marker=".", c="black", markersize=6, linewidth=0)
 
-    axs[1].annotate(
-        "Elbow point = {}".format(elbow_point),
-        xy=(elbow_point, y_log[elbow_point-1]),
-        xytext=(15, 50), textcoords="offset points",
-        arrowprops=dict(arrowstyle="-|>", mutation_scale=20, linewidth=2, color="black"),
-        ha="left", va="center",
-        fontsize=14, fontweight="bold"
-    )
+    if show_anno:
+        axs[1].annotate(
+            "Elbow point = {}".format(elbow_point),
+            xy=(elbow_point, y_log[elbow_point-1]),
+            xytext=(15, 50), textcoords="offset points",
+            arrowprops=dict(arrowstyle="-|>", mutation_scale=20, linewidth=2, color="black"),
+            ha="left", va="center",
+            fontsize=14, fontweight="bold"
+        )
 
     axs[1].set_title("Log Transformed")
 

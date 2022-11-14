@@ -635,7 +635,7 @@ def variability_features(adata, min_score=None, nb_features=None, show=True,
     #return(var_annot)
 
 
-def highly_variable(adata, min_score=None, n_features=None, save=None):
+def highly_variable(adata, min_score=None, n_features=None, figsize=None, save=None):
 
     if not min_score and not n_features:
         raise ValueError("Either min_score or n_features must not be None")
@@ -666,7 +666,10 @@ def highly_variable(adata, min_score=None, n_features=None, save=None):
     nrows = 3
     ncols = 1
 
-    fig, axs = plt.subplots(figsize=(ncols * 10, nrows * 5), nrows=nrows, ncols=ncols, squeeze=False, sharey=False)
+    if figsize is None:
+        figsize = (ncols*6, nrows*3)
+
+    fig, axs = plt.subplots(figsize=figsize, nrows=nrows, ncols=ncols, squeeze=False, sharey=False)
     axs = axs.flatten()
 
     fig.suptitle("Feature Selection")
@@ -792,8 +795,11 @@ def set_filter(adata, key, min_threshold=None, max_threshold=None, verbose=True)
             print("{} of {} features remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
 
 
-def show_filters(adata, x="n_features", y="tss_enrichment_score", size=None, save=None):
-    fig, ax = plt.subplots(figsize=(6, 6), nrows=1, ncols=1, squeeze=True)
+def show_filters(adata, x="n_features", y="tss_enrichment_score", size=None, figsize=None, save=None):
+    if figsize is None:
+        figsize = (4, 4)
+
+    fig, ax = plt.subplots(figsize=figsize, nrows=1, ncols=1, squeeze=True)
 
     if size is None:
         size = 100000 / adata.n_obs
