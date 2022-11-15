@@ -11,7 +11,10 @@ if platform.system() != "Windows":
     import pysam
 
 
-def get_tss(gtf, source=None, feature=None, protein_coding_only=False):
+def get_tss(gtf,
+            source=None,
+            feature=None,
+            protein_coding_only=False):
 
     gtf_column_names = ['seqname', 'source', 'feature', 'start', 'end', 'score', 'strand', 'attribute', 'other']
 
@@ -50,16 +53,17 @@ def tss_enrichment(adata,
                    bp_per_flank=100,
                    comment="#"):
     """
-    Computes the TSS profile for every observation
+    Computes the TSS profile for every observation.
 
     Args:
         adata: AnnData
-        gtf: path to GTF file
         fragments: path to fragments file
-        method: method to use for computing TSS enrichment
+        gtf: path to GTF file
+        n: number of TSS to use for calculation
         score: value that is used as TSS enrichment score for individual observations
         distance_to_tss: distance to TSS
         bp_per_flank: number of base pair per flank to use for normalization
+        comment: character that marks comments
 
     Returns:
         None
@@ -313,21 +317,21 @@ def tss_enrichment(adata,
 
 
 def tss_enrichment_plot(adata,
-                    group_by=None,
-                    show_n=False,
-                    max_cols=5,
-                    figsize=None,
-                    save=None):
+                        group_by=None,
+                        show_n=False,
+                        max_cols=5,
+                        figsize=None,
+                        save=None):
     """
-    Plots the mean TSS enrichment profile
+    Plots the mean TSS enrichment profile.
 
     Args:
         adata: AnnData
-        group_by: key of adata.obs that is used as grouping variable
-        show_n: whether or not to show the number of observations
+        group_by: key of .obs that is used as grouping variable
+        show_n: whether show the number of observations
         max_cols: maximum number of columns
         figsize: size of the figure
-        save: if True or str, save the figure. str is appended to the default filename. infer filetype if ending on {'.pdf', '.png', '.svg'}
+        save: if True or str, save the figure. str represents entire path. filetype is inferred.
 
     Returns:
         None

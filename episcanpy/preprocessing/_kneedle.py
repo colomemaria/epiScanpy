@@ -3,7 +3,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def find_elbow(adata, use_log=False, show_anno=False, figsize=None, save=None):
+def find_elbow(adata,
+               use_log=False,
+               show_anno=False,
+               figsize=None,
+               save=None):
+    """
+    Uses the kneedle algorithm to identify the elbow point (maximum curviture) of the scree plot. Can be used to
+    determine the number of components to use after PCA.
+
+    Args:
+        adata: AnnData object
+        use_log: whether to identify the elbow point on the log-transformed data
+        show_anno: some additional annotation
+        figsize: size of the figure
+        save: if True or str, save the figure. str represents entire path. filetype is inferred.
+
+    Returns:
+        int (elbow point)
+    """
+
     y = adata.uns["pca"]["variance_ratio"]
     y_log = np.log10(y)
 

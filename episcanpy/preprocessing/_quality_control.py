@@ -635,7 +635,25 @@ def variability_features(adata, min_score=None, nb_features=None, show=True,
     #return(var_annot)
 
 
-def highly_variable(adata, min_score=None, n_features=None, figsize=None, save=None):
+def highly_variable(adata,
+                    min_score=None,
+                    n_features=None,
+                    figsize=None,
+                    save=None):
+    """
+    Computes variability scores, plots the results, and marks highly variable features. Intended to use with binary
+    features.
+
+    Args:
+        adata: AnnData
+        min_score: variability score threshold
+        n_features: number of features to keep
+        figsize: size of the figure
+        save: if True or str, save the figure. str represents entire path. filetype is inferred.
+
+    Returns:
+        None
+    """
 
     if not min_score and not n_features:
         raise ValueError("Either min_score or n_features must not be None")
@@ -722,7 +740,19 @@ def highly_variable(adata, min_score=None, n_features=None, figsize=None, save=N
         plt.savefig(filename, dpi=300)
 
 
-def select_highly_variable(adata, verbose=True):
+def select_highly_variable(adata,
+                           verbose=True):
+    """
+    Returns an AnnData object that only contains the highly variable features.
+
+    Args:
+        adata: AnnData
+        verbose: some feedback
+
+    Returns:
+        AnnData object
+    """
+
     vars_prev = adata.n_vars
     adata = adata[:, adata.var.highly_variable].copy()
 
@@ -732,19 +762,56 @@ def select_highly_variable(adata, verbose=True):
     return adata
 
 
-def qc_stats(adata, verbose=True):
-    adata.var["n_cells"] = np.ravel(adata.X.sum(axis=0))
+def qc_stats(adata,
+             verbose=True):
+    """
+    Calculates basic QC metrics like the number of cells in which a feature is present (n_cells), the number of features
+    per observation (n_features), and the total number of counts per observation (n_counts). n_counts is only calculated
+    if values in the matrix are non-binary.
+
+    Args:
+        adata: AnnData
+        verbose: some feedback
+
+    Returns:
+        None
+    """
+
+    adata.var["n_cells"] = np.ravel((adata.X > 0).sum(axis=0))
     adata.var["log_n_cells"] = [np.log10(val) if val != 0 else 0 for val in adata.var.n_cells.values]
 
-    adata.obs["n_features"] = np.ravel(adata.X.sum(axis=1))
+    adata.obs["n_features"] = np.ravel((adata.X > 0).sum(axis=1))
     adata.obs["log_n_features"] = [np.log10(val) if val != 0 else 0 for val in adata.obs.n_features]
+
+    if adata.X.max() > 1:
+        adata.obs["n_counts"] = np.ravel(adata.X.sum(axis=1))
+        adata.obs["log_n_counts"] = [np.log10(val) if val != 0 else 0 for val in adata.obs.n_counts]
 
     if verbose:
         print("added keys n_cells, log_n_cells to .var")
-        print("added keys n_features, log_n_features to .obs")
+        if adata.X.max() > 1:
+            print("added keys n_features, log_n_features, n_counts, log_n_counts to .obs")
+        else:
+            print("added keys n_features, log_n_features to .obs")
 
 
-def lazy_qc(adata, fragments, gtf, verbose=True):
+def lazy_qc(adata,
+            fragments,
+            gtf,
+            verbose=True):
+    """
+    Convenience wrapper that runs qc_stats, nucleosome_signal, and tss_enrichment with default parameters.
+
+    Args:
+        adata: AnnData
+        fragments: path to fragments file
+        gtf: path to GTF file
+        verbose: some feedback
+
+    Returns:
+        None
+    """
+
     qc_stats(adata, verbose=False)
     nucleosome_signal(adata, fragments)
     tss_enrichment(adata, fragments=fragments, gtf=gtf)
@@ -754,48 +821,88 @@ def lazy_qc(adata, fragments, gtf, verbose=True):
         print("added keys n_features, log_n_features, nucleosome_signal, tss_enrichment_score to .obs")
 
 
-def set_filter(adata, key, min_threshold=None, max_threshold=None, verbose=True):
+def set_filter(adata,
+               key,
+               min_threshold=None,
+               max_threshold=None,
+               verbose=True):
+    """
+    Marks observations / features with respect to passing threshold or not.
+
+    Args:
+        adata: AnnData
+        key: name of the variable to apply the threshold to. has to be either in .obs or .var
+        min_threshold: lower threshold
+        max_threshold: upper threshold
+        verbose: some feedback
+
+    Returns:
+        None
+    """
+
     in_obs = key in adata.obs
     in_var = key in adata.var
 
     if not in_obs and not in_var:
         raise ValueError("key not found in AnnData object")
 
-    df = adata.obs if in_obs else adata.var
+    if not (min_threshold is None and max_threshold is None):
 
-    if "passes_filter" in df:
-        if min_threshold and max_threshold:
-            tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
-            df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
-        elif min_threshold:
-            tmp = df[key] >= min_threshold
-            df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
-        elif max_threshold:
-            tmp = df[key] <= max_threshold
-            df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
+        df = adata.obs if in_obs else adata.var
 
-    else:
-        if min_threshold and max_threshold:
-            tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
-            df["passes_filter"] = tmp
-        elif min_threshold:
-            tmp = df[key] >= min_threshold
-            df["passes_filter"] = tmp
-        elif max_threshold:
-            tmp = df[key] <= max_threshold
-            df["passes_filter"] = tmp
+        if "passes_filter" in df:
+            if min_threshold and max_threshold:
+                tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
+                df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
+            elif min_threshold:
+                tmp = df[key] >= min_threshold
+                df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
+            elif max_threshold:
+                tmp = df[key] <= max_threshold
+                df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
 
-    if in_obs:
-        adata.obs = df
-        if verbose:
-            print("{} of {} observations remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
-    else:
-        adata.var = df
-        if verbose:
-            print("{} of {} features remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
+        else:
+            if min_threshold and max_threshold:
+                tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
+                df["passes_filter"] = tmp
+            elif min_threshold:
+                tmp = df[key] >= min_threshold
+                df["passes_filter"] = tmp
+            elif max_threshold:
+                tmp = df[key] <= max_threshold
+                df["passes_filter"] = tmp
+
+        if in_obs:
+            adata.obs = df
+            if verbose:
+                print("{} of {} observations remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
+        else:
+            adata.var = df
+            if verbose:
+                print("{} of {} features remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
 
 
-def show_filters(adata, x="n_features", y="tss_enrichment_score", size=None, figsize=None, save=None):
+def show_filters(adata,
+                 x="n_features",
+                 y="tss_enrichment_score",
+                 size=None,
+                 figsize=None,
+                 save=None):
+    """
+    Scatter plot that shows which observations will be filtered when filters are applied.
+
+    Args:
+        adata: AnnData
+        x: feature to plot on the x-axis
+        y: feature to plot on the y-axis
+        size: marker size
+        figsize: size of the figure
+        save: if True or str, save the figure. str represents entire path. filetype is inferred.
+
+    Returns:
+        None
+    """
+
     if figsize is None:
         figsize = (4, 4)
 
@@ -821,7 +928,19 @@ def show_filters(adata, x="n_features", y="tss_enrichment_score", size=None, fig
         plt.savefig(filename, dpi=300)
 
 
-def apply_filters(adata, verbose=True):
+def apply_filters(adata,
+                  verbose=True):
+    """
+    Applies previously set filters and returns the filtered AnnData object.
+
+    Args:
+        adata: AnnData
+        verbose: some feedback
+
+    Returns:
+        AnnData object
+    """
+
     obs_prev = adata.n_obs
     vars_prev = adata.n_vars
 

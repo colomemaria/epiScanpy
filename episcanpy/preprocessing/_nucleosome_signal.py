@@ -3,7 +3,21 @@ import gzip
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def nucleosome_signal(adata, fragments, n=10000):
+
+def nucleosome_signal(adata,
+                      fragments,
+                      n=10000):
+    """
+    Calculates the nucleosome signal (mononucleosomal to nucleosome-free ratio).
+
+    Args:
+        adata: AnnData
+        fragments: path to fragments file
+        n: number of cell-associated fragments to consider per barcode in AnnData
+
+    Returns:
+        None
+    """
 
     n = adata.n_obs * n
 
@@ -74,7 +88,24 @@ def nucleosome_signal(adata, fragments, n=10000):
     adata.uns["fragment_lengths"] = {bc: nucleosome_signal[bc][1] for bc in adata.obs.index}
 
 
-def fragment_length(adata, n=5000, threshold=4, show_n=True, figsize=None, save=None):
+def fragment_length(adata,
+                    n=5000,
+                    threshold=4,
+                    show_n=True,
+                    figsize=None,
+                    save=None):
+    """
+    Plots the fragment length distribution.
+
+    Args:
+        adata: AnnData
+        n: number of fragment lengths to plot per observation.
+        figsize: size of the figure
+        save: if True or str, save the figure. str represents entire path. filetype is inferred.
+
+    Returns:
+        None
+    """
 
     ncols = 1 if not threshold else 2
     nrows = 1

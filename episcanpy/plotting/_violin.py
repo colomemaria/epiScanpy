@@ -3,7 +3,34 @@ import seaborn as sns
 import numpy as np
 
 
-def violin(adata, key, min_threshold=None, max_threshold=None, show_log=True, show_mean=True, show_median=True, print_statistics=True, figsize=None, save=None):
+def violin(adata,
+           key,
+           min_threshold=None,
+           max_threshold=None,
+           show_log=True,
+           show_mean=True,
+           show_median=True,
+           print_statistics=True,
+           figsize=None,
+           save=None):
+    """
+    General purpose violin plotting function.
+
+    Args:
+        adata: AnnData object
+        key: name of the variable. has to be either in .obs or .var
+        min_threshold: minimum threshold
+        max_threshold: maximum threshold
+        show_log: show logarithmized (log10) data
+        show_mean: show mean (dashed line)
+        show_median: show median (straight line)
+        print_statistics: print basic statistics
+        figsize: size of the figure
+        save: if True or str, save the figure. str represents entire path. filetype is inferred.
+
+    Returns:
+        None
+    """
 
     if figsize is None:
         figsize = (4, 4) if not show_log else (8, 4)

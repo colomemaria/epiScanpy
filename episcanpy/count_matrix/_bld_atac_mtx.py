@@ -89,7 +89,11 @@ if platform.system() != "Windows":
         return mtx
 
 
-def count(fragments, features, valid_bcs, fast, comment="#"):
+def count(fragments,
+          features,
+          valid_bcs,
+          fast,
+          comment="#"):
 
     check_for_comments = True
     use_strip = None
@@ -256,19 +260,23 @@ def count(fragments, features, valid_bcs, fast, comment="#"):
         return count_mtx_sparse
 
 
-def peak_mtx(fragments_file, peak_file, valid_bcs, normalized_peak_size=None, fast=False):
+def peak_mtx(fragments_file,
+             peak_file,
+             valid_bcs,
+             normalized_peak_size=None,
+             fast=False):
     """
     Generates a count matrix based on peaks. The fragments file needs to be sorted.
+
     Args:
-    ----------
-    fragments_file: path to fragments file
-    peak_file: path to BED file
-    valid_bcs: list of valid barcodes
-    normalized_peak_size: if True peaks size will be normalized; default: None (no normalization)
-    fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
+        fragments_file: path to fragments file
+        peak_file: path to BED file
+        valid_bcs: list of valid barcodes
+        normalized_peak_size: if True peaks size will be normalized; default: None (no normalization)
+        fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
+
     Returns:
-    ------
-    AnnData object
+        AnnData object
     """
 
     names = ["chr", "start", "stop"]
@@ -298,22 +306,30 @@ def peak_mtx(fragments_file, peak_file, valid_bcs, normalized_peak_size=None, fa
     return adata
 
 
-def gene_activity_mtx(fragments_file, gtf_file, valid_bcs, upstream=2000, downstream=0, source=None, gene_type=None, fast=False):
+def gene_activity_mtx(fragments_file,
+                      gtf_file,
+                      valid_bcs,
+                      upstream=2000,
+                      downstream=0,
+                      source=None,
+                      gene_type=None,
+                      fast=False):
     """
-    Generates a count matrix based on the openness of the gene bodies and promoter regions (gene activity). The fragments file needs to be sorted.
+    Generates a count matrix based on the openness of the gene bodies and promoter regions (gene activity). The
+    fragments file needs to be sorted.
+
     Args:
-    ----------
-    fragments_file: path to fragments file
-    gtf_file: path to GTF file
-    valid_bcs: list of valid barcodes; optional in the future
-    upstream: number of bp to consider upstream of TSS; default: 2000 bp
-    downstream: number of bp to consider downstream of gene body; default: 0 bp
-    source: filter for source of the feature; default: None (no filtering)
-    gene_type: filter for gene type of the feature; default: None (no filtering)
-    fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
+        fragments_file: path to fragments file
+        gtf_file: path to GTF file
+        valid_bcs: list of valid barcodes; optional in the future
+        upstream: number of bp to consider upstream of TSS; default: 2000 bp
+        downstream: number of bp to consider downstream of gene body; default: 0 bp
+        source: filter for source of the feature; default: None (no filtering)
+        gene_type: filter for gene type of the feature; default: None (no filtering)
+        fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
+
     Returns:
-    ------
-    AnnData object
+        AnnData object
     """
 
     names = ["chr", "source", "type", "start", "stop", "score", "strand", "frame", "attribute"]
@@ -353,19 +369,24 @@ def gene_activity_mtx(fragments_file, gtf_file, valid_bcs, upstream=2000, downst
     return adata
 
 
-def window_mtx(fragments_file, valid_bcs, window_size=5000, species="human", fast=False):
+def window_mtx(fragments_file,
+               valid_bcs,
+               window_size=5000,
+               species="human",
+               fast=False):
     """
-    Generates a count matrix based on the openness of equally sized bins of the genome (windows). The fragments file needs to be sorted.
+    Generates a count matrix based on the openness of equally sized bins of the genome (windows). The fragments file
+    needs to be sorted.
+
     Args:
-    ----------
-    fragments_file: path to fragments file
-    valid_bcs: list of valid barcodes
-    window_size: size of windows in bp; default: 5000 bp
-    species: species to create the windows for (human or mouse); default: "human"; will be extended in the future
-    fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
+        fragments_file: path to fragments file
+        valid_bcs: list of valid barcodes
+        window_size: size of windows in bp; default: 5000 bp
+        species: species to create the windows for (human or mouse); default: "human"; will be extended in the future
+        fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
+
     Returns:
-    ------
-    AnnData object
+        AnnData object
     """
 
     features = make_windows(window_size, chromosomes=species)
