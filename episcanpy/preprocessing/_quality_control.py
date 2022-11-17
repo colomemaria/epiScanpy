@@ -10,6 +10,9 @@ from warnings import warn
 from scipy.sparse import issparse
 from scipy.stats.stats import pearsonr, spearmanr
 
+from ._nucleosome_signal import nucleosome_signal
+from ._tss_enrichment import tss_enrichment
+
 
 def cal_var(adata, show=True, color=['b', 'r'], save=None):
     """
@@ -632,3 +635,325 @@ def variability_features(adata, min_score=None, nb_features=None, show=True,
     #return(var_annot)
 
 
+def highly_variable(adata,
+                    min_score=None,
+                    n_features=None,
+                    figsize=None,
+                    save=None):
+    """
+    Computes variability scores, plots the results, and marks highly variable features. Intended to use with binary
+    features.
+
+    Args:
+        adata: AnnData
+        min_score: variability score threshold
+        n_features: number of features to keep
+        figsize: size of the figure
+        save: if True or str, save the figure. str represents entire path. filetype is inferred.
+
+    Returns:
+        None
+    """
+
+    if not min_score and not n_features:
+        raise ValueError("Either min_score or n_features must not be None")
+    elif min_score and n_features:
+        raise ValueError("Use either min_score OR n_features")
+
+    adata.var["prop_shared_cells"] = adata.var.n_cells / adata.n_obs
+    adata.var["variability_score"] = 1 - np.abs(adata.var.prop_shared_cells - 0.5)
+
+    n_bins = 500
+    min_score = min_score
+    n_features_selected = n_features
+
+    if min_score is None:
+        tmp = adata.var.nlargest(n_features_selected, columns="variability_score")
+    else:
+        tmp = adata.var[adata.var.variability_score >= min_score]
+        n_features_selected = tmp.shape[0]
+
+    min_var_score = tmp.variability_score.min()
+    max_var_score = tmp.variability_score.max()
+
+    min_prop_shared = tmp.prop_shared_cells.min()
+    max_prop_shared = tmp.prop_shared_cells.max()
+
+    adata.var["highly_variable"] = adata.var.variability_score >= min_var_score
+
+    nrows = 3
+    ncols = 1
+
+    if figsize is None:
+        figsize = (ncols*6, nrows*3)
+
+    fig, axs = plt.subplots(figsize=figsize, nrows=nrows, ncols=ncols, squeeze=False, sharey=False)
+    axs = axs.flatten()
+
+    fig.suptitle("Feature Selection")
+
+    axs[0].plot(np.arange(1, adata.n_vars + 1), adata.var.variability_score.sort_values(ascending=False))
+    if min_score is None:
+        axs[0].axvline(x=n_features_selected, color="red", linestyle="--", linewidth=1, alpha=0.75)
+        lims = axs[0].get_xlim()
+        axs[0].hlines(y=min_var_score, xmin=lims[0], xmax=n_features_selected, color="black", linestyle="--", linewidth=1, alpha=0.75)
+        axs[0].set_xlim(lims)
+    else:
+        axs[0].axhline(y=min_score, color="red", linestyle="--", linewidth=1, alpha=0.75)
+        lims = axs[0].get_ylim()
+        axs[0].vlines(x=n_features_selected, ymin=lims[0], ymax=min_var_score, color="black", linestyle="--", linewidth=1, alpha=0.75)
+        axs[0].set_ylim(lims)
+    axs[0].set_xlabel("Rank")
+    axs[0].set_ylabel("Variability Score")
+
+    axs[1].hist(adata.var.variability_score, bins=n_bins, linewidth=0)
+    if min_score is None:
+        axs[1].axvline(x=min_var_score, color="black", linestyle="--", linewidth=1, alpha=0.75)
+    else:
+        axs[1].axvline(x=min_var_score, color="red", linestyle="--", linewidth=1, alpha=0.75)
+    axs[1].set_xlabel("Variability Score")
+    axs[1].set_ylabel("Counts")
+    axs[1].set_xlim((0.5, 1))
+
+    axs[2].hist(adata.var.prop_shared_cells, bins=n_bins, linewidth=0)
+    if min_score is None:
+        axs[2].axvline(x=min_prop_shared, color="black", linestyle="--", linewidth=1, alpha=0.75)
+        axs[2].axvline(x=max_prop_shared, color="black", linestyle="--", linewidth=1, alpha=0.75)
+    else:
+        axs[2].axvline(x=min_score - 0.5, color="red", linestyle="--", linewidth=1, alpha=0.75)
+        axs[2].axvline(x=1 - (min_score - 0.5), color="red", linestyle="--", linewidth=1, alpha=0.75)
+    axs[2].set_xlabel("Proportion Share Cells")
+    axs[2].set_ylabel("Counts")
+    axs[2].set_xlim((0, 1))
+
+    plt.tight_layout()
+
+    if not save:
+        plt.show()
+
+    else:
+        if isinstance(save, str):
+            filename = save
+        else:
+            filename = "feature_selection.png"
+
+        plt.savefig(filename, dpi=300)
+
+
+def select_highly_variable(adata,
+                           verbose=True):
+    """
+    Returns an AnnData object that only contains the highly variable features.
+
+    Args:
+        adata: AnnData
+        verbose: some feedback
+
+    Returns:
+        AnnData object
+    """
+
+    vars_prev = adata.n_vars
+    adata = adata[:, adata.var.highly_variable].copy()
+
+    if verbose:
+        print("{} of {} features remain ({})".format(adata.n_vars, vars_prev, adata.n_vars - vars_prev))
+
+    return adata
+
+
+def qc_stats(adata,
+             verbose=True):
+    """
+    Calculates basic QC metrics like the number of cells in which a feature is present (n_cells), the number of features
+    per observation (n_features), and the total number of counts per observation (n_counts). n_counts is only calculated
+    if values in the matrix are non-binary.
+
+    Args:
+        adata: AnnData
+        verbose: some feedback
+
+    Returns:
+        None
+    """
+
+    adata.var["n_cells"] = np.ravel((adata.X > 0).sum(axis=0))
+    adata.var["log_n_cells"] = [np.log10(val) if val != 0 else 0 for val in adata.var.n_cells.values]
+
+    adata.obs["n_features"] = np.ravel((adata.X > 0).sum(axis=1))
+    adata.obs["log_n_features"] = [np.log10(val) if val != 0 else 0 for val in adata.obs.n_features]
+
+    if adata.X.max() > 1:
+        adata.obs["n_counts"] = np.ravel(adata.X.sum(axis=1))
+        adata.obs["log_n_counts"] = [np.log10(val) if val != 0 else 0 for val in adata.obs.n_counts]
+
+    if verbose:
+        print("added keys n_cells, log_n_cells to .var")
+        if adata.X.max() > 1:
+            print("added keys n_features, log_n_features, n_counts, log_n_counts to .obs")
+        else:
+            print("added keys n_features, log_n_features to .obs")
+
+
+def lazy_qc(adata,
+            fragments,
+            gtf,
+            verbose=True):
+    """
+    Convenience wrapper that runs qc_stats, nucleosome_signal, and tss_enrichment with default parameters.
+
+    Args:
+        adata: AnnData
+        fragments: path to fragments file
+        gtf: path to GTF file
+        verbose: some feedback
+
+    Returns:
+        None
+    """
+
+    qc_stats(adata, verbose=False)
+    nucleosome_signal(adata, fragments)
+    tss_enrichment(adata, fragments=fragments, gtf=gtf)
+
+    if verbose:
+        print("added keys n_cells, log_n_cells to .var")
+        print("added keys n_features, log_n_features, nucleosome_signal, tss_enrichment_score to .obs")
+
+
+def set_filter(adata,
+               key,
+               min_threshold=None,
+               max_threshold=None,
+               verbose=True):
+    """
+    Marks observations / features with respect to passing threshold or not.
+
+    Args:
+        adata: AnnData
+        key: name of the variable to apply the threshold to. has to be either in .obs or .var
+        min_threshold: lower threshold
+        max_threshold: upper threshold
+        verbose: some feedback
+
+    Returns:
+        None
+    """
+
+    in_obs = key in adata.obs
+    in_var = key in adata.var
+
+    if not in_obs and not in_var:
+        raise ValueError("key not found in AnnData object")
+
+    if not (min_threshold is None and max_threshold is None):
+
+        df = adata.obs if in_obs else adata.var
+
+        if "passes_filter" in df:
+            if min_threshold and max_threshold:
+                tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
+                df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
+            elif min_threshold:
+                tmp = df[key] >= min_threshold
+                df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
+            elif max_threshold:
+                tmp = df[key] <= max_threshold
+                df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
+
+        else:
+            if min_threshold and max_threshold:
+                tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
+                df["passes_filter"] = tmp
+            elif min_threshold:
+                tmp = df[key] >= min_threshold
+                df["passes_filter"] = tmp
+            elif max_threshold:
+                tmp = df[key] <= max_threshold
+                df["passes_filter"] = tmp
+
+        if in_obs:
+            adata.obs = df
+            if verbose:
+                print("{} of {} observations remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
+        else:
+            adata.var = df
+            if verbose:
+                print("{} of {} features remain ({})".format(tmp.sum(), tmp.shape[0], tmp.sum() - tmp.shape[0]))
+
+
+def show_filters(adata,
+                 x="n_features",
+                 y="tss_enrichment_score",
+                 size=None,
+                 figsize=None,
+                 save=None):
+    """
+    Scatter plot that shows which observations will be filtered when filters are applied.
+
+    Args:
+        adata: AnnData
+        x: feature to plot on the x-axis
+        y: feature to plot on the y-axis
+        size: marker size
+        figsize: size of the figure
+        save: if True or str, save the figure. str represents entire path. filetype is inferred.
+
+    Returns:
+        None
+    """
+
+    if figsize is None:
+        figsize = (4, 4)
+
+    fig, ax = plt.subplots(figsize=figsize, nrows=1, ncols=1, squeeze=True)
+
+    if size is None:
+        size = 100000 / adata.n_obs
+
+    ax.scatter(x=adata[adata.obs.passes_filter].obs[x], y=adata[adata.obs.passes_filter].obs[y], linewidth=0, s=size, color="tab:blue")
+    ax.scatter(x=adata[~adata.obs.passes_filter].obs[x], y=adata[~adata.obs.passes_filter].obs[y], linewidth=0, s=size, color="tab:red")
+
+    plt.tight_layout()
+
+    if not save:
+        plt.show()
+
+    else:
+        if isinstance(save, str):
+            filename = save
+        else:
+            filename = "qc_filters.png"
+
+        plt.savefig(filename, dpi=300)
+
+
+def apply_filters(adata,
+                  verbose=True):
+    """
+    Applies previously set filters and returns the filtered AnnData object.
+
+    Args:
+        adata: AnnData
+        verbose: some feedback
+
+    Returns:
+        AnnData object
+    """
+
+    obs_prev = adata.n_obs
+    vars_prev = adata.n_vars
+
+    if "passes_filter" in adata.obs:
+        adata = adata[adata.obs.passes_filter, :].copy()
+
+    if verbose:
+        print("{} of {} observations remain ({})".format(adata.n_obs, obs_prev, adata.n_obs - obs_prev))
+
+    if "passes_filter" in adata.var:
+        adata = adata[:, adata.var.passes_filter].copy()
+
+    if verbose:
+        print("{} of {} features remain ({})".format(adata.n_vars, vars_prev, adata.n_vars - vars_prev))
+
+    return adata

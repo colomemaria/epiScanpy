@@ -3,24 +3,27 @@ import matplotlib.pyplot as plt
 import numpy as np
 import anndata as ad
 
-
-import multiprocessing
+import gzip
 import pandas as pd
 
 import platform
 if platform.system() != "Windows":
     import pysam
 
-def get_tss(gtf, source=None, feature=None, protein_coding_only=False):
+
+def get_tss(gtf,
+            source=None,
+            feature=None,
+            protein_coding_only=False):
 
     gtf_column_names = ['seqname', 'source', 'feature', 'start', 'end', 'score', 'strand', 'attribute', 'other']
 
     gtf = pd.read_csv(gtf,
-        sep='\t',
-        names=gtf_column_names,
-        comment="#",
-        header=None,
-        index_col=False)
+                      sep='\t',
+                      names=gtf_column_names,
+                      comment="#",
+                      header=None,
+                      index_col=False)
 
     if source is not None:
         gtf = gtf[gtf.source == source]
@@ -31,200 +34,258 @@ def get_tss(gtf, source=None, feature=None, protein_coding_only=False):
     if protein_coding_only:
         gtf = gtf[gtf.other.str.contains("protein_coding")]
 
-    tss_info = {"chromosome": [], "TSS_pos": [], "strand": []}
+    tss_info = {"chr": [], "tss_pos": [], "strand": []}
 
     for row in gtf.values:
-        tss_info["chromosome"].append(row[0])
+        tss_info["chr"].append(row[0])
         tss_info["strand"].append(row[6])
-        tss_info["TSS_pos"].append(row[3] if row[6] == "+" else row[4])
+        tss_info["tss_pos"].append(row[3] if row[6] == "+" else row[4])
 
     return pd.DataFrame(data=tss_info)
 
-# function that is executed by the processes (calculates coverage profiles for a subset of TSS)
-def calc_coverage(preprocessed_input_chunk, mtx, bc_mapping, fragments_file, distance_to_tss, method, queue):
-
-    # open fragments file
-    tbx = pysam.TabixFile(fragments_file)
-
-    # iterate over TSS subset
-    for chromosome, tss_pos, strand in preprocessed_input_chunk:
-
-        # calculate region boundaries
-        region_start = tss_pos - distance_to_tss
-        region_end = tss_pos + distance_to_tss + 1
-
-        # iterate over reads overlapping the region
-        for read in tbx.fetch(reference=chromosome, start=region_start, end=region_end, parser=pysam.asTuple()):
-
-            barcode = read[3]
-
-            # check if barcode is valid
-            if barcode in bc_mapping:
-
-                read_start = int(read[1])
-                read_end = int(read[2])
-
-                index_start = read_start - tss_pos + distance_to_tss
-                index_end = read_end - tss_pos + distance_to_tss
-
-                # check if index is in bounds
-                if index_start < 0:
-                    if method == "standard":
-                        continue
-                    elif method == "complete_coverage":
-                        index_start = 0
-
-                # check if index is in bounds
-                if index_end >= mtx.shape[1]:
-                    if method == "standard":
-                        continue
-                    elif method == "complete_coverage":
-                        index_end = mtx.shape[1]
-
-                # handle strand location
-                if strand == "-":
-                    tmp = mtx[bc_mapping[barcode]]
-                    tmp = np.flip(tmp)
-
-                    if method == "standard":
-                        tmp[[index_start, index_end]] = tmp[[index_start, index_end]] + 1
-
-                    elif method == "complete_coverage":
-                        tmp[index_start:index_end] = tmp[index_start:index_end] + 1
-
-                    mtx[bc_mapping[barcode]] = np.flip(tmp)
-
-                else:
-                    if method == "standard":
-                        mtx[bc_mapping[barcode]][[index_start, index_end]] = mtx[bc_mapping[barcode]][[index_start, index_end]] + 1
-
-                    elif method == "complete_coverage":
-                        mtx[bc_mapping[barcode]][index_start:index_end] = mtx[bc_mapping[barcode]][index_start:index_end] + 1
-
-    # put partial result in the queue
-    queue.put(mtx)
 
 def tss_enrichment(adata,
-                   gtf,
                    fragments,
-                   method="standard",
+                   gtf,
+                   n=5000,
                    score="avg_score_of_center_region",
                    distance_to_tss=1000,
                    bp_per_flank=100,
-                   n_jobs=1):
+                   comment="#"):
     """
-    Computes the TSS profile for every observation
-    The function offer two methods to compute the TSS enrichment coverage: 'standard' or 'complete_coverage'
-    'standard' only consider the start and end point of the read.
-    'complete_coverage' consider the entire read to calculate the coverage.
+    Computes the TSS profile for every observation.
 
     Args:
-    -----
         adata: AnnData
-        gtf: path to GTF file
         fragments: path to fragments file
-        method: method to use for computing TSS enrichment.
+        gtf: path to GTF file
+        n: number of TSS to use for calculation
         score: value that is used as TSS enrichment score for individual observations
         distance_to_tss: distance to TSS
         bp_per_flank: number of base pair per flank to use for normalization
-        n_jobs: number of jobs to use for computation. -1 means using all processors
+        comment: character that marks comments
 
     Returns:
-    --------
         None
     """
 
-    if method not in {"standard", "complete_coverage"}:
-        raise ValueError("value for method argument must be 'standard' or 'complete_coverage'")
+    features = get_tss(gtf, source="HAVANA", feature="gene", protein_coding_only=True)
 
-    if score not in {"avg_score_of_center_region", "score_at_zero"}:
-        raise ValueError("value for score argument must be 'avg_score_of_center_region' or 'score_at_zero'")
+    features["start"] = features.tss_pos - distance_to_tss
+    features["stop"] = features.tss_pos + distance_to_tss
 
+    features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
 
-    tss = get_tss(gtf, source="HAVANA", feature="gene", protein_coding_only=True)
+    features = features[["chr", "start", "stop", "tss_pos", "strand"]].values.tolist()
 
-    # if n_jobs == -1 use all available cores
-    if n_jobs == -1:
-        n_processes = multiprocessing.cpu_count()
-    else:
-        n_processes = n_jobs
+    if n:
+        features = features[:n]
 
-    # create a dict that maps the barcode to a row number of the matrix
+    check_for_comments = True
+    use_strip = None
+
+    feature_idx = 0
+
+    chrom_mapping = dict()
     bc_mapping = {bc: i for i, bc in enumerate(adata.obs_names)}
 
+    valid_bcs_set = set(bc_mapping.keys())
+
+    ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+
     # initialize matrix
-    coverage_mtx = np.zeros((len(bc_mapping), distance_to_tss * 2 + 1))
+    count_mtx = np.zeros((len(bc_mapping), distance_to_tss * 2 + 1))
 
-    # create input chunks for the processes
-    slice_size = int(np.ceil(tss.shape[0] / n_processes))
-    max_idx = tss.shape[0]
-    chunks = []
+    ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
-    for i in range(n_processes):
+    # mapping chromosome/contig names to numeric values
+    c = 0
+    for chrom in [feature[0] for feature in features]:
+        if not chrom in chrom_mapping:
+            chrom_mapping[chrom] = c
+            c += 1
 
-        # create slice indices
-        if i == n_processes - 1:
-            idxs = (slice_size * i, max_idx)
-        else:
-            idxs = (slice_size * i, slice_size * (i + 1))
+    ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
-        # preprocess TSS chunks
-        chunk = []
-        for chromosome, tss_pos, strand in zip(tss.chromosome[idxs[0]:idxs[1]],
-                                               tss.TSS_pos[idxs[0]:idxs[1]],
-                                               tss.strand[idxs[0]:idxs[1]]):
+    if fragments.endswith(".gz"):
+        fh = gzip.open(fragments, mode="rt")
+    else:
+        fh = open(fragments, mode="r")
 
-            region_start = tss_pos - distance_to_tss
+    ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
-            # skip mitochondrial TSS
-            if chromosome == "chrM":
+    for line in fh:
+
+        # only check for comments at start - performance reasons
+        if check_for_comments:
+            if line.startswith(comment):
                 continue
-            # skip TSS too close to the start of the chromosome
-            elif region_start < 0:
-                continue
-            # add valid TSS to the current chunk
             else:
-                chunk.append((chromosome, tss_pos, strand))
+                check_for_comments = False
 
-        # add current chunk to the list of chunks
-        chunks.append(chunk)
+        # only strip if necessary - performance reasons
+        if use_strip is None:
+            line_split = line.strip().split("\t")
+            if len(line_split) == 4:
+                use_strip = True
+            else:
+                use_strip = False
+        elif not use_strip:
+            line_split = line.split("\t")
+        else:
+            line_split = line.strip().split("\t")
 
+        ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
-    # create queue
-    q = multiprocessing.Queue()
+        bc = line_split[3]
+        if bc not in valid_bcs_set:
+            continue
 
-    # spawn processes
-    processes = []
-    for i in range(n_processes):
-        p = multiprocessing.Process(target=calc_coverage,
-                                    args=(chunks[i], coverage_mtx.copy(), bc_mapping, fragments, distance_to_tss, method, q))
-        p.start()
-        processes.append(p)
+        ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
-    # remove and return items from queue
-    results = []
-    for _ in range(len(processes)):
-        tmp = q.get()
-        results.append(tmp)
+        chrom = line_split[0]
 
-    # block until all processes are terminated
-    for p in processes:
-        p.join()
+        # map chromosome/contig name to numeric value
+        # skip if no features on chromosome/contig
+        if chrom in chrom_mapping:
+            chrom_int = chrom_mapping[chrom]
+        else:
+            continue
 
-    # put the partial results together
-    for mtx in results:
-        coverage_mtx += mtx
+        # fragment on previous chromosome
+        if chrom_int < chrom_mapping[features[feature_idx][0]]:
+            continue
+        # feature on previous chromosome
+        elif chrom_int > chrom_mapping[features[feature_idx][0]]:
+            while feature_idx < len(features) and chrom_int > chrom_mapping[features[feature_idx][0]]:
+                feature_idx += 1
+            if feature_idx >= len(features):
+                break
+
+        ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+
+        start = int(line_split[1])
+        stop = int(line_split[2])
+
+        # fragment in front of feature
+        if stop < features[feature_idx][1]:
+            continue
+
+        # fragment behind feature
+        elif start > features[feature_idx][2]:
+            while feature_idx < len(features) and start > features[feature_idx][2] and chrom_int == chrom_mapping[features[feature_idx][0]]:
+                feature_idx += 1
+
+            # end of features
+            if feature_idx >= len(features):
+                break
+
+            # fragment on previous chromosome
+            elif chrom_int != chrom_mapping[features[feature_idx][0]]:
+                continue
+
+            # overlap
+            elif not stop < features[feature_idx][1]:
+
+                # full overlap
+                if start >= features[feature_idx][1] and stop <= features[feature_idx][2]:
+
+                    index_start = start - features[feature_idx][3] + distance_to_tss
+                    index_stop = stop - features[feature_idx][3] + distance_to_tss
+
+                    if features[feature_idx][4] == "-":
+                        tmp = count_mtx[bc_mapping[bc]]
+                        tmp = np.flip(tmp)
+                        tmp[[index_start, index_stop]] = tmp[[index_start, index_stop]] + 1
+                        count_mtx[bc_mapping[bc]] = np.flip(tmp)
+
+                    else:
+                        count_mtx[bc_mapping[bc]][[index_start, index_stop]] = count_mtx[bc_mapping[bc]][[index_start, index_stop]] + 1
+
+                tmp_idx = feature_idx + 1
+                is_overlapping = True
+                on_same_chrom = True
+
+                # follow-up
+                while tmp_idx < len(features) and is_overlapping and on_same_chrom:
+                    is_overlapping = not (stop < features[tmp_idx][1] or start > features[tmp_idx][2])
+                    on_same_chrom = chrom_int == chrom_mapping[features[tmp_idx][0]]
+
+                    if is_overlapping and on_same_chrom:
+                        # full overlap
+                        if start >= features[tmp_idx][1] and stop <= features[tmp_idx][2]:
+
+                            index_start = start - features[tmp_idx][3] + distance_to_tss
+                            index_stop = stop - features[tmp_idx][3] + distance_to_tss
+
+                            if features[tmp_idx][4] == "-":
+                                tmp = count_mtx[bc_mapping[bc]]
+                                tmp = np.flip(tmp)
+                                tmp[[index_start, index_stop]] = tmp[[index_start, index_stop]] + 1
+                                count_mtx[bc_mapping[bc]] = np.flip(tmp)
+
+                            else:
+                                count_mtx[bc_mapping[bc]][[index_start, index_stop]] = count_mtx[bc_mapping[bc]][[index_start, index_stop]] + 1
+
+                    tmp_idx += 1
+
+        # overlap
+        else:
+
+            # full overlap
+            if start >= features[feature_idx][1] and stop <= features[feature_idx][2]:
+
+                index_start = start - features[feature_idx][3] + distance_to_tss
+                index_stop = stop - features[feature_idx][3] + distance_to_tss
+
+                if features[feature_idx][4] == "-":
+                    tmp = count_mtx[bc_mapping[bc]]
+                    tmp = np.flip(tmp)
+                    tmp[[index_start, index_stop]] = tmp[[index_start, index_stop]] + 1
+                    count_mtx[bc_mapping[bc]] = np.flip(tmp)
+
+                else:
+                    count_mtx[bc_mapping[bc]][[index_start, index_stop]] = count_mtx[bc_mapping[bc]][[index_start, index_stop]] + 1
+
+            tmp_idx = feature_idx + 1
+            is_overlapping = True
+            on_same_chrom = True
+
+            # follow-up
+            while tmp_idx < len(features) and is_overlapping and on_same_chrom:
+                is_overlapping = not (stop < features[tmp_idx][1] or start > features[tmp_idx][2])
+                on_same_chrom = chrom_int == chrom_mapping[features[tmp_idx][0]]
+
+                if is_overlapping and on_same_chrom:
+                    # full overlap
+                    if start >= features[tmp_idx][1] and stop <= features[tmp_idx][2]:
+
+                        index_start = start - features[tmp_idx][3] + distance_to_tss
+                        index_stop = stop - features[tmp_idx][3] + distance_to_tss
+
+                        if features[tmp_idx][4] == "-":
+                            tmp = count_mtx[bc_mapping[bc]]
+                            tmp = np.flip(tmp)
+                            tmp[[index_start, index_stop]] = tmp[[index_start, index_stop]] + 1
+                            count_mtx[bc_mapping[bc]] = np.flip(tmp)
+
+                        else:
+                            count_mtx[bc_mapping[bc]][[index_start, index_stop]] = count_mtx[bc_mapping[bc]][[index_start, index_stop]] + 1
+
+                tmp_idx += 1
+
+    fh.close()
 
     # calculate the index of the center
-    center = np.floor(coverage_mtx.shape[1] / 2)  # 0-index
+    center = np.floor(count_mtx.shape[1] / 2)  # 0-index
     # create x-values
-    x = [i - center for i in range(coverage_mtx.shape[1])]
+    x = [i - center for i in range(count_mtx.shape[1])]
 
     # create flank matrix
-    coverage_mtx_flanks = np.concatenate((coverage_mtx[:, :bp_per_flank], coverage_mtx[:, -bp_per_flank:]), axis=1)
+    count_mtx_flanks = np.concatenate((count_mtx[:, :bp_per_flank], count_mtx[:, -bp_per_flank:]), axis=1)
 
     # calculate mean coverage per barcode
-    flank_means = coverage_mtx_flanks.mean(axis=1)
+    flank_means = count_mtx_flanks.mean(axis=1)
     flank_means = flank_means[:, None]
 
     # replace NAN and 0 flank means with population flank mean to avoid potential division by zero
@@ -232,7 +293,7 @@ def tss_enrichment(adata,
     flank_means[flank_means == 0] = flank_means.mean()
 
     # calculate fold change of coverage over the mean coverage (flanks) per position per barcode
-    fold_change_mtx = coverage_mtx / flank_means
+    fold_change_mtx = count_mtx / flank_means
 
     # calculate mean fold change per position
     mean_fold_change = fold_change_mtx.mean(axis=0)
@@ -262,15 +323,15 @@ def tss_enrichment_plot(adata,
                         figsize=None,
                         save=None):
     """
-    Plots the mean TSS enrichment profile
+    Plots the mean TSS enrichment profile.
 
     Args:
         adata: AnnData
-        group_by: key of adata.obs that is used as grouping variable
-        show_n: whether or not to show the number of observations
+        group_by: key of .obs that is used as grouping variable
+        show_n: whether show the number of observations
         max_cols: maximum number of columns
         figsize: size of the figure
-        save: if True or str, save the figure. str is appended to the default filename. infer filetype if ending on {'.pdf', '.png', '.svg'}
+        save: if True or str, save the figure. str represents entire path. filetype is inferred.
 
     Returns:
         None
@@ -279,7 +340,7 @@ def tss_enrichment_plot(adata,
     if group_by is None:
 
         if figsize is None:
-            figsize = (6, 5)
+            figsize = (4, 4)
 
         fig = plt.figure(figsize=figsize)
         ax = fig.add_subplot(111)
@@ -300,7 +361,7 @@ def tss_enrichment_plot(adata,
         ncols = int(np.ceil(n_groups if n_groups <= max_cols else max_cols))
 
         if figsize is None:
-            figsize = (ncols * 5 * 1.2, nrows * 5)
+            figsize = (ncols * 4 * 1.2, nrows * 4)
 
         fig, axs = plt.subplots(figsize=figsize, nrows=nrows, ncols=ncols, sharey=True, squeeze=False)
         axs = axs.flatten()
@@ -342,67 +403,12 @@ def tss_enrichment_plot(adata,
         plt.show()
 
     else:
-        default_filename = "tss_enrichment_score"
-
         if isinstance(save, str):
-
-            if save[-4:] in {".pdf", ".png", ".svg"}:
-                filename = default_filename + save
-
-            else:
-                filename = default_filename + save + ".png"
-
+            filename = save
         else:
-            filename = default_filename + ".png"
+            filename = "tss_enrichment.png"
 
-        plt.savefig(filename)
-
-
-def tss_enrichment_score_plot(adata, figsize=(4, 6), save=None):
-    """
-    Plots a violin plot of the individual TSS enrichment scores
-
-    Args:
-        adata: AnnData
-        figsize: size of the figure
-        save: if True or str, save the figure. str is appended to the default filename. infer filetype if ending on {'.pdf', '.png', '.svg'}
-
-    Returns:
-        None
-    """
-
-    fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(111)
-
-    sns.violinplot(y=adata.obs.tss_enrichment_score, inner=None, cut=0, ax=ax)
-    sns.stripplot(y=adata.obs.tss_enrichment_score, size=1, jitter=0.3, color="black", ax=ax)
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.grid(False)
-    ax.set_ylabel("TSS enrichment score")
-    ax.set_title("TSS enrichment", loc="center")
-
-    sns.despine()
-
-    if not save:
-        plt.show()
-
-    else:
-        default_filename = "tss_enrichment_score"
-
-        if isinstance(save, str):
-
-            if save[-4:] in {".pdf", ".png", ".svg"}:
-                filename = default_filename + save
-
-            else:
-                filename = default_filename + save + ".png"
-
-        else:
-            filename = default_filename + ".png"
-
-        plt.savefig(filename)
-
+        plt.savefig(filename, dpi=300)
 
 
 # splitting the cells by high and low enrichment score
@@ -410,7 +416,7 @@ def filter_enrichment_score(adata, score_threshold):
     """
     Cluster the cells in 2 categories (low and high tss enrichment) based on the mean tss enrichment score
     obtained with epi.pp.tss_enrichment()
-    
+
     score <= score_threshold: --> low enrichment
     score > score thrshold --> high enrichment
     """

@@ -21,3 +21,6 @@ from ..preprocessing._decomposition import tfidf, lsi
 from ..preprocessing._decomposition import nmf, fa
 
 from ..preprocessing._tss_enrichment import tss_enrichment
+from ..preprocessing._nucleosome_signal import nucleosome_signal
+from ..preprocessing._kneedle import find_elbow
+from ..preprocessing._quality_control import highly_variable, select_highly_variable, qc_stats, set_filter, apply_filters, lazy_qc
