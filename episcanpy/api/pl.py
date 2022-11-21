@@ -17,7 +17,7 @@ from scanpy.plotting import umap, pca, diffmap, tsne, draw_graph
 
 from ..preprocessing._quality_control import cal_var, variability_features
 from ..preprocessing._tss_enrichment import tss_enrichment_plot as tss_enrichment
-from ..preprocessing._tss_enrichment import tss_enrichment_score_plot as tss_enrichment_socre
+from ..preprocessing._tss_enrichment import tss_enrichment_score_plot as tss_enrichment_score
 
 
 
