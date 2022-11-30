@@ -280,9 +280,7 @@ def peak_mtx(fragments_file,
     """
 
     names = ["chr", "start", "stop"]
-    # cellranger peak files contain comments. So added comment parameter to skip them.
-    features = pd.read_csv(peak_file, sep="\t", header=None, usecols=[0, 1, 2], names=names, comment='#')
-    features["chr"] = features.chr.astype(str)
+    features = pd.read_csv(peak_file, sep="\t", header=None, usecols=[0, 1, 2], names=names, comment='#', dtype={"chr": str})
 
     features.index = features.apply(lambda row: "_".join([str(val) for val in row]), axis=1)
 
@@ -335,8 +333,7 @@ def gene_activity_mtx(fragments_file,
     """
 
     names = ["chr", "source", "type", "start", "stop", "score", "strand", "frame", "attribute"]
-    features = pd.read_csv(gtf_file, sep="\t", header=None, comment="#", names=names)
-    features["chr"] = features.chr.astype(str)
+    features = pd.read_csv(gtf_file, sep="\t", header=None, comment="#", names=names, dtype={"chr": str})
 
     features = features[features.type == "gene"]
 
