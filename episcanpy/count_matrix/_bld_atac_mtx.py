@@ -89,6 +89,47 @@ if platform.system() != "Windows":
         return mtx
 
 
+def get_barcodes(fragments,
+                 comment="#"):
+
+    if fragments.endswith(".gz"):
+        fh = gzip.open(fragments, mode="rt")
+    else:
+        fh = open(fragments, mode="r")
+
+    barcodes = set()
+
+    check_for_comments = True
+    use_strip = None
+
+    for line in fh:
+
+        # only check for comments at start - performance reasons
+        if check_for_comments:
+            if line.startswith(comment):
+                continue
+            else:
+                check_for_comments = False
+
+        # only strip if necessary - performance reasons
+        if use_strip is None:
+            line_split = line.strip().split("\t")
+            if len(line_split) == 4:
+                use_strip = True
+            else:
+                use_strip = False
+        elif not use_strip:
+            line_split = line.split("\t")
+        else:
+            line_split = line.strip().split("\t")
+
+        bc = line_split[3]
+
+        barcodes.add(bc)
+
+    return list(barcodes)
+
+
 def count(fragments,
           features,
           valid_bcs,
@@ -262,7 +303,7 @@ def count(fragments,
 
 def peak_mtx(fragments_file,
              peak_file,
-             valid_bcs,
+             valid_bcs=None,
              normalized_peak_size=None,
              fast=False):
     """
@@ -271,7 +312,7 @@ def peak_mtx(fragments_file,
     Args:
         fragments_file: path to fragments file
         peak_file: path to BED file
-        valid_bcs: list of valid barcodes
+        valid_bcs: list of valid barcodes (optional)
         normalized_peak_size: if True peaks size will be normalized; default: None (no normalization)
         fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
 
@@ -294,6 +335,9 @@ def peak_mtx(fragments_file,
 
     features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
 
+    if valid_bcs is None:
+        valid_bcs = get_barcodes(fragments_file)
+
     ct_mtx = count(fragments_file, features.values.tolist(), valid_bcs, fast)
 
     if fast:
@@ -308,7 +352,7 @@ def peak_mtx(fragments_file,
 
 def gene_activity_mtx(fragments_file,
                       gtf_file,
-                      valid_bcs,
+                      valid_bcs=None,
                       upstream=2000,
                       downstream=0,
                       source=None,
@@ -321,7 +365,7 @@ def gene_activity_mtx(fragments_file,
     Args:
         fragments_file: path to fragments file
         gtf_file: path to GTF file
-        valid_bcs: list of valid barcodes; optional in the future
+        valid_bcs: list of valid barcodes (optional)
         upstream: number of bp to consider upstream of TSS; default: 2000 bp
         downstream: number of bp to consider downstream of gene body; default: 0 bp
         source: filter for source of the feature; default: None (no filtering)
@@ -357,6 +401,9 @@ def gene_activity_mtx(fragments_file,
 
     features = features[["gene_name", "gene_id", "gene_type", "chr", "start", "stop", "strand", "source"]]
 
+    if valid_bcs is None:
+        valid_bcs = get_barcodes(fragments_file)
+
     ct_mtx = count(fragments_file, features[["chr", "start", "stop"]].values.tolist(), valid_bcs, fast)
 
     if fast:
@@ -370,7 +417,7 @@ def gene_activity_mtx(fragments_file,
 
 
 def window_mtx(fragments_file,
-               valid_bcs,
+               valid_bcs=None,
                window_size=5000,
                species="human",
                fast=False):
@@ -380,7 +427,7 @@ def window_mtx(fragments_file,
 
     Args:
         fragments_file: path to fragments file
-        valid_bcs: list of valid barcodes
+        valid_bcs: list of valid barcodes (optional)
         window_size: size of windows in bp; default: 5000 bp
         species: species to create the windows for (human or mouse); default: "human"; will be extended in the future
         fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
@@ -399,6 +446,9 @@ def window_mtx(fragments_file,
     features.index = features.apply(lambda row: "_".join([str(val) for val in row]), axis=1)
 
     features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
+
+    if valid_bcs is None:
+        valid_bcs = get_barcodes(fragments_file)
 
     ct_mtx = count(fragments_file, features.values.tolist(), valid_bcs, fast)
 
