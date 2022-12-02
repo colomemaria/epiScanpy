@@ -913,6 +913,8 @@ def show_filters(adata,
 
     ax.scatter(x=adata[adata.obs.passes_filter].obs[x], y=adata[adata.obs.passes_filter].obs[y], linewidth=0, s=size, color="tab:blue")
     ax.scatter(x=adata[~adata.obs.passes_filter].obs[x], y=adata[~adata.obs.passes_filter].obs[y], linewidth=0, s=size, color="tab:red")
+    ax.set_xlabel(x)
+    ax.set_ylabel(y)
 
     plt.tight_layout()
 
