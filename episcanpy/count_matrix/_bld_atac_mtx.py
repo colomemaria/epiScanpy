@@ -323,6 +323,11 @@ def peak_mtx(fragments_file,
     names = ["chr", "start", "stop"]
     features = pd.read_csv(peak_file, sep="\t", header=None, usecols=[0, 1, 2], names=names, comment='#', dtype={"chr": str})
 
+    try:
+        int(features.iloc[0].start)
+    except ValueError:
+        features = features[1:]
+
     features.index = features.apply(lambda row: "_".join([str(val) for val in row]), axis=1)
 
     if normalized_peak_size:
