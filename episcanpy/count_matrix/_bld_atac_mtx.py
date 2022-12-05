@@ -326,7 +326,11 @@ def peak_mtx(fragments_file,
     try:
         int(features.iloc[0].start)
     except ValueError:
-        features = features[1:]
+        features = features[1:].copy()
+        features["start"] = features.start.astype(int)
+        features["stop"] = features.stop.astype(int)
+
+
 
     features.index = features.apply(lambda row: "_".join([str(val) for val in row]), axis=1)
 
