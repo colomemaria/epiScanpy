@@ -402,7 +402,7 @@ def gene_activity_mtx(fragments_file,
 
     tmp = [attr.replace("gene_type", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_type ")]
     if not tmp:
-        tmp = [attr.replace("gene_type", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_biotype ")]
+        tmp = [attr.replace("gene_biotype", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_biotype ")]
     features["gene_type"] = tmp
 
     if gene_type:
