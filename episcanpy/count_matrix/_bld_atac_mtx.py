@@ -394,8 +394,16 @@ def gene_activity_mtx(fragments_file,
         features = features[features.source == source]
 
     features["gene_id"] = [attr.replace("gene_id", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_id")]
-    features["gene_name"] = [attr.replace("gene_name", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_name")]
-    features["gene_type"] = [attr.replace("gene_type", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_type")]
+
+    tmp = [attr.replace("gene_name", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_name ")]
+    if not tmp:
+        tmp = [attr.replace("gene", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene ")]
+    features["gene_name"] = tmp
+
+    tmp = [attr.replace("gene_type", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_type ")]
+    if not tmp:
+        tmp = [attr.replace("gene_type", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_biotype ")]
+    features["gene_type"] = tmp
 
     if gene_type:
         features = features[[feature in gene_type for feature in features.gene_type]]
