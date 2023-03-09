@@ -317,8 +317,6 @@ def tss_enrichment(adata,
     adata.uns["tss_enrichment"]["mean_fold_change"] = mean_fold_change
     adata.uns["tss_enrichment"]["mean_tss_score"] = mean_tss_score
 
-    adata.uns["tss_enrichment"]["flank_means"] = flank_means
-
 
 def tss_enrichment_plot(adata,
                         group_by=None,
