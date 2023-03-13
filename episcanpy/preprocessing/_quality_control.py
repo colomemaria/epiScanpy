@@ -851,24 +851,24 @@ def set_filter(adata,
         df = adata.obs if in_obs else adata.var
 
         if "passes_filter" in df:
-            if min_threshold and max_threshold:
+            if min_threshold is not None and max_threshold is not None:
                 tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
                 df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
-            elif min_threshold:
+            elif min_threshold is not None:
                 tmp = df[key] >= min_threshold
                 df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
-            elif max_threshold:
+            elif max_threshold is not None:
                 tmp = df[key] <= max_threshold
                 df["passes_filter"] = [False if not passed else val for passed, val in zip(tmp, df["passes_filter"])]
 
         else:
-            if min_threshold and max_threshold:
+            if min_threshold is not None and max_threshold is not None:
                 tmp = np.logical_and(df[key] >= min_threshold, df[key] <= max_threshold)
                 df["passes_filter"] = tmp
-            elif min_threshold:
+            elif min_threshold is not None:
                 tmp = df[key] >= min_threshold
                 df["passes_filter"] = tmp
-            elif max_threshold:
+            elif max_threshold is not None:
                 tmp = df[key] <= max_threshold
                 df["passes_filter"] = tmp
 
