@@ -6,7 +6,7 @@ from scipy.sparse import lil_matrix
 from tqdm import tqdm
 
 
-def bld_mtx_fly(tsv_file, annotation, csv_file=None, genome=None, save=False):
+def bld_mtx_fly(tsv_file, annotation,ignore_lines='#', csv_file=None, genome=None, save=False):
     """
     Building count matrix on the fly.
     Expected running time for 10k cells X 100k features on a personal computer ~65min
@@ -19,6 +19,8 @@ def bld_mtx_fly(tsv_file, annotation, csv_file=None, genome=None, save=False):
     tsv_file : name of the file containing the multiplexed reads (.tsv or .tsv.gz)
 
     annotation : loaded set of features to create the feature matrix from
+    
+    ignore_lines : ignore lines starting the symbole chosen (# by default).
 
     csv_file : default is None -
 
@@ -34,7 +36,7 @@ def bld_mtx_fly(tsv_file, annotation, csv_file=None, genome=None, save=False):
     """
 
     print('loading barcodes')
-    barcodes = sorted(pd.read_csv(tsv_file, sep='\t', header=None).loc[:, 3].unique().tolist())
+    barcodes = sorted(pd.read_csv(tsv_file, sep='\t', header=None, comment=ignore_lines).loc[:, 3].unique().tolist())
 
     # barcodes
     nb_barcodes = len(barcodes)
