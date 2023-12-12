@@ -47,6 +47,7 @@ def get_tss(gtf,
 def tss_enrichment(adata,
                    fragments,
                    gtf,
+                   source="HAVANA",
                    n=5000,
                    score="avg_score_of_center_region",
                    distance_to_tss=1000,
@@ -59,6 +60,7 @@ def tss_enrichment(adata,
         adata: AnnData
         fragments: path to fragments file
         gtf: path to GTF file
+        source: source of the feature
         n: number of TSS to use for calculation
         score: value that is used as TSS enrichment score for individual observations
         distance_to_tss: distance to TSS
@@ -69,7 +71,7 @@ def tss_enrichment(adata,
         None
     """
 
-    features = get_tss(gtf, source="HAVANA", feature="gene", protein_coding_only=True)
+    features = get_tss(gtf, source=source, feature="gene", protein_coding_only=True)
 
     features["start"] = features.tss_pos - distance_to_tss
     features["stop"] = features.tss_pos + distance_to_tss
