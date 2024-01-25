@@ -24,3 +24,5 @@ packaging
 pysam; platform_system != "Windows"
 h5py
 kneed
+biopython
+pyjaspar

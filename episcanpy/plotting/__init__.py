@@ -21,3 +21,5 @@ from ..preprocessing._nucleosome_signal import fragment_length
 from ..preprocessing._quality_control import show_filters
 from ..plotting._violin import violin
 from ..plotting._histograms import histogram
+
+from ..tools._footprinting import plot_footprints as footprinting

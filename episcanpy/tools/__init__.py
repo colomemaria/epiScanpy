@@ -24,3 +24,6 @@ from ..preprocessing._decomposition import tfidf, lsi
 from ..preprocessing._decomposition import nmf, fa
 
 from ..preprocessing._tss_enrichment import filter_enrichment_score
+
+from ..tools._motif_search import get_peak_sequences, search_motifs
+from ..tools._footprinting import footprinting
