@@ -27,3 +27,4 @@ from ..preprocessing._tss_enrichment import filter_enrichment_score
 
 from ..tools._motif_search import get_peak_sequences, search_motifs
 from ..tools._footprinting import footprinting
+from ..tools._enrichment_analysis import motif_enrichment
