@@ -498,8 +498,8 @@ def get_scores(adata, mtx):
 
         motif = adata.uns["motif_search"]["tf_motifs"][i]
 
-        flank_l = adata.uns["footprinting"][mtx][i][:, center - 40 : center - int(np.floor(motif.length / 2))]
-        flank_r = adata.uns["footprinting"][mtx][i][:, center + int(np.ceil(motif.length / 2)) : center + 40]
+        flank_l = adata.uns["footprinting"][mtx][i][:, center - 50 : center - int(np.floor(motif.length / 2))]
+        flank_r = adata.uns["footprinting"][mtx][i][:, center + int(np.ceil(motif.length / 2)) : center + 50]
         flank = np.concatenate((flank_l, flank_r), axis=1)
 
         footprint = adata.uns["footprinting"][mtx][i][:, center - int(np.floor(motif.length / 2)) : center + int(np.ceil(motif.length / 2))]
