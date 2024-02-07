@@ -1,4 +1,5 @@
 import multiprocessing
+from collections import defaultdict
 
 import numpy as np
 import pandas as pd
@@ -123,9 +124,15 @@ def search_motifs(adata, tf_names, release="JASPAR2022", pseudocounts=1, thresho
 
     print(f"Number of binding sites: {len(results)}")
 
+    tfbs_counts = defaultdict(int)
+
+    for res in results:
+        tfbs_counts[res["motif_idx"]] += 1
+
     adata.uns["motif_search"] = {}
     adata.uns["motif_search"]["tf_motifs"] = motifs
     adata.uns["motif_search"]["results"] = results
+    adata.uns["motif_search"]["tfbs_counts"] = dict(tfbs_counts)
 
 
 
