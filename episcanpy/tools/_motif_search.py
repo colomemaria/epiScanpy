@@ -92,7 +92,7 @@ def background_distribution(adata):
 
 
 
-def search_motifs(adata, tf_names, release="JASPAR2022", pseudocounts=1, threshold_fpr=1e-6, n_jobs=1):
+def search_motifs(adata, tf_names, release="JASPAR2022", pseudocounts=1, threshold_fpr=1e-5, n_jobs=1):
 
     # fetch motif data
     motifs = fetch_motifs(tf_names=tf_names, release=release)
