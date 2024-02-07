@@ -4,6 +4,7 @@ import gzip
 from collections import defaultdict
 
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 import numpy as np
 import pandas as pd
@@ -11,6 +12,7 @@ import pandas as pd
 from Bio import SeqIO
 
 from ._motif_search import get_sequence
+
 
 
 
@@ -367,6 +369,7 @@ def tn5_activity(adata, fragments, features, groupby, pos_to_feat, genome, k, bi
     
 
     adata.uns["footprinting"] = {}
+    adata.uns["footprinting"]["group_mapping"] = {v: k for k, v in group_mapping.items()}
     adata.uns["footprinting"]["mtx_raw"] = ct_mtx_raw
     adata.uns["footprinting"]["mtx_corr"] = ct_mtx_corr
 
@@ -572,15 +575,13 @@ def footprinting(adata, groupby, fragments, genome, kmer_size=6, distance_to_cen
 
 
 
-def plot_footprints(adata, mtx="corr_norm", figsize=None, save=None):
+def plot_footprints(adata, mtx="corr_norm", show_score=True, score_threshold=1.3, figsize=None, save=None):
 
     if mtx in ["raw", "norm", "corr", "corr_norm", "norm_smooth", "corr_norm_smooth"]:
         score = f"score_{mtx}"
         mtx = f"mtx_{mtx}"
     else:
         raise ValueError(f"Unknown mtx '{mtx}'")
-    
-    # center = adata.uns["footprinting"][mtx][0].shape[2] // 2
 
     nrows = adata.uns["footprinting"][mtx][0].shape[0]
     ncols = len(adata.uns["footprinting"][mtx])
@@ -596,28 +597,126 @@ def plot_footprints(adata, mtx="corr_norm", figsize=None, save=None):
 
     for i in range(ncols):
 
-        aggregated = adata.uns["footprinting"][mtx][i]
-
         motif_size = adata.uns["motif_search"]["tf_motifs"][i].length
         tf_name = adata.uns["motif_search"]["tf_motifs"][i].name
         mtx_id = adata.uns["motif_search"]["tf_motifs"][i].matrix_id
+
+        min_val = np.inf
+        max_val = -np.inf
 
         for j in range(nrows):
 
             axs[j, i].plot(x, adata.uns["footprinting"][mtx][i][j], linewidth=1.4)
 
+            if show_score:
+                current_score = adata.uns["footprinting"][score][j][i]
+                facecolor = "white" if current_score < score_threshold else "green"
+                axs[j, i].text(0.05, 0.95, f"{current_score:.2f}", transform=axs[j, i].transAxes, fontsize=12, verticalalignment="top", bbox=dict(boxstyle="round", facecolor=facecolor, alpha=0.75))
+
+            current_min_val = np.min(adata.uns["footprinting"][mtx][i][j])
+            if current_min_val < min_val:
+                min_val = current_min_val
+
+            current_max_val = np.max(adata.uns["footprinting"][mtx][i][j])
+            if current_max_val > max_val:
+                max_val = current_max_val
+
+            if i == 0:
+                axs[j, i].set_ylabel(adata.uns["footprinting"]["group_mapping"][j], rotation=0, labelpad=50, fontsize="large", fontweight="bold")
+                axs[j, i].yaxis.label.set_horizontalalignment("right")
+
+        for j in range(nrows):
+
             x_motif = [int(i) for i in range(int(-np.floor(motif_size / 2)), int(np.ceil(motif_size / 2)))]
-            y_motif = [0 for _ in range(len(x_motif))]
+
+            y_range = max_val - min_val
+            y_val_motif = np.max(min_val - (y_range * 0.05), 0)
+            y_motif = [y_val_motif for _ in range(len(x_motif))]
+
             axs[j, i].plot(x_motif, y_motif, linewidth=2, color="tab:red")
 
-            current_score = adata.uns["footprinting"][score][j][i]
-            facecolor = "white" if current_score < 1.4 else "green"
-            axs[j, i].text(0.05, 0.95, f"{current_score:.2f}", transform=axs[j, i].transAxes, fontsize=12, verticalalignment="top", bbox=dict(boxstyle="round", facecolor=facecolor, alpha=0.75))
-
-        axs[0, i].set_title(f"{tf_name} ({mtx_id}) ({motif_size} bp)", fontsize="large")
+        axs[0, i].set_title(f"{tf_name} ({mtx_id}) ({motif_size} bp)", pad=50, fontsize="large", fontweight="bold")
         axs[-1, i].set_xlabel("Distance to motif center [bp]")
 
     plt.tight_layout()
+
+    if save is not None:
+        plt.savefig(save)
+
+
+
+def plot_footprints_compact(adata, mtx="corr_norm", max_cols=5, figsize=None, save=None):
+
+    if mtx in ["raw", "norm", "corr", "corr_norm", "norm_smooth", "corr_norm_smooth"]:
+        mtx = f"mtx_{mtx}"
+    else:
+        raise ValueError(f"Unknown mtx '{mtx}'")
+
+    ngroups = adata.uns["footprinting"][mtx][0].shape[0]
+
+    nsubplots = len(adata.uns["footprinting"][mtx])
+
+    ncols = max_cols if nsubplots > max_cols else nsubplots
+    nrows = np.ceil(nsubplots / max_cols).astype(int)
+
+    if figsize is None:
+        figsize = (5 * ncols, 5 * nrows)
+
+    fig, axs = plt.subplots(figsize=figsize, nrows=nrows, ncols=ncols)
+
+    plt.subplots_adjust(hspace=0.4, wspace=0.2)
+
+    axs = axs.flatten()
+
+    for ax in axs[nsubplots+1:]:
+        ax.remove()
+
+    axs = axs[:nsubplots+1]
+
+    x_len = adata.uns["footprinting"][mtx][0].shape[1]
+    x = [int(val - ((x_len - 1) / 2)) for val in range(x_len)]
+
+    for i, ax in enumerate(axs[:-1]):
+
+        motif_size = adata.uns["motif_search"]["tf_motifs"][i].length
+        tf_name = adata.uns["motif_search"]["tf_motifs"][i].name
+        mtx_id = adata.uns["motif_search"]["tf_motifs"][i].matrix_id
+
+        min_val = np.inf
+        max_val = -np.inf
+
+        for j in range(ngroups):
+
+            if i == len(axs) - 2:
+                ax.plot(x, adata.uns["footprinting"][mtx][i][j], linewidth=1.4, label=adata.uns["footprinting"]["group_mapping"][j])
+            else:
+                ax.plot(x, adata.uns["footprinting"][mtx][i][j], linewidth=1.4)
+
+            current_min_val = np.min(adata.uns["footprinting"][mtx][i][j])
+            if current_min_val < min_val:
+                min_val = current_min_val
+
+            current_max_val = np.max(adata.uns["footprinting"][mtx][i][j])
+            if current_max_val > max_val:
+                max_val = current_max_val
+
+        x_motif = [int(i) for i in range(int(-np.floor(motif_size / 2)), int(np.ceil(motif_size / 2)))]
+
+        y_range = max_val - min_val
+        y_val_motif = np.max(min_val - (y_range * 0.05), 0)
+        y_motif = [y_val_motif for _ in range(len(x_motif))]
+
+        ax.plot(x_motif, y_motif, linewidth=2, color="tab:red")
+
+        ax.set_title(f"{tf_name} ({mtx_id}) ({motif_size} bp)", fontsize="large")
+        ax.set_xlabel("Distance to motif center [bp]")
+
+    
+    ax_legend = axs[-1]
+    ax_legend.axis("off")
+
+    handles, labels = ax.get_legend_handles_labels()
+    ax_legend.legend(handles, labels, loc="center", frameon=False)
 
     if save is not None:
         plt.savefig(save)
