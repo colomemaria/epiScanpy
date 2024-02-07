@@ -24,4 +24,4 @@ from ..plotting._histograms import histogram
 
 from ..tools._footprinting import plot_footprints as footprinting
 from ..tools._footprinting import plot_footprints_compact as footprinting_compact
-# from ..tools._enrichment_analysis import plot_motif_enrichment as motif_enrichment
+from ..tools._enrichment_analysis import plot_motif_enrichment as motif_enrichment
