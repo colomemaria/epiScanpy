@@ -1,9 +1,12 @@
 import numpy as np
 import pandas as pd
+
 from scipy.stats import hypergeom
+from statsmodels.stats.multitest import multipletests
 
 from collections import defaultdict
 
+from IPython.display import display
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -20,13 +23,15 @@ def binary_motif_mtx(adata):
 
 
 
-def motif_enrichment(adata, pval_threshold=0.05):
+def motif_enrichment(adata, alpha=0.05):
 
     adata.uns["motif_enrichment"] = {}
     adata.uns["motif_enrichment"]["results"] = defaultdict(list)
 
     # get motif presence matrix
     binary_motif_mtx(adata)
+
+    results = []
 
     # get grouping variable from DA test
     grouping_var = adata.uns["rank_features_groups"]["params"]["groupby"]
@@ -51,34 +56,53 @@ def motif_enrichment(adata, pval_threshold=0.05):
 
             pval = hypergeom.sf(k-1, M, n, N)  # k-1 because hypergeom.sf(k, M, n, N) returns the probability of getting more than k successes
                 
-            adata.uns["motif_enrichment"]["results"][group].append(
+            results.append(
                 {
                     "tf_name": tf_name,
                     "tf_mtx_id": tf_mtx_id,
-                    "pval": pval,
                     "pct_tfbs_in_da_features": (k / n) * 100,
-                    "pct_da_features_with_tfbs": (k / N) * 100                        
+                    "pct_da_features_with_tfbs": (k / N) * 100,
+                    "pval": pval,
+                    "group": group
                 }
             )
 
-    # convert defaultdict to dict
-    adata.uns["motif_enrichment"]["results"] = dict(adata.uns["motif_enrichment"]["results"])
-                
-    for group in adata.uns["motif_enrichment"]["results"]:
-        adata.uns["motif_enrichment"]["results"][group] = pd.DataFrame(adata.uns["motif_enrichment"]["results"][group])
+    pvals = [x["pval"] for x in results]
 
-    # sort results by p-value
-    for group in adata.uns["motif_enrichment"]["results"]:
+    _, pvals_corr, _, _ = multipletests(pvals, alpha=alpha, method="fdr_bh")
+    for result, pval_corr in zip(results, pvals_corr):
+        result["pval_corr_bh"] = pval_corr
+
+    _, pvals_corr, _, _ = multipletests(pvals, alpha=alpha, method="bonferroni")
+    for result, pval_corr in zip(results, pvals_corr):
+        result["pval_corr_bonferroni"] = pval_corr
+
+    results_grouped = defaultdict(list)
+    for result in results:
+        results_grouped[result["group"]].append(result)
+
+    # convert defaultdict to dict
+    results_grouped = dict(results_grouped)
+                
+    for group in results_grouped.keys():
+        adata.uns["motif_enrichment"]["results"][group] = pd.DataFrame(results_grouped[group])
+        adata.uns["motif_enrichment"]["results"][group] = adata.uns["motif_enrichment"]["results"][group].drop(["group"], axis=1)
         adata.uns["motif_enrichment"]["results"][group] = adata.uns["motif_enrichment"]["results"][group].sort_values(by="pval")
 
-    # sort results by p-value
     for group in adata.uns["motif_enrichment"]["results"]:
         print(group)
-        print(adata.uns["motif_enrichment"]["results"][group], end="\n\n")
+        display(adata.uns["motif_enrichment"]["results"][group])
+        print("\n")
 
 
 
-def plot_enrichment(x, y, c, s, x_label, colorbar_label, legend_label, title=None, figsize=(6, 6), save=None):
+def plot_enrichment(x, y, c, s, x_label, colorbar_label, legend_label, show_nonsignificant=True, highlight_significant=True, highlight_list=None, title=None, figsize=(6, 6), save=None):
+
+    if not show_nonsignificant:
+        x = x[highlight_list]
+        y = y[highlight_list]
+        c = c[highlight_list]
+        s = s[highlight_list]
 
     fig, ax = plt.subplots(figsize=figsize, nrows=1, ncols=1, squeeze=True)
 
@@ -91,6 +115,7 @@ def plot_enrichment(x, y, c, s, x_label, colorbar_label, legend_label, title=Non
         c=c,
         s=s_var_scaled,
         cmap="viridis_r",
+        alpha=[1 if highlight and highlight_significant else 0.4 for highlight in highlight_list] if show_nonsignificant else 1,
         linewidth=1,
         edgecolor="grey",
         vmin=np.floor(c.min()) - 0.25,
@@ -123,7 +148,6 @@ def plot_enrichment(x, y, c, s, x_label, colorbar_label, legend_label, title=Non
     
     cbar.ax.set_yticklabels(["$10^{{{:n}}}$".format(x) for x in cbar_ticks])
     cbar.set_label(label=colorbar_label, weight="bold", labelpad=12)
-
 
     legend_size_vals_min = s.min()
     legend_size_vals_max = s.max()
@@ -161,7 +185,21 @@ def plot_enrichment(x, y, c, s, x_label, colorbar_label, legend_label, title=Non
 
 
 
-def plot_motif_enrichment(adata, save=None):
+def plot_motif_enrichment(adata, corr_method="benjamini-hochberg", top_n=10, show_nonsignificant=True, highlight_significant=True, pval_threshold=0.05, save=None):
+
+    if corr_method is None or corr_method.lower() in ["raw", "none"]:
+        pval_key = "pval"
+        colorbar_label = "unadj. p-value"
+    
+    elif corr_method.lower() in ["benjamini-hochberg", "bh"]:
+        pval_key = "pval_corr_bh"
+        colorbar_label = "adj. p-value (Benjamini-Hochberg)"
+    
+    elif corr_method.lower() in ["bonferroni"]:
+        pval_key = "pval_corr_bonferroni"
+        colorbar_label = "adj. p-value (Bonferroni)"
+
+    msgs = []
 
     for group in adata.uns["motif_enrichment"]["results"]:
 
@@ -169,7 +207,33 @@ def plot_motif_enrichment(adata, save=None):
 
         x = data.pct_tfbs_in_da_features
         y = data.tf_name + " (" + data.tf_mtx_id + ")"
-        c = data.pval
+        c = data[pval_key]
         s = data.pct_da_features_with_tfbs
 
-        plot_enrichment(x, y, np.log10(c), s, x_label="% TFBS in DA features", colorbar_label="p-value", legend_label="% DA features\nwith TFBS", title=group, figsize=(8, 6), save=save)
+        if top_n:
+            x, y, c, s = x[:top_n], y[:top_n], c[:top_n], s[:top_n]
+
+        highlight_list = [True if pval < pval_threshold else False for pval in c]
+
+        if not show_nonsignificant and  np.sum(highlight_list) == 0:
+            msgs.append(f"No significant results for {group}\n")
+            continue
+
+        plot_enrichment(
+            x, 
+            y, 
+            np.log10(c), 
+            s, 
+            x_label="% TFBS in DA features", 
+            colorbar_label=colorbar_label, 
+            legend_label="% DA features\nwith TFBS", 
+            show_nonsignificant=show_nonsignificant,
+            highlight_significant=highlight_significant,
+            highlight_list=highlight_list,
+            title=group, 
+            figsize=(8, 6), 
+            save=save
+        )
+
+    for msg in msgs:
+        print(msg)
