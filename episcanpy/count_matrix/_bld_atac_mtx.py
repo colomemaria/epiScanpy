@@ -5,9 +5,11 @@ if platform.system() != "Windows":
     import anndata as ad
     import pandas as pd
     import pysam
-    from scipy.sparse import lil_matrix, csr_matrix
+    from scipy.sparse import lil_matrix, csr_matrix, dok_matrix
+    from intervaltree import Interval, IntervalTree
     from tqdm import tqdm
     import gzip
+    import multiprocessing
     from ._features import make_windows
 
 
@@ -89,6 +91,7 @@ if platform.system() != "Windows":
         return mtx
 
 
+
 def get_barcodes(fragments,
                  comment="#"):
 
@@ -97,232 +100,223 @@ def get_barcodes(fragments,
     else:
         fh = open(fragments, mode="r")
 
-    barcodes = set()
+    try:
 
-    check_for_comments = True
-    use_strip = None
+        barcodes = set()
 
-    for line in fh:
+        check_for_comments = True
+        use_strip = None
 
-        # only check for comments at start - performance reasons
-        if check_for_comments:
-            if line.startswith(comment):
-                continue
+        # iterate over lines and count
+        for i, line in enumerate(fh):
+
+            # only check for comments at start - performance reasons
+            if check_for_comments:
+                if line.startswith(comment):
+                    continue
+                else:
+                    check_for_comments = False
+
+            # only strip if necessary - performance reasons
+            if use_strip is None:
+                line_split = line.strip().split("\t")
+                if len(line_split) == 4:
+                    use_strip = True
+                else:
+                    use_strip = False
+            elif not use_strip:
+                line_split = line.split("\t")
             else:
-                check_for_comments = False
+                line_split = line.strip().split("\t")
 
-        # only strip if necessary - performance reasons
-        if use_strip is None:
-            line_split = line.strip().split("\t")
-            if len(line_split) == 4:
-                use_strip = True
-            else:
-                use_strip = False
-        elif not use_strip:
-            line_split = line.split("\t")
-        else:
-            line_split = line.strip().split("\t")
+            # extract barcode
+            bc = line_split[3]
+            barcodes.add(bc)
 
-        bc = line_split[3]
+    finally:
+        fh.close()
 
-        barcodes.add(bc)
+    n_lines = i + 1
 
-    return list(barcodes)
+    return list(barcodes), n_lines
 
 
-def count(fragments,
-          features,
-          valid_bcs,
-          fast,
-          comment="#"):
 
-    check_for_comments = True
-    use_strip = None
-
-    feature_idx = 0
-
-    chrom_mapping = dict()
-    bc_mapping = {bc: i for i, bc in enumerate(valid_bcs)}
-
-    valid_bcs_set = set(valid_bcs)
-
-    ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
-
-    # fast vs memory efficient
-    if fast:
-        count_mtx = [[0 for _ in range(len(features))] for i in range(len(valid_bcs))]
-        # count_mtx = np.zeros((len(valid_bcs), len(features)))
-    else:
-        count_mtx_sparse = lil_matrix((len(valid_bcs), len(features)))
-
-    ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
-
-    # mapping chromosome/contig names to numeric values
-    c = 0
-    for chrom in [feature[0] for feature in features]:
-        if not chrom in chrom_mapping:
-            chrom_mapping[chrom] = c
-            c += 1
-
-    ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+def count_lines(fragments):
 
     if fragments.endswith(".gz"):
         fh = gzip.open(fragments, mode="rt")
     else:
         fh = open(fragments, mode="r")
 
-    ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+    try:
+    
+        # iterate over lines and count
+        for i, line in enumerate(fh):
+            pass
 
-    for line in fh:
+    finally:
+        fh.close()
 
-        # only check for comments at start - performance reasons
-        if check_for_comments:
-            if line.startswith(comment):
-                continue
-            else:
-                check_for_comments = False
+    n_lines = i + 1
 
-        # only strip if necessary - performance reasons
-        if use_strip is None:
-            line_split = line.strip().split("\t")
-            if len(line_split) == 4:
-                use_strip = True
-            else:
-                use_strip = False
-        elif not use_strip:
-            line_split = line.split("\t")
+    return n_lines
+
+
+
+def count_fragments(fragments,
+                    genomic_tree,
+                    bc_mapping,
+                    mode,
+                    shape,
+                    n_lines,
+                    n_jobs):
+
+    # initialize count matrix
+    ct_mtx = csr_matrix(shape)
+
+    n_jobs = multiprocessing.cpu_count() if n_jobs == -1 else n_jobs
+
+    # determine intervals for parallel processing
+    lines_per_job = n_lines // n_jobs
+    intervals = [(i*lines_per_job, (i+1)*lines_per_job) for i in range(n_jobs)]
+    intervals[-1] = (intervals[-1][0], n_lines)
+
+    sem = multiprocessing.Semaphore(n_jobs)
+
+    manager = multiprocessing.Manager()
+    q = manager.Queue()
+
+    producers = [CountProcess(fragments, genomic_tree, bc_mapping, mode, shape, intervals[i], q, sem) for i in range(n_jobs)]
+
+    for p in producers:
+        sem.acquire()
+        p.start()
+
+    for p in producers:
+        p.join()
+
+    # sum up partial count matrices
+    while not q.empty():
+        ct_mtx += q.get()
+
+    return ct_mtx
+
+
+
+class CountProcess(multiprocessing.Process):
+
+    def __init__(self, fragments, genomic_tree, bc_mapping, mode, shape, interval, q, sem):
+
+        super().__init__()
+
+        self.fragments = fragments
+        self.genomic_tree = genomic_tree
+        self.bc_mapping = bc_mapping
+
+        self.mode = mode
+        self.shape = shape
+
+        self.interval = interval
+
+        self.q = q
+        self.sem = sem
+
+
+    def run(self):
+
+        # initialize count matrix (DOK format for efficiency in incremental construction)
+        ct_mtx = dok_matrix(self.shape)
+
+        if self.fragments.endswith(".gz"):
+            fh = gzip.open(self.fragments, mode="rt")
         else:
-            line_split = line.strip().split("\t")
+            fh = open(self.fragments, mode="r")
 
-        ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+        try:
 
-        bc = line_split[3]
-        if bc not in valid_bcs_set:
-            continue
+            for i, f in enumerate(fh):
 
-        ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+                # skip lines outside of interval
+                if i < self.interval[0]:
+                    continue
+                elif i >= self.interval[1]:
+                    break
+                    
+                # skip comments
+                if f.startswith("#"):
+                    continue
 
-        chrom = line_split[0]
+                f = f.split("\t")
 
-        # map chromosome/contig name to numeric value
-        # skip if no features on chromosome/contig
-        if chrom in chrom_mapping:
-            chrom_int = chrom_mapping[chrom]
-        else:
-            continue
+                bc = f[3]
 
-        # fragment on previous chromosome
-        if chrom_int < chrom_mapping[features[feature_idx][0]]:
-            continue
-        # feature on previous chromosome
-        elif chrom_int > chrom_mapping[features[feature_idx][0]]:
-            while feature_idx < len(features) and chrom_int > chrom_mapping[features[feature_idx][0]]:
-                feature_idx += 1
-            if feature_idx >= len(features):
-                break
+                # skip invalid barcodes
+                if bc not in self.bc_mapping:
+                    continue
 
-        ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+                chrom = f[0]
+                start = int(f[1])
+                stop = int(f[2])
 
-        start = int(line_split[1])
-        stop = int(line_split[2])
+                try:
 
-        # fragment in front of feature
-        if stop < features[feature_idx][1]:
-            continue
+                    # count based on transposition events
+                    if self.mode == "transposition":
 
-        # fragment behind feature
-        elif start > features[feature_idx][2]:
-            while feature_idx < len(features) and start > features[feature_idx][2] and chrom_int == chrom_mapping[features[feature_idx][0]]:
-                feature_idx += 1
+                        for pos in [start, stop]:
+                            res = self.genomic_tree[chrom].at(pos)
+                            feature_indices = [interval.data for interval in res]
+                            for feature_idx in feature_indices:
+                                ct_mtx[self.bc_mapping[bc], feature_idx] += 1
 
-            # end of features
-            if feature_idx >= len(features):
-                break
+                    # count based on overlaps
+                    elif self.mode == "overlap":
+                        
+                        res = self.genomic_tree[chrom].overlap(start, stop)
+                        feature_indices = [interval.data for interval in res]
+                        for feature_idx in feature_indices:
+                            ct_mtx[self.bc_mapping[bc], feature_idx] += 1
 
-            # fragment on previous chromosome
-            elif chrom_int != chrom_mapping[features[feature_idx][0]]:
-                continue
+                # skip unannotated chromosomes
+                except KeyError:
+                    continue
 
-            # overlap
-            elif not stop < features[feature_idx][1]:
+        finally:
+            fh.close()
 
-                if fast:
-                    count_mtx[bc_mapping[bc]][feature_idx] += 1
-                else:
-                    count_mtx_sparse[bc_mapping[bc], feature_idx] += 1
+        # change to CSR format for efficiency in arithmetic operations and storage
+        self.q.put(csr_matrix(ct_mtx))
+        self.sem.release()
 
-                tmp_idx = feature_idx + 1
-                is_overlapping = True
-                on_same_chrom = True
-
-                # follow-up
-                while tmp_idx < len(features) and is_overlapping and on_same_chrom:
-                    is_overlapping = not (stop < features[tmp_idx][1] or start > features[tmp_idx][2])
-                    on_same_chrom = chrom_int == chrom_mapping[features[tmp_idx][0]]
-
-                    if is_overlapping and on_same_chrom:
-                        if fast:
-                            count_mtx[bc_mapping[bc]][tmp_idx] += 1
-                        else:
-                            count_mtx_sparse[bc_mapping[bc], tmp_idx] += 1
-
-                    tmp_idx += 1
-
-        # overlap
-        else:
-
-            if fast:
-                count_mtx[bc_mapping[bc]][feature_idx] += 1
-            else:
-                count_mtx_sparse[bc_mapping[bc], feature_idx] += 1
-
-            tmp_idx = feature_idx + 1
-            is_overlapping = True
-            on_same_chrom = True
-
-            # follow-up
-            while tmp_idx < len(features) and is_overlapping and on_same_chrom:
-                is_overlapping = not (stop < features[tmp_idx][1] or start > features[tmp_idx][2])
-                on_same_chrom = chrom_int == chrom_mapping[features[tmp_idx][0]]
-
-                if is_overlapping and on_same_chrom:
-                    if fast:
-                        count_mtx[bc_mapping[bc]][tmp_idx] += 1
-                    else:
-                        count_mtx_sparse[bc_mapping[bc], tmp_idx] += 1
-
-                tmp_idx += 1
-
-    fh.close()
-
-    if fast:
-        return count_mtx
-    else:
-        return count_mtx_sparse
 
 
 def peak_mtx(fragments_file,
              peak_file,
              valid_bcs=None,
              normalized_peak_size=None,
-             fast=False):
+             mode="transposition",
+             n_jobs=-1):
     """
-    Generates a count matrix based on peaks. The fragments file needs to be sorted.
+    Generates a count matrix based on peaks.
 
     Args:
         fragments_file: path to fragments file
         peak_file: path to BED file
         valid_bcs: list of valid barcodes (optional)
-        normalized_peak_size: if True peaks size will be normalized; default: None (no normalization)
-        fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
+        normalized_peak_size: if True peaks size will be normalized accordingly; default: None (no normalization)
+        mode: determines what the counting is based on; either "transposition" or "overlap"; default: "transposition"
+        n_jobs: number of parallel processes to start; default: -1 (all available cores)
 
     Returns:
         AnnData object
     """
 
+    # load peaks
     names = ["chr", "start", "stop"]
     features = pd.read_csv(peak_file, sep="\t", header=None, usecols=[0, 1, 2], names=names, comment='#', dtype={"chr": str})
 
+    # check if first row should be skipped (header)
     try:
         int(features.iloc[0].start)
     except ValueError:
@@ -330,33 +324,44 @@ def peak_mtx(fragments_file,
         features["start"] = features.start.astype(int)
         features["stop"] = features.stop.astype(int)
 
-
-
     features.index = features.apply(lambda row: "_".join([str(val) for val in row]), axis=1)
 
+    # normalize peak size
     if normalized_peak_size:
         extension = int(np.ceil(normalized_peak_size / 2))
-        start = round(features["start"] + (features["stop"] - features["start"]) / 2).astype(int) - extension
-        stop = round(features["start"] + (features["stop"] - features["start"]) / 2).astype(int) + extension
+        centers = ((features["start"] + features["stop"]) // 2).astype(int)
+        start = centers - extension
+        stop = centers + extension
         features["start"] = start
         features["stop"] = stop
         features["start"].clip(lower=0, inplace=True)
 
     features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
 
+    # count lines to determine intevals for parallel processing; if valid_bcs=None, also get barcodes
     if valid_bcs is None:
-        valid_bcs = get_barcodes(fragments_file)
-
-    ct_mtx = count(fragments_file, features.values.tolist(), valid_bcs, fast)
-
-    if fast:
-        X = csr_matrix(ct_mtx)
+        valid_bcs, n_lines = get_barcodes(fragments_file)
     else:
-        X = ct_mtx.tocsr()
+        n_lines = count_lines(fragments_file)
 
+    # create a barcode mapping to associate barcodes with indices
+    bc_mapping = {bc: i for i, bc in enumerate(valid_bcs)}
+
+    mtx_shape = (len(valid_bcs), features.shape[0])  
+
+    # create a genomic tree
+    genomic_tree = {chrom: IntervalTree() for chrom in features.chr.unique()}
+    for feature_idx, feature in enumerate(features.itertuples()):
+        genomic_tree[feature.chr].add(Interval(feature.start, feature.stop, feature_idx))
+
+    # create count matrix
+    X = count_fragments(fragments_file, genomic_tree, bc_mapping, mode, mtx_shape, n_lines, n_jobs)
+
+    # create AnnData object
     adata = ad.AnnData(X, obs=pd.DataFrame(index=valid_bcs), var=features)
 
     return adata
+
 
 
 def gene_activity_mtx(fragments_file,
@@ -366,10 +371,10 @@ def gene_activity_mtx(fragments_file,
                       downstream=0,
                       source=None,
                       gene_type=None,
-                      fast=False):
+                      mode="transposition",
+                      n_jobs=-1):
     """
-    Generates a count matrix based on the openness of the gene bodies and promoter regions (gene activity). The
-    fragments file needs to be sorted.
+    Generates a count matrix based on the openness of the gene bodies and promoter regions (gene activity).
 
     Args:
         fragments_file: path to fragments file
@@ -379,84 +384,111 @@ def gene_activity_mtx(fragments_file,
         downstream: number of bp to consider downstream of gene body; default: 0 bp
         source: filter for source of the feature; default: None (no filtering)
         gene_type: filter for gene type of the feature; default: None (no filtering)
-        fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
+        mode: determines what the counting is based on; either "transposition" or "overlap"; default: "transposition"
+        n_jobs: number of parallel processes to start; default: -1 (all available cores)
 
     Returns:
         AnnData object
     """
 
+    # load features from GTF file
     names = ["chr", "source", "type", "start", "stop", "score", "strand", "frame", "attribute"]
     features = pd.read_csv(gtf_file, sep="\t", header=None, comment="#", names=names, dtype={"chr": str})
 
+    # filter for genes
     features = features[features.type == "gene"]
 
+    # filter for source
     if source:
         features = features[features.source == source]
 
+    # extract gene ID
     features["gene_id"] = [attr.replace("gene_id", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_id")]
 
-    tmp = [attr.replace("gene_name", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_name ")]
-    if not tmp:
-        tmp = [attr.replace("gene", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene ")]
+    # extract gene name
+    possible_tags = ["gene_name", "gene"]
+    for tag in possible_tags:
+        tmp = [attr.replace(tag, "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith(f"{tag} ")]
+        if tmp:
+            break
     features["gene_name"] = tmp
 
-    tmp = [attr.replace("gene_type", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_type ")]
-    if not tmp:
-        tmp = [attr.replace("gene_biotype", "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith("gene_biotype ")]
+    # extract gene type
+    possible_tags = ["gene_type", "gene_biotype"]
+    for tag in possible_tags:
+        tmp = [attr.replace(tag, "").strip().strip("\"") for feature_attr in features.attribute for attr in feature_attr.split(";") if attr.strip().startswith(f"{tag} ")]
+        if tmp:
+            break
     features["gene_type"] = tmp
 
+    # filter for gene type
     if gene_type:
         features = features[[feature in gene_type for feature in features.gene_type]]
 
     features.index = features.gene_id
 
-    features["start"] = features.start - upstream
+    # adjust coordinates for upstream and downstream parameters
+    features["start"] = features.apply(lambda row: row.start - upstream if row.strand == "+" else row.start - downstream, axis=1)
     features["start"].clip(lower=0, inplace=True)
-    features["stop"] = features.stop + downstream
+    features["stop"] = features.apply(lambda row: row.stop + downstream if row.strand == "+" else row.stop + upstream, axis=1)
 
     features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
 
     features = features[["gene_name", "gene_id", "gene_type", "chr", "start", "stop", "strand", "source"]]
 
+    # count lines to determine intevals for parallel processing; if valid_bcs=None, also get barcodes
     if valid_bcs is None:
-        valid_bcs = get_barcodes(fragments_file)
-
-    ct_mtx = count(fragments_file, features[["chr", "start", "stop"]].values.tolist(), valid_bcs, fast)
-
-    if fast:
-        X = csr_matrix(ct_mtx)
+        valid_bcs, n_lines = get_barcodes(fragments_file)
     else:
-        X = ct_mtx.tocsr()
+        n_lines = count_lines(fragments_file)
 
+    # create a barcode mapping to associate barcodes with indices
+    bc_mapping = {bc: i for i, bc in enumerate(valid_bcs)}
+    
+    mtx_shape = (len(valid_bcs), features.shape[0]) 
+
+    # create a genomic tree
+    genomic_tree = {chrom: IntervalTree() for chrom in features.chr.unique()}
+    for feature_idx, feature in enumerate(features.itertuples()):
+        genomic_tree[feature.chr].add(Interval(feature.start, feature.stop, feature_idx))
+
+    # create count matrix
+    X = count_fragments(fragments_file, genomic_tree, bc_mapping, mode, mtx_shape, n_lines, n_jobs)
+
+    # create AnnData object
     adata = ad.AnnData(X, obs=pd.DataFrame(index=valid_bcs), var=features)
 
     return adata
+
 
 
 def window_mtx(fragments_file,
                valid_bcs=None,
                window_size=5000,
                species="human",
-               fast=False):
+               mode="transposition",
+               n_jobs=-1):
     """
-    Generates a count matrix based on the openness of equally sized bins of the genome (windows). The fragments file
-    needs to be sorted.
+    Generates a count matrix based on the openness of equally sized bins of the genome (windows).
 
     Args:
         fragments_file: path to fragments file
         valid_bcs: list of valid barcodes (optional)
         window_size: size of windows in bp; default: 5000 bp
         species: species to create the windows for (human or mouse); default: "human"; will be extended in the future
-        fast: if True dense matrix will be used (faster but required more memory); default: False (sparse matrix)
+        mode: determines what the counting is based on; either "transposition" or "overlap"; default: "transposition"
+        n_jobs: number of parallel processes to start; default: -1 (all available cores)
 
     Returns:
         AnnData object
     """
 
+    # create windows
     features = make_windows(window_size, chromosomes=species)
 
     features = [["chr{}".format(chrom), *window[:-1]] for chrom, windows in features.items() for window in windows]
 
+    # create feature DataFrame
     features = pd.DataFrame(features, columns=["chr", "start", "stop"])
     features["chr"] = features.chr.astype(str)
 
@@ -464,16 +496,26 @@ def window_mtx(fragments_file,
 
     features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
 
+    # count lines to determine intevals for parallel processing; if valid_bcs=None, also get barcodes
     if valid_bcs is None:
-        valid_bcs = get_barcodes(fragments_file)
-
-    ct_mtx = count(fragments_file, features.values.tolist(), valid_bcs, fast)
-
-    if fast:
-        X = csr_matrix(ct_mtx)
+        valid_bcs, n_lines = get_barcodes(fragments_file)
     else:
-        X = ct_mtx.tocsr()
+        n_lines = count_lines(fragments_file)
 
+    # create a barcode mapping to associate barcodes with indices
+    bc_mapping = {bc: i for i, bc in enumerate(valid_bcs)}
+    
+    mtx_shape = (len(valid_bcs), features.shape[0]) 
+
+    # create a genomic tree
+    genomic_tree = {chrom: IntervalTree() for chrom in features.chr.unique()}
+    for feature_idx, feature in enumerate(features.itertuples()):
+        genomic_tree[feature.chr].add(Interval(feature.start, feature.stop, feature_idx))
+
+    # create count matrix
+    X = count_fragments(fragments_file, genomic_tree, bc_mapping, mode, mtx_shape, n_lines, n_jobs)
+
+    # create AnnData object
     adata = ad.AnnData(X, obs=pd.DataFrame(index=valid_bcs), var=features)
 
     return adata
