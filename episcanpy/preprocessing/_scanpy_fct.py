@@ -232,11 +232,35 @@ def pca(adata,
     # chunked calculation is not randomized, anyways
 
     if copy:
-        return(sc.pp.pca(adata, n_comps, zero_center, svd_solver, random_state, return_info,
-            use_highly_variable, dtype, copy, chunked, chunk_size))
+        return(
+            sc.pp.pca(
+                adata,
+                n_comps=n_comps,
+                zero_center=zero_center,
+                svd_solver=svd_solver,
+                random_state=random_state,
+                return_info=return_info,
+                use_highly_variable=use_highly_variable,
+                dtype=dtype,
+                copy=copy,
+                chunked=chunked,
+                chunk_size=chunk_size
+            )
+        )
     else:
-        sc.pp.pca(adata, n_comps, zero_center, svd_solver, random_state, return_info,
-            use_highly_variable, dtype, copy, chunked, chunk_size)
+        sc.pp.pca(
+            adata,
+            n_comps=n_comps,
+            zero_center=zero_center,
+            svd_solver=svd_solver,
+            random_state=random_state,
+            return_info=return_info,
+            use_highly_variable=use_highly_variable,
+            dtype=dtype,
+            copy=copy,
+            chunked=chunked,
+            chunk_size=chunk_size
+        )
 
 
 def normalize_per_cell(
