@@ -334,7 +334,7 @@ def peak_mtx(fragments_file,
         stop = centers + extension
         features["start"] = start
         features["stop"] = stop
-        features["start"].clip(lower=0, inplace=True)
+        features["start"] = features["start"].clip(lower=0)
 
     features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
 
@@ -429,7 +429,7 @@ def gene_activity_mtx(fragments_file,
 
     # adjust coordinates for upstream and downstream parameters
     features["start"] = features.apply(lambda row: row.start - upstream if row.strand == "+" else row.start - downstream, axis=1)
-    features["start"].clip(lower=0, inplace=True)
+    features["start"] = features["start"].clip(lower=0)
     features["stop"] = features.apply(lambda row: row.stop + downstream if row.strand == "+" else row.stop + upstream, axis=1)
 
     features.sort_values(by=["chr", "start", "stop"], key=lambda col: col if col.dtype == np.int64 else col.str.lower(), inplace=True)
