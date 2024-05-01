@@ -96,7 +96,7 @@ def motif_enrichment(adata, alpha=0.05):
 
 
 
-def plot_enrichment(x, y, c, s, x_label, colorbar_label, legend_label, show_nonsignificant=True, highlight_significant=True, highlight_list=None, title=None, figsize=(6, 6), save=None):
+def plot_enrichment(x, y, c, s, x_label, colorbar_label, legend_label, show_nonsignificant=True, highlight_significant=True, highlight_list=None, title=None, figsize=(6, 6), dpi=300, save=None):
 
     if not show_nonsignificant:
         x = x[highlight_list]
@@ -181,11 +181,11 @@ def plot_enrichment(x, y, c, s, x_label, colorbar_label, legend_label, show_nons
     if save is None:
         plt.show()
     else:
-        plt.savefig(save, dpi=600, bbox_inches="tight")
+        plt.savefig(save, dpi=dpi, bbox_inches="tight")
 
 
 
-def plot_motif_enrichment(adata, corr_method="benjamini-hochberg", top_n=10, show_nonsignificant=True, highlight_significant=True, pval_threshold=0.05, save=None):
+def plot_motif_enrichment(adata, corr_method="benjamini-hochberg", top_n=10, show_nonsignificant=True, highlight_significant=True, pval_threshold=0.05, dpi=300, save=None):
 
     if corr_method is None or corr_method.lower() in ["raw", "none"]:
         pval_key = "pval"
@@ -201,7 +201,7 @@ def plot_motif_enrichment(adata, corr_method="benjamini-hochberg", top_n=10, sho
 
     msgs = []
 
-    for group in adata.uns["motif_enrichment"]["results"]:
+    for i, group in enumerate(adata.uns["motif_enrichment"]["results"]):
 
         data = adata.uns["motif_enrichment"]["results"][group]
 
@@ -231,8 +231,9 @@ def plot_motif_enrichment(adata, corr_method="benjamini-hochberg", top_n=10, sho
             highlight_significant=highlight_significant,
             highlight_list=highlight_list,
             title=group, 
-            figsize=(8, 6), 
-            save=save
+            figsize=(8, 6),
+            dpi=dpi,
+            save=save.split(".")[0] + f"_{i+1}." + save.split(".")[1] if save is not None else None
         )
 
     for msg in msgs:

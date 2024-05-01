@@ -647,7 +647,7 @@ def plot_footprints(adata, mtx="corr_norm", show_score=True, score_threshold=1.3
 
 
 
-def plot_footprints_compact(adata, mtx="corr_norm", max_cols=5, width_adjust=1, figsize=None, save=None):
+def plot_footprints_compact(adata, mtx="corr_norm", max_cols=5, width_adjust=1, figsize=None, dpi=300, save=None):
 
     if mtx in ["raw", "norm", "corr", "corr_norm", "norm_smooth", "corr_norm_smooth"]:
         mtx = f"mtx_{mtx}"
@@ -733,4 +733,4 @@ def plot_footprints_compact(adata, mtx="corr_norm", max_cols=5, width_adjust=1, 
         handle.set_linewidth(2.5)
 
     if save is not None:
-        plt.savefig(save)
+        plt.savefig(save, dpi=dpi)
