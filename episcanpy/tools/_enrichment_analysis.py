@@ -6,7 +6,7 @@ from statsmodels.stats.multitest import multipletests
 
 from collections import defaultdict
 
-from IPython.display import display
+# from IPython.display import display
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -89,10 +89,10 @@ def motif_enrichment(adata, alpha=0.05):
         adata.uns["motif_enrichment"]["results"][group] = adata.uns["motif_enrichment"]["results"][group].drop(["group"], axis=1)
         adata.uns["motif_enrichment"]["results"][group] = adata.uns["motif_enrichment"]["results"][group].sort_values(by="pval")
 
-    for group in adata.uns["motif_enrichment"]["results"]:
-        print(group)
-        display(adata.uns["motif_enrichment"]["results"][group])
-        print("\n")
+    # for group in adata.uns["motif_enrichment"]["results"]:
+    #     print(group)
+    #     display(adata.uns["motif_enrichment"]["results"][group])
+    #     print("\n")
 
 
 
