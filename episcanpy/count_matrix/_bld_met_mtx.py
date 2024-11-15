@@ -1,5 +1,4 @@
 import numpy as np
-from numpy import NaN
 
 # chromosomes for 2 principal species. If you work with another genome
 # the chromosomes will have to be specified
@@ -388,7 +387,7 @@ def prep_methlevels(methylation_feature, name_cell, threshold=1):
         if element[2] >= threshold:
             output_list.append(float(element[0])/element[1])
         else:
-            output_list.append(NaN)
+            output_list.append(np.nan)
     return(output_list)
   
 def write_list(the_list, file_to_write):
