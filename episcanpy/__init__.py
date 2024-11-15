@@ -32,7 +32,7 @@ from .preprocessing._load_matrix import read_h5 as read_h5_atac
 # read functions from AnnData
 from anndata import AnnData
 from anndata import read
-from anndata import read_h5ad, read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
+from anndata.io import read_h5ad, read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
 
 
 # import multidata information

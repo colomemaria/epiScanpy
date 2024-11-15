@@ -1,7 +1,7 @@
 import scanpy as sc
 from anndata import AnnData
 from anndata import read as read_h5ad
-from anndata import read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
+from anndata.io import read_csv, read_excel, read_hdf, read_loom, read_mtx, read_text, read_umi_tools
 
 from .. import __version__
 
