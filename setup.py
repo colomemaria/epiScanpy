@@ -33,8 +33,8 @@ setup(
         Path('requirements.txt').read_text('utf-8').splitlines()
     ],
     extras_require=dict(
-        louvain=['python-igraph', 'louvain>=0.6'],
-        leiden=['python-igraph', 'leidenalg'],
+        louvain=['igraph', 'louvain>=0.6'],
+        leiden=['igraph', 'leidenalg'],
         bbknn=['bbknn'],
         combat=['patsy'],
         doc=['sphinx', 'sphinx_rtd_theme', 'sphinx_autodoc_typehints', 'scanpydoc'],
