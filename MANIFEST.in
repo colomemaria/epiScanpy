@@ -1,6 +1,6 @@
 include versioneer.py
 include requirements.txt
 include episcanpy/_version.py
-include episcanpy/*/*.txt
+recursive-include episcanpy *.txt
 include LICENSE.txt
 include README.rst
